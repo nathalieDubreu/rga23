@@ -7,6 +7,6 @@ eligiblesRGA <- exportRGA |>
 eligiblesCultivateurs <- eligiblesRGA |>
   filter(RaisonsRecensement__1 == 1)
 
-cultivateurs <- eligiblesCultivateurs |> summarise(SAUTotale = sum(as.numeric(SurfaceTotalProdAgri)), na.rm=TRUE)
-
-                                                                                     
+cultivateurs <- eligiblesCultivateurs |>
+  mutate(SAU = case_when(is.na(SurfaceTotalProdAgri) ~ 0, TRUE ~ as.numeric(SurfaceTotalProdAgri))) |>
+  summarise(SAU_totale_hectare = sum(SAU)/10000, SAU_moyenne_hectare = mean(SAU)/10000)
