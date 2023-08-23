@@ -1,0 +1,104 @@
+---
+title: "Comptages collecte RGA"
+author: "NDubreu"
+date: '2023-08-22'
+output: md_document
+---
+
+# [RGA23] Suivi de la collecte - `r date`
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+```
+
+## `r exportRGA |> count()` entretiens
+
+- <font color = "Green">`r exportRGA |> filter(interview__status == 120) |> count()`</font> entretiens approuvés
+- <font color = "Orange">`r exportRGA |> filter(interview__status == 100) |> count()`</font> entretiens terminés
+- <font color = "Red">`r exportRGA |> filter(interview__status == 65) |> count()`</font> entretiens rejetés (erreurs apparentes dans les questionnaires remplis)
+
+**=> `r exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()` entretiens sont donc terminés et/ou validés**
+
+<br/>
+
+## Statut de la collecte pour ces `r exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()` entretiens
+
+```{r, echo=FALSE}
+
+kable(exportRGA |>
+  filter(interview__status == 100 | interview__status == 120) |>
+  mutate(
+    `La collecte est-elle possible ?` = case_when(
+      statut_collecte == 1 ~ "1 - Oui",
+      statut_collecte == 2 ~ "2 - Non, l'exploitation n'existe plus de façon définitive",
+      statut_collecte == 3 ~ "3 - Non, l'exploitant est injoignable",
+      statut_collecte == 4 ~ "4 - Non, l'exploitant refuse de répondre",
+      statut_collecte == 5 ~ "5 - Non, l'exploitation a déjà été interrogée"
+    )
+  ) |>
+  group_by(`La collecte est-elle possible ?`) |>
+  count())
+```
+
+```{r, echo=FALSE}
+
+exportRGA_interroges <- exportRGA |>
+  filter((interview__status == 100 | interview__status == 120) & statut_collecte == 1)
+
+```
+
+**=> `r exportRGA_interroges |> filter(interview__status == 120 | interview__status == 100) |> count()` unités ont donc été visitées**
+ 
+<br/>
+
+## Profil des `r exportRGA_interroges |> count()` unités visitées
+
+- <font color = "Blue">`r exportRGA_interroges |> filter(substring(id_exploitation, 0, 1) == "C") |> count()`</font> coprahculteurs (>2,7 tonnes)
+- <font color = "Blue">`r exportRGA_interroges |> filter(substring(id_exploitation, 0, 1) == "P") |> count()`</font> producteurs phyisques
+- <font color = "Blue">`r exportRGA_interroges |> filter(substring(id_exploitation, 0, 1) == "M") |> count()`</font> personnes morales
+- <font color = "Blue">`r exportRGA_interroges |> filter(substring(id_exploitation, 0, 1) == "X") |> count()`</font> chefs d'exploitation produisant plus de 2,7 tonnes de coprah
+
+### Activités 
+*Les unités peuvent cocher plusieurs cases*
+
+- `r exportRGA_interroges |> summarise(sum(RaisonsRecensement__1))` agriculteurs
+- `r exportRGA_interroges |> summarise(sum(RaisonsRecensement__2))` éleveurs
+- `r exportRGA_interroges |> summarise(sum(RaisonsRecensement__3))` coprahculteurs
+- `r exportRGA_interroges |> summarise(sum(RaisonsRecensement__4))` n'ont aucune de ces 3 activités
+
+### Eligibilité des unités
+
+```{r, echo=FALSE}
+
+exportRGA_interroges <- exportRGA_interroges |>
+  mutate(
+    eligibOrNot = case_when(
+      ((eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "C") |
+        (eligibilite == 0 & substring(id_exploitation, 0, 1) == "P") |
+        (eligibilite == 0 & substring(id_exploitation, 0, 1) == "M") |
+        (eligibilite == 0 & eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "X"))
+      ~ "out",
+      TRUE ~ "in"
+    )
+  ) 
+
+```
+
+- <font color = "Green">`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()`</font> unités éligibles
+- <font color = "Red">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> count()`</font> unités NON éligibles
+  - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "C") |> count()`</font> Coprahculteurs out - C
+  - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & substring(id_exploitation, 0, 1) == "M") |> count()`</font> Personnes morales out - M
+  - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & substring(id_exploitation, 0, 1) == "P") |> count()`</font> Producteurs physiques out - P
+  - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "X") |> count()`</font> Chef d'exploitations ayant fait plus de 2,7 tonnes de coprah out - X
+
+### Localisation (`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()` unités éligibles)
+
+```{r, echo=FALSE}
+
+kable(left_join(exportRGA_interroges |> mutate(IleISPF = Ile), iles |> mutate(`Ile habitation des enquêtés` = Ile), by=c("IleISPF")) |>
+  filter(eligibOrNot == "in")  |>
+  group_by(`Ile habitation des enquêtés`) |>
+  count())
+
+```
+
