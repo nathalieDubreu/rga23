@@ -1,4 +1,6 @@
 
+rga23 <- readTable("rga23.tab", dossier)
+
 PourcentModeMiel <- readTable("PourcentModeMiel.tab", dossier)
 PourcentModeOeufs <- readTable("PourcentModeOeufs.tab", dossier)
 PourcentModeViande <- readTable("PourcentModeViande.tab", dossier)
