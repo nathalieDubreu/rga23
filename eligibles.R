@@ -1,4 +1,3 @@
-
 exportRGA <- readTable("rga23.tab", dossier)
 
 eligiblesRGA <- exportRGA |>
@@ -15,13 +14,21 @@ eligiblesEleveurs <- eligiblesRGA |>
   filter(RaisonsRecensement__2 == 1)
 
 ## QQ surfaces
-cultivateurs <- eligiblesCultivateurs |>
+eligiblesCultivateurs |>
   mutate(SAU = case_when(is.na(SurfaceTotalProdAgri) ~ 0, TRUE ~ as.numeric(SurfaceTotalProdAgri))) |>
   summarise(
     SAU_totale_hectare = sum(SAU) / 10000,
     SAU_moyenne_hectare = mean(SAU) / 10000,
     SAU_max_hectare = max(SAU) / 10000
   )
+
+eligiblesCultivateurs |>
+  filter(SurfaceTotalProdAgri > 0) |>
+  summarise(surfaceMin_m2 = min(SurfaceTotalProdAgri))
+
+eligiblesCultivateurs |>
+  filter(SurfaceTotalProdAgri > 0 & SurfaceTotalProdAgri < 100) |>
+  summarise(nbSurfacesInf100m2 = n())
 
 ### Par type de cultures classiques ou d'animaux
 
@@ -70,3 +77,7 @@ eligiblesEleveurs |>
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0)
+
+SurfacesCultures |>
+  group_by(TypeCultures) |>
+    summarize(nbExploitants = n_distinct(interview__key), surfaceTotalHectares = round((sum(SurfaceCult) / 10000), 1))
