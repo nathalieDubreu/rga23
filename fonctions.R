@@ -1,3 +1,5 @@
+## Lecture
+
 readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_csv2(file.path(chemin, nomFichier))
 }
@@ -6,12 +8,8 @@ readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t")
 }
 
-recupererFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
-  pathDossier <- file.path(chemin, dossier)
-  fichiers <- list.files(pathDossier, pattern = ".tab")
-}
-
-parcours <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
+### Fichiers tab d'un dossier défini -> liste
+lireFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
   pathDossier <- file.path(chemin, dossier)
   fichiers <- list.files(pathDossier, pattern = ".tab")
   lapply(fichiers, function(x) {
@@ -20,3 +18,19 @@ parcours <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
   })
 }
 
+## Ecriture
+
+writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
+  readr::write_csv2(
+    table,
+    file.path(
+      chemin,
+      paste(
+        deparse(substitute(table)),
+        ".csv"
+      )
+    ),
+    append = FALSE,
+    col_names = TRUE
+  )
+}
