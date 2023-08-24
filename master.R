@@ -7,8 +7,8 @@ dossier <- "Export_08-24"
 
 # Mises en forme des données
 source("miseEnForme/rostersSurfaces.R")
-source("miseEnForme/rostersCommercialisation.R")
-# source("miseEnForme/decoupageRga23.R")
+source("miseEnForme/decoupageRga23.R")
+#source("miseEnForme/rostersCommercialisation.R")
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
@@ -22,6 +22,7 @@ source("analyse/nonEligibles.R")
 source("analyse/eligibles.R")
 source("analyse/cultivateurs.R")
 source("analyse/eleveurs.R")
+source("analyse/coprahculteurs.R")
 
 
 

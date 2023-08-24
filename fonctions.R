@@ -25,6 +25,7 @@ writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
     table,
     file.path(
       chemin,
+      "SortiesR",
       paste(
         deparse(substitute(table)),
         ".csv"
