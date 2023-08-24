@@ -1,6 +1,7 @@
 rga23 <- readTable("rga23.tab", dossier)
 
 rga23_coprahculteurs <- rga23 |>
+  filter(RaisonsRecensement__3 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -93,6 +94,7 @@ rga23_coprahculteurs <- rga23 |>
   ))
 
 rga23_exploitations <- rga23 |>
+  filter(RaisonsRecensement__1 == 1 | RaisonsRecensement__2 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -127,23 +129,6 @@ rga23_exploitations <- rga23 |>
     "AnneeNaissRespJuridique",
     "TpsTravailRespJuridique",
     "Compta",
-    "PratiquesCulturales__1",
-    "PratiquesCulturales__2",
-    "PratiquesCulturales__3",
-    "PratiquesCulturales__5",
-    "PratiquesCulturales__6",
-    "PratiquesCulturales__7",
-    "PratiquesCulturales__4",
-    "PsceArbresHorsRente__1",
-    "PsceArbresHorsRente__2",
-    "PsceArbresHorsRente__3",
-    "RaisonsArbresHorsR__1",
-    "RaisonsArbresHorsR__2",
-    "RaisonsArbresHorsR__3",
-    "RaisonsArbresHorsR__4",
-    "RaisonsArbresHorsR__5",
-    "RaisonsArbresHorsR__6",
-    "ZoneHumide",
     "UtilisationGraines",
     "ProvenanceSemences__1",
     "ProvenanceSemences__2",
@@ -163,7 +148,6 @@ rga23_exploitations <- rga23 |>
     "NbCultEspPhytoChim",
     "FormationPhytosanit",
     "UtilisationGlyphosate",
-    "RecyclDechets",
     "UtilisationEngrais",
     "TypeEngrais__1",
     "TypeEngrais__3",
@@ -187,11 +171,6 @@ rga23_exploitations <- rga23 |>
     "ModeStockageDej__6",
     "ModeStockageDej__7",
     "TraitementDejections",
-    "ConnaissPratiques",
-    "InteretPratiques",
-    "ConnaissOrga",
-    "EnergiesRenouv",
-    "NivAutoEnergiesR",
     "MaterielTransport__1",
     "MaterielTransport__2",
     "MaterielTransport__3",
@@ -475,6 +454,7 @@ rga23_general <- rga23 |>
   ))
 
 rga23_prodAnimales <- rga23 |>
+  filter(RaisonsRecensement__2 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -794,6 +774,7 @@ rga23_prodAnimales <- rga23 |>
   ))
 
 rga23_prodVegetales <- rga23 |>
+  filter(RaisonsRecensement__1 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -1364,7 +1345,30 @@ rga23_tape <- rga23 |>
     "ComElevageLocal",
     "DestiElevages__1",
     "DestiElevages__2",
-    "DestiElevages__3"
+    "DestiElevages__3",
+    "PratiquesCulturales__1",
+    "PratiquesCulturales__2",
+    "PratiquesCulturales__3",
+    "PratiquesCulturales__5",
+    "PratiquesCulturales__6",
+    "PratiquesCulturales__7",
+    "PratiquesCulturales__4",
+    "PsceArbresHorsRente__1",
+    "PsceArbresHorsRente__2",
+    "PsceArbresHorsRente__3",
+    "RaisonsArbresHorsR__1",
+    "RaisonsArbresHorsR__2",
+    "RaisonsArbresHorsR__3",
+    "RaisonsArbresHorsR__4",
+    "RaisonsArbresHorsR__5",
+    "RaisonsArbresHorsR__6",
+    "ZoneHumide",
+    "RecyclDechets",
+    "ConnaissPratiques",
+    "InteretPratiques",
+    "ConnaissOrga",
+    "EnergiesRenouv",
+    "NivAutoEnergiesR"
   ))
 
 rga23_mainOeuvre <- rga23 |>
