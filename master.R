@@ -17,9 +17,11 @@ source("miseEnForme/rostersCommercialisation.R")
 
 # Analyse 
 ## Non éligibles
-source("nonEligibles.R")
+source("analyse/nonEligibles.R")
 ## Eligibles
-source("eligibles.R")
+source("analyse/eligibles.R")
+source("analyse/cultivateurs.R")
+source("analyse/eleveurs.R")
 
 
 
