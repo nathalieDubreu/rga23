@@ -1,3 +1,6 @@
+
+exportRGA <- readTable("rga23.tab", dossier)
+
 eligiblesRGA <- exportRGA |>
   filter((interview__status == 100 | interview__status == 120) & statut_collecte == 1) |>
   filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |

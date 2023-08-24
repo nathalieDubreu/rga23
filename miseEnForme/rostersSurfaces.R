@@ -1,10 +1,3 @@
-colonnesRga <- readCSV("miseEnForme/colonnesRga23.csv")
-colonnesRga |>
-  group_by(fichier) |>
-  count()
-
-rga23 <- readTable("rga23.tab", dossier)
-
 # Cultures maraîchères....................................10/10
 SurfacesCultMarai <- readTable("SurfacesCultMarai.tab", dossier) |>
   rename(
@@ -90,3 +83,26 @@ SurfacesJacheres <- readTable("SurfacesJacheres.tab", dossier) |>
   ) |>
   select(!SurfacesJacheres__id & !SurfaceJacheres) |>
   mutate(TypeCultures = 80)
+
+# TODO
+## Compléter avec SurfacesFourrages dès qu'il y aura eu une réponse
+SurfacesCultures <- bind_rows(
+  SurfacesCultFlorale,
+  SurfacesCultFruit,
+  SurfacesCultMarai,
+  SurfacesCultVivri,
+  SurfacesJacheres,
+  SurfacesPepinieres,
+  SurfacesPlantes
+)
+
+rm(
+  SurfacesCultFlorale,
+  SurfacesCultFruit,
+  SurfacesCultMarai,
+  SurfacesCultVivri,
+  SurfacesJacheres,
+  SurfacesPepinieres,
+  SurfacesPlantes,
+  SurfacesFourrages
+)
