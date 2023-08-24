@@ -4,7 +4,7 @@ source("analyse/eligibles.R")
 eligiblesCultivateurs <- eligiblesRGA |>
   filter(RaisonsRecensement__1 == 1)
 
-## QQ surfaces
+## SAU
 eligiblesCultivateurs |>
   mutate(SAU = case_when(is.na(SurfaceTotalProdAgri) ~ 0, TRUE ~ as.numeric(SurfaceTotalProdAgri))) |>
   summarise(
@@ -13,6 +13,7 @@ eligiblesCultivateurs |>
     SAU_max_hectare = max(SAU) / 10000
   )
 
+## SAU les plus faibles
 eligiblesCultivateurs |>
   filter(SurfaceTotalProdAgri > 0) |>
   summarise(surfaceMin_m2 = min(SurfaceTotalProdAgri))
@@ -44,6 +45,29 @@ eligiblesCultivateurs |>
     cultJacheres = sum(CulturesPresentes__80)
   )
 
-SurfacesCultures |>
+SurfacesCulturesEligibles <- inner_join(SurfacesCultures, eligiblesCultivateurs |> select(interview__key))
+
+surfacesCultures <- SurfacesCulturesEligibles |>
+  mutate(TypeCultures = case_when(
+    (TypeCultures == 10) ~ "10 - Cultures maraîchères",
+    (TypeCultures == 20) ~ "20 - Cultures vivrières",
+    (TypeCultures == 30) ~ "30 - Cultures fruitières (hors pépinères) et bois d'oeuvre",
+    (TypeCultures == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
+    (TypeCultures == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
+    (TypeCultures == 60) ~ "60 - Pépinières (plantes vendues en pot)",
+    (TypeCultures == 70) ~ "70 - Cultures fourragères",
+    (TypeCultures == 80) ~ "80 - Jachères",
+    TRUE ~ as.character(TypeCultures)
+  )) |>
   group_by(TypeCultures) |>
-    summarize(nbExploitants = n_distinct(interview__key), surfaceTotalHectares = round((sum(SurfaceCult) / 10000), 1))
+  summarize(
+    `Nombre d'exploitants` = n_distinct(interview__key),
+    `Surface Totale (Ha)` = round((sum(SurfaceCult) / 10000), 1),
+    `Surface moyenne (m²)` = mean(SurfaceCult),
+    `Surface min (m²)` = min(SurfaceCult),
+    `Surface max (m²)` = max(SurfaceCult)
+  )
+
+writeCSV(surfacesCultures)
+
+
