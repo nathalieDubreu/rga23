@@ -7,6 +7,7 @@ dossier <- "Export_08-23"
 
 # Mises en forme des données
 source("miseEnForme/rostersSurfaces.R")
+source("miseEnForme/rostersCommercialisation.R")
 # source("miseEnForme/decoupageRga23.R")
 
 # Suivi de la collecte

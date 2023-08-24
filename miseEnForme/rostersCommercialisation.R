@@ -1,0 +1,11 @@
+
+PourcentModeMiel <- readTable("PourcentModeMiel.tab", dossier)
+PourcentModeOeufs <- readTable("PourcentModeOeufs.tab", dossier)
+PourcentModeViande <- readTable("PourcentModeViande.tab", dossier)
+PourcentModeFlorale <- readTable("PourcentModeFlorale.tab", dossier)
+PourcentModeFourrages <- readTable("PourcentModeFourrages.tab", dossier)
+PourcentModeFruit <- readTable("PourcentModeFruit.tab", dossier)
+PourcentModeMaraic <- readTable("PourcentModeMaraic.tab", dossier)
+PourcentModePepinieres <- readTable("PourcentModePepinieres.tab", dossier)
+PourcentModePlantes <- readTable("PourcentModePlantes.tab", dossier)
+PourcentModeVivri <- readTable("PourcentModeVivri.tab", dossier)
