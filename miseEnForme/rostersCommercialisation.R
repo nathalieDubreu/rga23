@@ -1,54 +1,41 @@
 rga23 <- readTable("rga23.tab", dossier)
 
-PourcentModeMiel <- readTable("PourcentModeMiel.tab", dossier)
-
-typeProduction <- "Miel"
-
-for (i in 1:13) {
-  variableI <- paste("ModesCom",typeProduction,"__", i, sep = "")
-  PartCommerI <- paste("PartCom",typeProduction,"__", i, sep = "")
-
-  pourcentagesI <-
-    PourcentModeMiel |> filter(PourcentModeMiel__id == i)
-
-  rga23 <-
-    left_join(
-      rga23,
-      pourcentagesI |> select(!PourcentModeMiel__id),
-      by = c("interview__id", "interview__key")
-    ) |>
-    rename("{PartCommerI}" := PourcentComMiel) |>
-    select(!variableI)
-}
-
-################# WIP -> passage en fonction #####################
-
-commercialisation <- function(typeProduction, variable) {
+commercialisation <- function(typeProduction, table) {
   for (i in 1:13) {
-    variableI <- paste("ModesCom",typeProduction,"__", i, sep = "")
-    PartCommerI <- paste("PartCom",typeProduction,"__", i, sep = "")
-    
+    variableI <- paste("ModesCom", typeProduction, "__", i, sep = "")
+    PartCommerI <- paste("PartCom", typeProduction, "__", i, sep = "")
+
     pourcentagesI <-
-      PourcentModeMiel |> filter(PourcentModeMiel__id == i)
-    
+      table |> filter(PourcentMode__id == i)
+
     print(PartCommerI)
-    
+
     rga23 <-
       left_join(
         rga23,
-        pourcentagesI |> select(!PourcentModeMiel__id),
+        pourcentagesI |> select(!PourcentMode__id),
         by = c("interview__id", "interview__key")
       ) |>
-      rename("{PartCommerI}" := PourcentComMiel)  |>
+      rename("{PartCommerI}" := PourcentCom) |>
       select(!variableI)
   }
   return(rga23)
 }
 
-rga23Ex <- commercialisation("Miel",PourcentModeMiel$PourcentModeMiel__id)
+TablePourcentMode <- readTable("PourcentModeMiel.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeMiel__id,
+  PourcentCom = PourcentComMiel
+)
+rga23 <- commercialisation("Miel", TablePourcentMode)
 
 
-PourcentModeOeufs <- readTable("PourcentModeOeufs.tab", dossier)
+TablePourcentMode <- readTable("PourcentModeOeufs.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeOeufs__id,
+  PourcentCom = PourcentComOeufs
+)
+rga23 <- commercialisation("Oeufs", TablePourcentMode)
+
+
 PourcentModeViande <- readTable("PourcentModeViande.tab", dossier)
 PourcentModeFlorale <- readTable("PourcentModeFlorale.tab", dossier)
 PourcentModeFourrages <-
