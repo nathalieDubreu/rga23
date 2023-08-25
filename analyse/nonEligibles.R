@@ -40,5 +40,5 @@ nonEligiblesRGA_X <- nonEligiblesRGA |>
   ))
 
 ################## TODO -> Vérifier les "Autre ?!?" et les "Aucune utilisation de la production"
-aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "5. Aucune utilisation de la production" | Raison == "6. Autre ?!?")
+aVerifier <- nonEligiblesRGA_X |> filter(Raison == "5. Aucune utilisation de la production" | Raison == "6. Autre ?!?")
 

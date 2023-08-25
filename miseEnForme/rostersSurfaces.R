@@ -72,7 +72,8 @@ SurfacesFourrages <- readTable("SurfacesFourrages.tab", dossier) |>
   rename(
     Culture__id = SurfacesFourrages__id,
     SurfaceCult = SurfaceFourrage,
-    SurfaceIrrig = SurfaceIrrigFourrage
+    SurfaceIrrig = SurfaceIrrigFourrage,
+    SurfaceBio = SurfaceBioFourrages
   )
 
 # Jachères................................................80/80
@@ -87,17 +88,18 @@ SurfacesJacheres <- readTable("SurfacesJacheres.tab", dossier) |>
   ) |>
   select(!SurfacesJacheres__id & !SurfaceJacheres)
 
-# TODO
-## Compléter avec SurfacesFourrages dès qu'il y aura eu une réponse
-SurfacesCultures <- bind_rows(
+rga23_surfacesCultures <- bind_rows(
   SurfacesCultFlorale,
   SurfacesCultFruit,
   SurfacesCultMarai,
   SurfacesCultVivri,
   SurfacesJacheres,
   SurfacesPepinieres,
-  SurfacesPlantes
+  SurfacesPlantes,
+  SurfacesFourrages
 )
+
+writeCSVTraites(rga23_surfacesCultures)
 
 rm(
   SurfacesCultFlorale,

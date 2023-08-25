@@ -45,6 +45,8 @@ eligiblesCultivateurs |>
     cultJacheres = sum(CulturesPresentes__80)
   )
 
+SurfacesCultures <- readCSV("rga23_surfacesCultures.csv")
+
 SurfacesCulturesEligibles <- inner_join(SurfacesCultures, eligiblesCultivateurs |> select(interview__key))
 
 surfacesCultures <- SurfacesCulturesEligibles |>

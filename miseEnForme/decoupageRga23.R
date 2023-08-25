@@ -1395,3 +1395,11 @@ rga23_mainOeuvre <- rga23 |>
     "UniteDureeMOOccas",
     "finMainOeuvre"
   ))
+
+writeCSVTraites(rga23_coprahculteurs)
+writeCSVTraites(rga23_exploitations)
+writeCSVTraites(rga23_general)
+writeCSVTraites(rga23_mainOeuvre)
+writeCSVTraites(rga23_prodAnimales)
+writeCSVTraites(rga23_prodVegetales)
+writeCSVTraites(rga23_tape)

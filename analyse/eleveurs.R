@@ -29,3 +29,11 @@ aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0)
 
+eleveurs <- readCSV("rga23_prodAnimales.csv")
+eleveursVolailles <- eleveurs |>
+  filter(PresenceAnimaux__4 == 1)
+
+eleveursPoulesPondeuses <- eleveurs |>
+  filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |>
+  group_by(TypeVolailles__1, TypeVolailles__3, TypeVolailles__4) |>
+  count()

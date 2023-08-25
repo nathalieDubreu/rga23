@@ -36,3 +36,20 @@ writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
     col_names = TRUE
   )
 }
+
+### Ecriture à la racine du chemin (A utiliser pour les données traitées)
+writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
+  readr::write_csv2(
+    table,
+    file.path(
+      chemin,
+      paste(
+        deparse(substitute(table)),
+        ".csv",
+        sep=""
+      )
+    ),
+    append = FALSE,
+    col_names = TRUE
+  )
+}
