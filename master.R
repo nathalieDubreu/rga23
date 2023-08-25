@@ -2,8 +2,8 @@ library("dplyr")
 
 source("fonctions.R")
 
-# TODO - mettre à jour
-dossier <- "Export_08-24"
+# TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
+dossier <- "Export_08-23"
 
 # Mises en forme des données
 source("miseEnForme/rostersSurfaces.R")

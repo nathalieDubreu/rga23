@@ -20,6 +20,7 @@ lireFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
 
 ## Ecriture
 
+### Ecriture dans un dossier SortiesR
 writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
   readr::write_csv2(
     table,

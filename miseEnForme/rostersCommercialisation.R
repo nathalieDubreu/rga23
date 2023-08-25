@@ -8,8 +8,6 @@ commercialisation <- function(typeProduction, table) {
     pourcentagesI <-
       table |> filter(PourcentMode__id == i)
 
-    print(PartCommerI)
-
     rga23 <-
       left_join(
         rga23,
@@ -36,13 +34,57 @@ TablePourcentMode <- readTable("PourcentModeOeufs.tab", dossier) %>% rename(
 rga23 <- commercialisation("Oeufs", TablePourcentMode)
 
 
-PourcentModeViande <- readTable("PourcentModeViande.tab", dossier)
-PourcentModeFlorale <- readTable("PourcentModeFlorale.tab", dossier)
-PourcentModeFourrages <-
-  readTable("PourcentModeFourrages.tab", dossier)
-PourcentModeFruit <- readTable("PourcentModeFruit.tab", dossier)
-PourcentModeMaraic <- readTable("PourcentModeMaraic.tab", dossier)
-PourcentModePepinieres <-
-  readTable("PourcentModePepinieres.tab", dossier)
-PourcentModePlantes <- readTable("PourcentModePlantes.tab", dossier)
-PourcentModeVivri <- readTable("PourcentModeVivri.tab", dossier)
+TablePourcentMode <- readTable("PourcentModeViande.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeViande__id,
+  PourcentCom = PourcentComViande
+)
+rga23 <- commercialisation("Viande", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModeFlorale.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeFlorale__id,
+  PourcentCom = PourcentComFlorale
+)
+rga23 <- commercialisation("Florale", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModeFourrages.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeFourrages__id,
+  PourcentCom = PourcentComFourrages
+)
+rga23 <- commercialisation("Fourrages", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModeFruit.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeFruit__id,
+  PourcentCom = PourcentComFruit
+)
+rga23 <- commercialisation("Fruit", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModeMaraic.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeMaraic__id,
+  PourcentCom = PourcentComMaraich
+)
+rga23 <- commercialisation("Maraic", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModePepinieres.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModePepinieres__id,
+  PourcentCom = PourcentComPepinieres
+)
+rga23 <- commercialisation("Pepinieres", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModePlantes.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModePlantes__id,
+  PourcentCom = PourcentComPlantes
+)
+rga23 <- commercialisation("Plantes", TablePourcentMode)
+
+
+TablePourcentMode <- readTable("PourcentModeVivri.tab", dossier) %>% rename(
+  PourcentMode__id = PourcentModeVivri__id,
+  PourcentCom = PourcentComVivri
+)
+rga23 <- commercialisation("Vivri", TablePourcentMode)
