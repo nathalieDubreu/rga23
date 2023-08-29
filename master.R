@@ -3,12 +3,12 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_08-24"
+dossier <- "Export_08-28"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
-#date <- "24/08/2023"
-#source("suiviCollecte/comptages.R")
+date <- "28/08/2023"
+source("suiviCollecte/comptages.R")
 
 # Mises en forme des données (à lancer dans l'ordre)
 source("miseEnForme/rostersSurfaces.R")
