@@ -7,3 +7,5 @@ eligiblesRGA <- exportRGA |>
     ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X"))
 
 ##eligiblesRGA |> filter(ActivitesChefExploit__5 == 1) |> group_by(IleExploitation, id_enqueteur_ech) |> count()
+
+eligiblesRGA |> filter(substring(id_exploitation, 0, 1) == "X" & eligibilite == FALSE & eligibiliteCoprah == TRUE) |> count()

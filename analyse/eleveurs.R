@@ -24,8 +24,6 @@ eligiblesEleveurs |>
     elevCaprins = sum(PresenceAnimaux__8, na.rm = TRUE)
   )
 
-anti_join(eligiblesEleveurs, test, by = c("interview__key"))
-
 ## TODO : A vérifier éleveurs sans paturage (pour bovins, caprins, ovins et équidés a minima)
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
