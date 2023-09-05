@@ -1,5 +1,3 @@
-rga23 <- readTable("rga23.tab", dossier)
-
 rga23_coprahculteurs <- rga23 |>
   filter(RaisonsRecensement__3 == 1) |>
   as_tibble() |>
