@@ -37,7 +37,12 @@ eleveursPoulesPondeuses <- eleveurs |>
   filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1)
 
 eleveursPoulesPondeuses |>
-  group_by(TypeVolailles__1, TypeVolailles__3, TypeVolailles__4) |>
+  rename(
+    `Poules en cage - code 3` = TypeVolailles__1,
+    `Poules plein air ou au sol - code 1 ou 2` = TypeVolailles__3,
+    `Poules bio - code 0` = TypeVolailles__4
+  ) |>
+  group_by(`Poules en cage - code 3`, `Poules plein air ou au sol - code 1 ou 2`, `Poules bio - code 0`) |>
   count()
 
 # eleveursPoulesPondeuses |> select(interview__key, NombrePoules3, ProductionPoules3, NombrePoules1, ProductionPoules1)
@@ -55,4 +60,16 @@ eleveursPoulesPondeuses |> summarize(
   NbMoyenPoules0 = sum(NombrePoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
   NbOeufsMoyenPoules0 = sum(ProductionPoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
   OeufsParPoules0 = NbOeufsMoyenPoules0 / NbMoyenPoules0
+)
+
+apiculteurs <- eleveurs |>
+  filter(PresenceAnimaux__7 == 1) |>
+  select(interview__key, NbRuchesRecoltees, ProductionRuches) |>
+  mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees)
+
+apiculteurs |> summarize(
+  nbRuchesRecoltees = sum(NbRuchesRecoltees, na.rm = TRUE),
+  moyennekiloMiel = sum(ProductionRuches, na.rm = TRUE) / sum(NbRuchesRecoltees, na.rm = TRUE),
+  maxKiloMiel = max(KiloMiel, na.rm = TRUE),
+  minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
