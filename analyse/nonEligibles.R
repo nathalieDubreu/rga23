@@ -1,7 +1,4 @@
-
-exportRGA <- readTable("rga23.tab", dossier)
-
-nonEligiblesRGA <- exportRGA |>
+nonEligiblesRGA <- rga23 |>
   filter((interview__status == 100 | interview__status == 120) & statut_collecte == 1) |>
   filter((eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "C") | (eligibilite == 0 & substring(id_exploitation, 0, 1) == "P") | (eligibilite == 0 & substring(id_exploitation, 0, 1) == "M") | (eligibilite == 0 & eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "X"))
 
@@ -17,7 +14,8 @@ nonEligiblesRGA_PMC <- nonEligiblesRGA |>
     AutoConsommation == 1 ~ "3. Autoconsommation de toute la production",
     InstallationRecente == 1 ~ "4. Installation récente pas encore en production",
     ConsommationStockNonFamilial == 2 ~ "5. Aucune utilisation de la production",
-    TRUE ~ "6. Autre ?!?"
+    !is.na(RaisonNonProduction) ~ "6. Non production pour une raison non prévue",
+    TRUE ~ "Autre ?!?"
   ))
 
 nonEligiblesRGA_PMC |>
@@ -25,7 +23,7 @@ nonEligiblesRGA_PMC |>
   count()
 
 ################## TODO -> Vérifier les "Autre ?!?" et les "Aucune utilisation de la production"
-aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "5. Aucune utilisation de la production" | Raison == "6. Autre ?!?")
+aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "5. Aucune utilisation de la production")
 
 ## Double casquette : production de coprah définitivement arrêté + raison identifiée ci-dessous pour la partie exploitation agricole
 nonEligiblesRGA_X <- nonEligiblesRGA |>
@@ -36,9 +34,10 @@ nonEligiblesRGA_X <- nonEligiblesRGA |>
     AutoConsommation == 1 ~ "3. Autoconsommation de toute la production",
     InstallationRecente == 1 ~ "4. Installation récente pas encore en production",
     ConsommationStockNonFamilial == 2 ~ "5. Aucune utilisation de la production",
-    TRUE ~ "6. Autre ?!?"
+    !is.na(RaisonNonProduction) ~ "6. Non production pour une raison non prévue",
+    TRUE ~ "Autre ?!?"
   ))
 
 ################## TODO -> Vérifier les "Autre ?!?" et les "Aucune utilisation de la production"
-aVerifier <- nonEligiblesRGA_X |> filter(Raison == "5. Aucune utilisation de la production" | Raison == "6. Autre ?!?")
+aVerifier <- nonEligiblesRGA_X |> filter(Raison == "5. Aucune utilisation de la production" | Raison == "Autre ?!?")
 
