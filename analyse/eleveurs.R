@@ -64,10 +64,11 @@ eleveursPoulesPondeuses |> summarize(
 
 apiculteurs <- eleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
-  select(interview__key, NbRuchesRecoltees, ProductionRuches) |>
+  select(interview__key, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees)
 
 apiculteurs |> summarize(
+  nbRuchesPourProduire = sum(NbRuchesPourProduire),
   nbRuchesRecoltees = sum(NbRuchesRecoltees, na.rm = TRUE),
   moyennekiloMiel = sum(ProductionRuches, na.rm = TRUE) / sum(NbRuchesRecoltees, na.rm = TRUE),
   maxKiloMiel = max(KiloMiel, na.rm = TRUE),
