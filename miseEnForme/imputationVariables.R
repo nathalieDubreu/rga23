@@ -33,11 +33,3 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
   ))
 
 rga23 <- rga23Brut
-
-
-rga23Brut |>
-  group_by(SurfaceIrrigJardins) |>
-  count()
-rga23Brut |>
-  group_by(SurfaceIrrigJardins2) |>
-  count()
