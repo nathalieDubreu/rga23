@@ -7,23 +7,30 @@ commercialisation <- function(typeProduction, roster, rga23) {
       roster |> filter(PourcentMode__id == i)
 
     rga23 <-
+      ## ETAPE 1 : Récupération des pourcentages présents dans les rosters
       left_join(
         rga23,
         pourcentagesI |> select(!PourcentMode__id & !interview__id),
         by = c("interview__key")
       ) |>
+      ## ETAPE 2 : Imputation de valeurs -> 100% s'il n'y a qu'une modalité
+      mutate(PourcentCom2 = case_when(
+        ("{variableI}" == 1 & is.na(PourcentCom)) ~ 10000,
+        TRUE ~ as.numeric(PourcentCom)
+      )) |>
       rename("{PartCommerI}" := PourcentCom) |>
       select(!variableI)
   }
   return(rga23)
 }
 
-## MAJ rga23_prodAnimales
+
+### MAJ rga23_prodAnimales
 
 TablePourcentMode <- readTable("PourcentModeMiel.tab", dossier) %>% rename(
   PourcentMode__id = PourcentModeMiel__id,
   PourcentCom = PourcentComMiel
-) 
+)
 rga23_prodAnimales <- commercialisation("Miel", TablePourcentMode, rga23_prodAnimales)
 
 
@@ -40,7 +47,7 @@ TablePourcentMode <- readTable("PourcentModeViande.tab", dossier) %>% rename(
 rga23_prodAnimales <- commercialisation("Viande", TablePourcentMode, rga23_prodAnimales)
 
 
-## MAJ rga23_prodVegetales
+### MAJ rga23_prodVegetales
 
 TablePourcentMode <- readTable("PourcentModeFlorale.tab", dossier) %>% rename(
   PourcentMode__id = PourcentModeFlorale__id,
@@ -91,7 +98,8 @@ TablePourcentMode <- readTable("PourcentModeVivri.tab", dossier) %>% rename(
 rga23_prodVegetales <- commercialisation("Vivri", TablePourcentMode, rga23_prodVegetales)
 
 
-# Export fichiers traités
+## Export fichiers traités
 writeCSVTraites(rga23_prodAnimales)
 writeCSVTraites(rga23_prodVegetales)
 
+# test2 <- rga23_prodVegetales |> filter(is.na(PartComFlorale__1) & ModesComFlorale__1 == 1)
