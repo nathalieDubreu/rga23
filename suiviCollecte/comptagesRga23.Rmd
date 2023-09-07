@@ -9,15 +9,16 @@ output: md_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+nbEntretiensTermines <- exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()
 ```
 
-## `r exportRGA |> count()` entretiens
+## `r exportRGA |> count()` entretiens *(Taux de collecte = `r round(exportRGA |> count() / 7494,3)*100`%)*
 
 - <font color = "Green">`r exportRGA |> filter(interview__status == 120) |> count()`</font> entretiens approuvés
 - <font color = "Orange">`r exportRGA |> filter(interview__status == 100) |> count()`</font> entretiens terminés
 - <font color = "Red">`r exportRGA |> filter(interview__status == 65 | interview__status == 125) |> count()`</font> entretiens rejetés (erreurs apparentes dans les questionnaires remplis)
 
-**=> `r exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()` entretiens sont donc terminés et/ou validés**
+**=> `r nbEntretiensTermines` entretiens sont donc terminés et/ou validés**
 
 <br/>
 
@@ -84,7 +85,8 @@ exportRGA_interroges <- exportRGA_interroges |>
 
 ```
 
-- <font color = "Green">`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()`</font> unités éligibles
+- <font color = "Green">`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()`</font> unités éligibles (`r round(exportRGA_interroges |> filter(eligibOrNot == "in") |> count() / exportRGA_interroges |> count(),3)*100`% des unités visitées)
+
 - <font color = "Red">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> count()`</font> unités NON éligibles
   - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "C") |> count()`</font> Coprahculteurs out - C
   - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & substring(id_exploitation, 0, 1) == "M") |> count()`</font> Personnes morales out - M

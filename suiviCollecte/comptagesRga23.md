@@ -1,6 +1,6 @@
 # \[RGA23\] Suivi de la collecte - 06/09/2023
 
-## 1145 entretiens
+## 1145 entretiens *(Taux de collecte = 15.3%)*
 
 -   <font color = "Green">1047</font> entretiens approuvés
 -   <font color = "Orange">59</font> entretiens terminés
@@ -70,8 +70,11 @@ interrogée</td>
 
 ### Eligibilité des unités
 
--   <font color = "Green">714</font> unités éligibles
+-   <font color = "Green">714</font> unités éligibles (71.5% des unités
+    visitées)
+
 -   <font color = "Red">285</font> unités NON éligibles
+
     -   <font color = "Orange">2</font> Coprahculteurs out - C
     -   <font color = "Orange">19</font> Personnes morales out - M
     -   <font color = "Orange">264</font> Producteurs physiques out - P
