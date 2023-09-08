@@ -9,12 +9,12 @@ output: md_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
-nbEntretiensTermines <- exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()
+nbEntretiensTermines <- exportRGA |> filter(interview__status == 130 | interview__status == 120 | interview__status == 100) |> count()
 ```
 
 ## `r exportRGA |> count()` entretiens *(Taux de collecte = `r round(exportRGA |> count() / 7494,3)*100`%)*
 
-- <font color = "Green">`r exportRGA |> filter(interview__status == 120) |> count()`</font> entretiens approuvés
+- <font color = "Green">`r exportRGA |> filter(interview__status == 120 | interview__status == 130) |> count()`</font> entretiens approuvés
 - <font color = "Orange">`r exportRGA |> filter(interview__status == 100) |> count()`</font> entretiens terminés
 - <font color = "Red">`r exportRGA |> filter(interview__status == 65 | interview__status == 125) |> count()`</font> entretiens rejetés (erreurs apparentes dans les questionnaires remplis)
 
@@ -22,12 +22,12 @@ nbEntretiensTermines <- exportRGA |> filter(interview__status == 120 | interview
 
 <br/>
 
-## Statut de la collecte pour ces `r exportRGA |> filter(interview__status == 120 | interview__status == 100) |> count()` entretiens
+## Statut de la collecte pour les `r exportRGA |> filter(interview__status == 120 | interview__status == 130) |> count()` entretiens validés
 
 ```{r, echo=FALSE}
 
 kable(exportRGA |>
-  filter(interview__status == 100 | interview__status == 120) |>
+  filter(interview__status == 130 | interview__status == 120) |>
   mutate(
     `La collecte est-elle possible ?` = case_when(
       statut_collecte == 1 ~ "1 - Oui",
@@ -44,11 +44,11 @@ kable(exportRGA |>
 ```{r, echo=FALSE}
 
 exportRGA_interroges <- exportRGA |>
-  filter((interview__status == 100 | interview__status == 120) & statut_collecte == 1)
+  filter((interview__status == 130 | interview__status == 120) & statut_collecte == 1)
 
 ```
 
-**=> `r exportRGA_interroges |> filter(interview__status == 120 | interview__status == 100) |> count()` unités ont donc été visitées**
+**=> `r exportRGA_interroges |> count()` unités validées ont donc été visitées**
  
 <br/>
 
