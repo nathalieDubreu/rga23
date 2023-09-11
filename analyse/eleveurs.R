@@ -51,15 +51,32 @@ eleveursPoulesPondeuses |> summarize(
   NbMoyenPoules3 = sum(NombrePoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE),
   NbOeufsMoyenPoules3 = sum(ProductionPoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE),
   OeufsParPoules3 = NbOeufsMoyenPoules3 / NbMoyenPoules3,
+  NbMinOeufsPoules3 = min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),
+  NbMaxOeufsPoules3 = max(ProductionPoules3 / NombrePoules3, na.rm = TRUE)
+)
+
+# aVerifier <- eleveursPoulesPondeuses |>
+#   mutate(OeufsParPoules3 = ProductionPoules3 / NombrePoules3) |>
+#   select(interview__key, OeufsParPoules3, ProductionPoules3, NombrePoules3)
+
+eleveursPoulesPondeuses |> summarize(
   NbMoyenPoules12 = sum(NombrePoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE),
   NbOeufsMoyenPoules12 = sum(ProductionPoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE),
-  OeufsParPoules12 = NbOeufsMoyenPoules12 / NbMoyenPoules12
+  OeufsParPoules12 = NbOeufsMoyenPoules12 / NbMoyenPoules12,
+  NbMinOeufsPoules12 = min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),
+  NbMaxOeufsPoules12 = max(ProductionPoules1 / NombrePoules1, na.rm = TRUE)
 )
+
+# aVerifier <- eleveursPoulesPondeuses |>
+#   mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
+#   select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
 
 eleveursPoulesPondeuses |> summarize(
   NbMoyenPoules0 = sum(NombrePoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
   NbOeufsMoyenPoules0 = sum(ProductionPoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
-  OeufsParPoules0 = NbOeufsMoyenPoules0 / NbMoyenPoules0
+  OeufsParPoules0 = NbOeufsMoyenPoules0 / NbMoyenPoules0,
+  NbMinOeufsPoules0 = min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),
+  NbMaxOeufsPoules0 = max(ProductionPoules0 / NombrePoules0, na.rm = TRUE)
 )
 
 apiculteurs <- eleveurs |>
@@ -74,3 +91,4 @@ apiculteurs |> summarize(
   maxKiloMiel = max(KiloMiel, na.rm = TRUE),
   minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
+
