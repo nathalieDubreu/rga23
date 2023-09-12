@@ -280,11 +280,7 @@ rga23_general <- rga23 |>
   as_tibble() |>
   select(c(
     "interview__key",
-    "interview__id",
     "id_exploitation",
-    "id_enqueteur_ech",
-    "enqueteur",
-    "autre_enqueteur",
     "statut_collecte",
     "RaisonsRecensement__1",
     "RaisonsRecensement__2",
@@ -446,11 +442,7 @@ rga23_general <- rga23 |>
     "VivriLocaux",
     "PlatsTradi",
     "MaaTahitiPlus",
-    "BesoinsNutri",
-    "sssys_irnd",
-    "has__errors",
-    "interview__status",
-    "assignment__id"
+    "BesoinsNutri"
   ))
 
 rga23_prodAnimales <- rga23 |>
@@ -1396,10 +1388,32 @@ rga23_mainOeuvre <- rga23 |>
     "finMainOeuvre"
   ))
 
+rga23_gestion <- rga23 |>
+  as_tibble() |>
+  select(c(
+    "interview__key",
+    "interview__id",
+    "id_exploitation",
+    "id_enqueteur_ech",
+    "enqueteur",
+    "autre_enqueteur",
+    "statut_collecte",
+    "RaisonsRecensement__1",
+    "RaisonsRecensement__2",
+    "RaisonsRecensement__3",
+    "RaisonsRecensement__4",
+    "ActiviteEnquete",
+    "sssys_irnd",
+    "has__errors",
+    "interview__status",
+    "assignment__id"
+  ))
+
+writeCSVTraites(rga23_gestion)
 writeCSVTraites(rga23_coprahculteurs)
 writeCSVTraites(rga23_exploitations)
 writeCSVTraites(rga23_general)
-writeCSVTraites(rga23_mainOeuvre)
-writeCSVTraites(rga23_prodAnimales)
-writeCSVTraites(rga23_prodVegetales)
+# writeCSVTraites(rga23_mainOeuvre)
+# writeCSVTraites(rga23_prodAnimales)
+# writeCSVTraites(rga23_prodVegetales)
 writeCSVTraites(rga23_tape)
