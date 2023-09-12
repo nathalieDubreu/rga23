@@ -97,7 +97,7 @@ rga23_surfacesCultures <- bind_rows(
   SurfacesPepinieres,
   SurfacesPlantes,
   SurfacesFourrages
-)
+) |> select(!interview__id)
 
 writeCSVTraites(rga23_surfacesCultures)
 
