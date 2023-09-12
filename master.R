@@ -18,6 +18,7 @@ source("miseEnForme/rostersCommercialisation.R")
 source("miseEnForme/rosterCocoteraies.R")
 source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
+source("miseEnForme/rosterEngraisOrganiques.R")
 
 # Analyse
 ## Non éligibles
