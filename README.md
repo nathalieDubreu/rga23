@@ -3,7 +3,7 @@
 ## Suivi de la collecte
 - `comptages.R` : création d'un fichier md à destination de la Dag (comptages par statut de la collecte, par éligibilité, par île, ...)
 
-## Mises en forme des données (à lancer dans l'ordre) => création des 14 fichiers de données
+## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
 - `imputationVariables.R` : impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP
 PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables 
 - `rostersSurfaces.R` : 
