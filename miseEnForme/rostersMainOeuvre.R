@@ -1,5 +1,7 @@
-rga23_coexploitants <- readTable("RosterCoExploit.tab", dossier) |> select(!interview__id)
-rga23_moPermanenteFam <- readTable("RosterMOPermFam.tab", dossier) |> select(!interview__id)
+rga23_coexploitants <- readTable("RosterCoExploit.tab", dossier) |> select(!interview__id)|>
+  rename(coexploitant_id = RosterCoExploit__id)
+rga23_moPermanenteFam <- readTable("RosterMOPermFam.tab", dossier) |> select(!interview__id) |>
+  rename(persMoPermFam_id = RosterMOPermFam__id)
 
 writeCSVTraites(rga23_coexploitants)
 writeCSVTraites(rga23_moPermanenteFam)

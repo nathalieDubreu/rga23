@@ -95,3 +95,13 @@ rga23Localise6 <- left_join(rga23Localise5 |> rename(IleUnique = Ile), ilesCommu
   select(!CommuneUnique)
 
 rga23 <- rga23Localise6
+
+rm(
+  rga23Brut,
+  rga23Localise1,
+  rga23Localise2,
+  rga23Localise3,
+  rga23Localise4,
+  rga23Localise5,
+  rga23Localise6
+)
