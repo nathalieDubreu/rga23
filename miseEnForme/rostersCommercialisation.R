@@ -18,9 +18,8 @@ commercialisation <- function(typeProduction, roster, rga23) {
         (eval(parse(text = variableI)) == 1 & is.na(PourcentCom)) ~ 100,
         TRUE ~ as.numeric(PourcentCom)
       )) |>
-      rename("{PartCommerI}" := PourcentCom)
-    # |>
-    #   select(!variableI)
+      rename("{PartCommerI}" := PourcentCom) |>
+      select(!variableI)
   }
   return(rga23)
 }
