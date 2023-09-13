@@ -89,7 +89,7 @@ rga23_coprahculteurs <- rga23 |>
     "ProprieteSechoir__1",
     "ProprieteSechoir__2",
     "finCoprahculture"
-  ))
+  )) |> rename(ProportionExploit3 = ProportionExploit23)
 
 rga23_exploitations <- rga23 |>
   filter(RaisonsRecensement__1 == 1 | RaisonsRecensement__2 == 1) |>
