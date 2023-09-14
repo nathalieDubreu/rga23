@@ -96,6 +96,7 @@ rga23Localise6 <- left_join(rga23Localise5 |> rename(IleUnique = Ile), ilesCommu
 
 rga23Localise <- rga23Localise6
 
+# Traitement des noms, prénoms et téléphones
 rga23 <- rga23Localise |>
   mutate(
     Nom = case_when(
@@ -135,6 +136,17 @@ rga23 <- rga23Localise |>
 # verif <- rga23Localise |>
 #   filter(Infos_a_corriger__1 == 1 | Infos_a_corriger__2 == 1) |>
 #   select(id_exploitation, nom_ech, Nom, prenoms_ech, Prenoms)
+
+# Passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
+rga23 <- rga23 |>
+  mutate(SurfaceTotalProdAgri = case_when(
+    (SurfaceTotalProdAgri == 1) ~ as.numeric(NA),
+    TRUE ~ SurfaceTotalProdAgri
+  )) |>
+  mutate(SurfaceVegeNatur = case_when(
+    (SurfaceVegeNatur == 1) ~ as.numeric(NA),
+    TRUE ~ SurfaceVegeNatur
+  ))
 
 rm(
   rga23Brut,

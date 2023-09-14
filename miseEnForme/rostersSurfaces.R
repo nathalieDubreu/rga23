@@ -98,6 +98,10 @@ rga23_surfacesCultures <- bind_rows(
   SurfacesPlantes,
   SurfacesFourrages
 ) |> select(!interview__id) |>
+  mutate(SurfaceCult = case_when(
+    (SurfaceCult < 0) ~ as.numeric(NA),
+    TRUE ~  SurfaceCult
+  )) |>
   rename(culture_id  = Culture__id, TypeCulture = TypeCultures)
 
 writeCSVTraites(rga23_surfacesCultures)
