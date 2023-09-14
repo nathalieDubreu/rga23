@@ -3,11 +3,11 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_09-13"
+dossier <- "Export_09-14"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
-date <- "13/09/2023"
+date <- "14/09/2023"
 source("suiviCollecte/comptages.R")
 
 # Mises en forme des données (à lancer dans l'ordre)
@@ -28,6 +28,8 @@ source("analyse/eligibles.R")
 source("analyse/cultivateurs.R")
 source("analyse/eleveurs.R")
 source("analyse/coprahculteurs.R")
+## Dans le champ du RGA23
+source("analyse/champRGA.R")
 
 
 
