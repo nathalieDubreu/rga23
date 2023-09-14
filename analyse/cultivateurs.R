@@ -64,10 +64,10 @@ surfacesCultures <- SurfacesCulturesEligibles |>
   group_by(TypeCulture) |>
   summarize(
     `Nombre d'exploitants` = n_distinct(interview__key),
-    `Surface Totale (Ha)` = round((sum(SurfaceCult) / 10000), 1),
-    `Surface moyenne (m²)` = mean(SurfaceCult),
-    `Surface min (m²)` = min(SurfaceCult),
-    `Surface max (m²)` = max(SurfaceCult)
+    `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm=TRUE) / 10000), 1),
+    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm=TRUE),2),
+    `Surface min (m²)` = min(SurfaceCult, na.rm=TRUE),
+    `Surface max (m²)` = max(SurfaceCult, na.rm=TRUE)
   )
 
 writeCSV(surfacesCultures)
