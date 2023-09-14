@@ -50,18 +50,18 @@ SurfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 SurfacesCulturesEligibles <- inner_join(SurfacesCultures, eligiblesCultivateurs |> select(interview__key))
 
 surfacesCultures <- SurfacesCulturesEligibles |>
-  mutate(TypeCultures = case_when(
-    (TypeCultures == 10) ~ "10 - Cultures maraîchères",
-    (TypeCultures == 20) ~ "20 - Cultures vivrières",
-    (TypeCultures == 30) ~ "30 - Cultures fruitières (hors pépinères) et bois d'oeuvre",
-    (TypeCultures == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
-    (TypeCultures == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
-    (TypeCultures == 60) ~ "60 - Pépinières (plantes vendues en pot)",
-    (TypeCultures == 70) ~ "70 - Cultures fourragères",
-    (TypeCultures == 80) ~ "80 - Jachères",
-    TRUE ~ as.character(TypeCultures)
+  mutate(TypeCulture = case_when(
+    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
+    (TypeCulture == 20) ~ "20 - Cultures vivrières",
+    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors pépinères) et bois d'oeuvre",
+    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
+    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
+    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
+    (TypeCulture == 70) ~ "70 - Cultures fourragères",
+    (TypeCulture == 80) ~ "80 - Jachères",
+    TRUE ~ as.character(TypeCulture)
   )) |>
-  group_by(TypeCultures) |>
+  group_by(TypeCulture) |>
   summarize(
     `Nombre d'exploitants` = n_distinct(interview__key),
     `Surface Totale (Ha)` = round((sum(SurfaceCult) / 10000), 1),
