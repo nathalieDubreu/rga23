@@ -94,7 +94,47 @@ rga23Localise6 <- left_join(rga23Localise5 |> rename(IleUnique = Ile), ilesCommu
   ) |>
   select(!CommuneUnique)
 
-rga23 <- rga23Localise6
+rga23Localise <- rga23Localise6
+
+rga <- rga23Localise |>
+  mutate(
+    Nom = case_when(
+      Infos_a_corriger__1 == 1 ~ Nom,
+      TRUE ~ nom_ech
+    ),
+    AncienNom = case_when(
+      (Infos_a_corriger__1 == 1 & nom_ech != "##N/A##") ~ nom_ech,
+      TRUE ~ ""
+    )
+  ) |>
+  mutate(
+    Prenoms = case_when(
+      Infos_a_corriger__2 == 1 ~ Prenoms,
+      TRUE ~ prenoms_ech
+    ),
+    AnciensPrenoms = case_when(
+      (Infos_a_corriger__2 == 1 & prenoms_ech != "##N/A##") ~ prenoms_ech,
+      TRUE ~ ""
+    )
+  ) |>
+  mutate(
+    Telephone = case_when(
+      Infos_a_corriger__3 == 1 ~ Telephone,
+      TRUE ~ tel_ech
+    ),
+    AnciensTelephones = case_when(
+      (Infos_a_corriger__3 == 1 & tel_ech != "##N/A##" & tel_ech != "_") ~ tel_ech,
+      TRUE ~ ""
+    )
+  )
+
+# verif <- rga |>
+#   filter(AncienNom != "") |>
+#   select(interview__key, id_exploitation, Nom, AncienNom)
+
+# verif <- rga23Localise |>
+#   filter(Infos_a_corriger__1 == 1 | Infos_a_corriger__2 == 1) |>
+#   select(id_exploitation, nom_ech, Nom, prenoms_ech, Prenoms)
 
 rm(
   rga23Brut,
@@ -104,6 +144,7 @@ rm(
   rga23Localise4,
   rga23Localise5,
   rga23Localise6,
+  rga23Localise,
   communes,
   iles,
   ilesCommunesUniques
