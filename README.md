@@ -10,7 +10,7 @@ PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres v
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier 
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
     - création du fichier csv correspondant
-- `decoupageRga23.R` : découpage du fichier rga23 global en 7 sous fichiers (rga23_coprahculteurs, rga23_exploitations, rga23_general, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales et rga23_tape)
+- `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (rga23_coprahculteurs, rga23_exploitations, rga23_general, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, rga23_gestion, rga23_peche et rga23_tape)
 - `rostersCommercialisation.R` :
     - récupération des valeurs présentes dans les rosters de commercialisation dans rga23_prodAnimales et rga23_prodVegetales
     - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
