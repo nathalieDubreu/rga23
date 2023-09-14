@@ -121,7 +121,7 @@ writeCSVTraites(rga23_prodVegetales)
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures vivrières - 20
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -140,10 +140,10 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComVivri__13), 0, PartComVivri__13),
 #     presenceCultures = ifelse(is.na(CulturesPresentes__20), 0, CulturesPresentes__20) +
 #       ifelse(is.na(CultPresentesJardins__20), 0, CultPresentesJardins__20)
-#   ) |> 
+#   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures fruitières - 30
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -162,10 +162,10 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComFruit__13), 0, PartComFruit__13),
 #     presenceCultures = ifelse(is.na(CulturesPresentes__30), 0, CulturesPresentes__30) +
 #       ifelse(is.na(CultPresentesJardins__30), 0, CultPresentesJardins__30)
-#   ) |> 
+#   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures florales - 40
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -187,7 +187,7 @@ writeCSVTraites(rga23_prodVegetales)
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures plantes aromatiques - 50
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -209,7 +209,7 @@ writeCSVTraites(rga23_prodVegetales)
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures pépinières - 60
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -230,7 +230,7 @@ writeCSVTraites(rga23_prodVegetales)
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
-# 
+#
 # ## Cultures fourrages - 70
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
@@ -252,3 +252,7 @@ writeCSVTraites(rga23_prodVegetales)
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
+
+rm(
+  TablePourcentMode
+)

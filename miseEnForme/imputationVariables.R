@@ -103,5 +103,8 @@ rm(
   rga23Localise3,
   rga23Localise4,
   rga23Localise5,
-  rga23Localise6
+  rga23Localise6,
+  communes,
+  iles,
+  ilesCommunesUniques
 )

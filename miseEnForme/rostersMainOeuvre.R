@@ -32,3 +32,7 @@ for (i in 1:4) {
 }
 
 writeCSVTraites(rga23_mainOeuvre)
+
+rm(
+  TableI,
+  rosterMoPermanenteNonFam)
