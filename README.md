@@ -6,7 +6,7 @@
 ## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
-    - traitement des noms, prénoms et téléphones corrigés
+    - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
 - `rostersSurfaces.R` : 
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier 
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
