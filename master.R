@@ -32,5 +32,8 @@ source("analyse/coprahculteurs.R")
 source("analyse/champRGA.R")
 
 
+source("analyse/stats.R")
+
+
 
 
