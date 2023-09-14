@@ -96,7 +96,7 @@ rga23Localise6 <- left_join(rga23Localise5 |> rename(IleUnique = Ile), ilesCommu
 
 rga23Localise <- rga23Localise6
 
-rga <- rga23Localise |>
+rga23 <- rga23Localise |>
   mutate(
     Nom = case_when(
       Infos_a_corriger__1 == 1 ~ Nom,
@@ -128,7 +128,7 @@ rga <- rga23Localise |>
     )
   )
 
-# verif <- rga |>
+# verif <- rga23 |>
 #   filter(AncienNom != "") |>
 #   select(interview__key, id_exploitation, Nom, AncienNom)
 
