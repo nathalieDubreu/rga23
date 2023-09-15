@@ -25,13 +25,12 @@ source("miseEnForme/rosterEngraisOrganiques.R")
 source("analyse/nonEligibles.R")
 ## Eligibles
 source("analyse/eligibles.R")
+## Dans le champ du RGA23
+source("analyse/champRGA.R")
+## Divers profils
 source("analyse/cultivateurs.R")
 source("analyse/eleveurs.R")
 source("analyse/coprahculteurs.R")
-## Dans le champ du RGA23
-source("analyse/champRGA.R")
-
-
 source("analyse/stats.R")
 
 
