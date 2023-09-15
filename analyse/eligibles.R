@@ -1,3 +1,5 @@
+rga23 <- readCSV("rga23.csv")
+
 eligiblesRGA <- rga23 |>
   filter((interview__status == 100 | interview__status == 120 | interview__status == 130) & statut_collecte == 1) |>
   filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |
@@ -19,6 +21,7 @@ eligiblesRGA |>
            interview__key != "38-13-87-05" &
            interview__key != "87-50-31-74" &
            interview__key != "88-51-69-94" &
-           interview__key != "26-04-00-30") 
+           interview__key != "26-04-00-30" &
+           interview__key != "39-17-18-65") 
 
 # test <- eligiblesRGA |> filter(interview__key=="25-94-37-62")

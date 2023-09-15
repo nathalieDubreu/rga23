@@ -4,6 +4,7 @@ source("analyse/eligibles.R")
 eligiblesCoprahculteurs <- eligiblesRGA |>
   filter(RaisonsRecensement__3 == 1)
 
+aVerifier <- eligiblesCoprahculteurs |> filter(ProprieteSechoir__1 == 1 & ProprieteSechoir__2 == 1)
 
 cocoteraiesExploitees <- eligiblesCoprahculteurs |> summarize(`Nb de producteurs de coprah` = n(), 
                                      `Nb de cocoteraies exploitées` = sum(NbCocoteraies),  

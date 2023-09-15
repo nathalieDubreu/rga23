@@ -45,11 +45,9 @@ eligiblesCultivateurs |>
     cultJacheres = sum(CulturesPresentes__80)
   )
 
-SurfacesCultures <- readCSV("rga23_surfacesCultures.csv")
+surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), eligiblesCultivateurs |> select(interview__key))
 
-SurfacesCulturesEligibles <- inner_join(SurfacesCultures, eligiblesCultivateurs |> select(interview__key))
-
-surfacesCultures <- SurfacesCulturesEligibles |>
+surfacesCultures <- surfacesCulturesEligibles |>
   mutate(TypeCulture = case_when(
     (TypeCulture == 10) ~ "10 - Cultures maraîchères",
     (TypeCulture == 20) ~ "20 - Cultures vivrières",
@@ -64,12 +62,10 @@ surfacesCultures <- SurfacesCulturesEligibles |>
   group_by(TypeCulture) |>
   summarize(
     `Nombre d'exploitants` = n_distinct(interview__key),
-    `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm=TRUE) / 10000), 1),
-    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm=TRUE),2),
-    `Surface min (m²)` = min(SurfaceCult, na.rm=TRUE),
-    `Surface max (m²)` = max(SurfaceCult, na.rm=TRUE)
+    `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
+    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 2),
+    `Surface min (m²)` = min(SurfaceCult, na.rm = TRUE),
+    `Surface max (m²)` = max(SurfaceCult, na.rm = TRUE)
   )
 
 writeCSV(surfacesCultures)
-
-

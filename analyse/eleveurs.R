@@ -28,14 +28,13 @@ eligiblesEleveurs |>
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0) |>
-  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03") |>
+  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39") |>
   select(interview__key, interview__status, id_enqueteur_ech, PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8)
 
-eleveurs <- readCSV("rga23_prodAnimales.csv")
-eleveursVolailles <- eleveurs |>
+eleveursVolailles <- eligiblesEleveurs |>
   filter(PresenceAnimaux__4 == 1)
 
-eleveursPoulesPondeuses <- eleveurs |>
+eleveursPoulesPondeuses <- eligiblesEleveurs |>
   filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1)
 
 eleveursPoulesPondeuses |>
@@ -81,7 +80,7 @@ eleveursPoulesPondeuses |> summarize(
   NbMaxOeufsPoules0 = max(ProductionPoules0 / NombrePoules0, na.rm = TRUE)
 )
 
-apiculteurs <- eleveurs |>
+apiculteurs <- eligiblesEleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees)
@@ -93,3 +92,5 @@ apiculteurs |> summarize(
   maxKiloMiel = max(KiloMiel, na.rm = TRUE),
   minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
+
+rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs)

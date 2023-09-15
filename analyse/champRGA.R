@@ -86,3 +86,5 @@ idCultivateursChampRGA <- rbind(cultivateursChampRGA1 |> select(interview__key),
 idExploitantsDansLeChamp <- rbind(
   eleveursChampRGA |> select(interview__key), idCultivateursChampRGA
 ) |> distinct()
+
+rm(cultivateursChampRGA1, cultivateursChampRGA2, culturesChampRGA, idCultivateursChampRGA)

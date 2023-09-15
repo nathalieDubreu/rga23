@@ -1,3 +1,5 @@
+rga23 <- readCSV("rga23.csv")
+
 nonEligiblesRGA <- rga23 |>
   filter((interview__status == 100 | interview__status == 120 | interview__status == 130) & statut_collecte == 1) |>
   filter((eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "C") | (eligibilite == 0 & substring(id_exploitation, 0, 1) == "P") | (eligibilite == 0 & substring(id_exploitation, 0, 1) == "M") | (eligibilite == 0 & eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "X"))
@@ -42,3 +44,6 @@ nonEligiblesRGA_X <- nonEligiblesRGA |>
 aVerifier <- nonEligiblesRGA_X |>
   filter(Raison == "5. Aucune utilisation de la production" | Raison == "Autre ?!?") |>
   filter(interview__key != "39-90-06-55" & interview__key != "84-75-99-87")
+
+
+rm(nonEligiblesRGA, nonEligiblesRGA_PMC, nonEligiblesRGA_X, aVerifier)
