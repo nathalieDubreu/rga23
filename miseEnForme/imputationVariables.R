@@ -161,3 +161,5 @@ rm(
   iles,
   ilesCommunesUniques
 )
+
+writeCSVTraites(rga23)
