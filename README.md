@@ -31,6 +31,10 @@ Ebauches des stats sur les différents profils.
 - `nonEligibles.R`
 ### Eligibles
 - `eligibles.R`
+### Dans le champ du RGA23
+- `champRGA.R`
+### Divers profils
 - `cultivateurs.R`
 - `eleveurs.R`
 - `coprahculteurs.R`
+- `stats.R` : génération d'un .md contenant qq stats sur les différents profils
