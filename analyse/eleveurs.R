@@ -68,9 +68,9 @@ eleveursPoulesPondeuses |> summarize(
   NbMaxOeufsPoules12 = max(ProductionPoules1 / NombrePoules1, na.rm = TRUE)
 )
 
-aVerifier <- eleveursPoulesPondeuses |>
-  mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
-  select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
+# aVerifier <- eleveursPoulesPondeuses |>
+#   mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
+#   select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
 
 eleveursPoulesPondeuses |> summarize(
   NbMoyenPoules0 = sum(NombrePoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
@@ -92,5 +92,7 @@ apiculteurs |> summarize(
   maxKiloMiel = max(KiloMiel, na.rm = TRUE),
   minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
+
+aVerifier <- eligiblesEleveurs |> filter(AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2)
 
 rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs)

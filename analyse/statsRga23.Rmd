@@ -130,16 +130,19 @@ poules <- eligiblesEleveurs |> filter(TypeVolailles__1 == 1) |> summarize(
 ### Abeilles - `r eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |> count()` apiculteurs
 
 ```{r, echo=FALSE}
-kable(eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |>
+table <- eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees) |> summarize(
   nbRuchesPourProduire = sum(NbRuchesPourProduire),
   nbRuchesRecoltees = sum(NbRuchesRecoltees, na.rm = TRUE),
-  moyennekiloMiel = sum(ProductionRuches, na.rm = TRUE) / sum(NbRuchesRecoltees, na.rm = TRUE),
-  maxKiloMiel = max(KiloMiel, na.rm = TRUE),
-  minKiloMiel = min(KiloMiel, na.rm = TRUE)
-))
+  moyennekiloMiel = round(sum(ProductionRuches, na.rm = TRUE) / sum(NbRuchesRecoltees, na.rm = TRUE),2),
+  maxKiloMiel = round(max(KiloMiel, na.rm = TRUE),2),
+  minKiloMiel = round(min(KiloMiel, na.rm = TRUE),2)
+)
 ```
-
+- `r table$nbRuchesPourProduire` ruches pour produire
+  - dont `r table$nbRuchesRecoltees` ruches récoltées
+- `r table$moyennekiloMiel` kilos de miel produits en moyenne (de `r table$minKiloMiel` à `r table$maxKiloMiel`)
+  
 ## Coprahculteurs
 
 ```{r, echo=FALSE}
@@ -163,6 +166,4 @@ table <- eligiblesRGA |>
   - `r table$NbCocoExploiteesPI` en tant que propriétaire en indivision,
   - `r table$NbCocoExploiteesE` en tant qu'exploitant
   
-- `r table$NbMoyCoco` cocoteraies exploitées en moyenne
-  - `r table$NbMinCoco` cocoteraies exploitées au minimum
-  - `r table$NbMaxCoco` cocoteraies exploitées au maximum
+- `r table$NbMoyCoco` cocoteraies exploitées en moyenne (de `r table$NbMinCoco` à `r table$NbMaxCoco`)
