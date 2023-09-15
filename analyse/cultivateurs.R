@@ -69,3 +69,64 @@ surfacesCultures <- surfacesCulturesEligibles |>
   )
 
 writeCSV(surfacesCultures)
+
+# jardins océaniens
+
+contenuJardinsOceaniens <- eligiblesCultivateurs |>
+  filter(ModesProduction__4 == 1) |>
+  mutate(nbTypesCultures = CultPresentesJardins__10 +
+    CultPresentesJardins__20 +
+    CultPresentesJardins__30 +
+    CultPresentesJardins__40 +
+    CultPresentesJardins__50 +
+    CultPresentesJardins__60 +
+    CultPresentesJardins__70 +
+    CultPresentesJardins__80) |>
+  select(
+    interview__key,
+    id_enqueteur_ech,
+    SurfaceJardins,
+    nbTypesCultures,
+    totalSurfaceFruit,
+    totalSurfaceMarai,
+    totalSurfaceVivri,
+    totalSurfaceFlorale,
+    totalSurfacePlantes,
+    CultPresentesJardins__10,
+    CultPresentesJardins__20,
+    CultPresentesJardins__30,
+    CultPresentesJardins__40,
+    CultPresentesJardins__50,
+    CultPresentesJardins__60,
+    CultPresentesJardins__70,
+    CultPresentesJardins__80
+  )
+
+## 1 seul type de cultures dans le jardin océanien
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1) |> select(!nbTypesCultures)
+
+## Fruits (30) 
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1 & CultPresentesJardins__30 == 1)
+
+## Maraichage (10) 
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1 & CultPresentesJardins__10 == 1)
+
+## Vivrier (20) 
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1 & CultPresentesJardins__20 == 1)
+
+## Fleurs (40) 
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1 & CultPresentesJardins__40 == 1)
+
+## PPAM (50) 
+aVerifier <- contenuJardinsOceaniens |>
+  filter(nbTypesCultures == 1 & CultPresentesJardins__50 == 1)
+
+
+## Zoom maraichage qui a un seuil de 1000m²
+aVerifier <- contenuJardinsOceaniens |>
+  filter(SurfaceJardins < 3000 & CultPresentesJardins__10 == 1)
