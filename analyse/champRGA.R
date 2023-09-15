@@ -54,6 +54,7 @@ cultivateursChampRGA1 <- eligiblesRGA |>
   )
 
 culturesChampRGA <- readCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA)
+rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 
 cultivateursChampRGA2 <- left_join(rga23_surfacesCultures, culturesChampRGA, by = c("culture_id")) |>
   group_by(interview__key, idSeuilRGA) |>
@@ -83,8 +84,10 @@ idCultivateursChampRGA <- rbind(cultivateursChampRGA1 |> select(interview__key),
   distinct()
 
 # Ensemble des exploitants dans le champ
-idExploitantsDansLeChamp <- rbind(
-  eleveursChampRGA |> select(interview__key), idCultivateursChampRGA
-) |> distinct()
+idExploitantsDansLeChamp <- full_join(
+  eleveursChampRGA |> select(interview__key) |> mutate(ElevageValide = 1),
+  idCultivateursChampRGA |> mutate(CultureValide = 1),
+  by = c("interview__key")
+)
 
-rm(cultivateursChampRGA1, cultivateursChampRGA2, culturesChampRGA, idCultivateursChampRGA)
+rm(cultivateursChampRGA1, cultivateursChampRGA2, culturesChampRGA, idCultivateursChampRGA, eleveursChampRGA)

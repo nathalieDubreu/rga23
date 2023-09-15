@@ -11,7 +11,27 @@ output: md_document
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
 ```
 
-`r eligiblesRGA |> count()` unités <font color = "orange">(pas de contrôle de l'appartenance au champ du RGA)</font>
+## Zoom sur l'appartenance au champ des `r eligiblesRGA |> count()` unités recensées
+
+```{r, echo=FALSE}
+
+kable(inner_join(rga23,idExploitantsDansLeChamp, by=c("interview__key"))  |>
+  summarise(
+    `Ensemble` = n(),
+    `Cultivateurs` = sum(CultureValide == 1, na.rm = TRUE),
+    `Eleveurs` = sum(ElevageValide == 1, na.rm = TRUE)
+  ))
+```
+```{r, echo=FALSE}
+
+kable(inner_join(rga23, idExploitantsDansLeChamp, by=c("interview__key")) |>
+  group_by(ArchipelExploitation) |>
+  count()
+  )
+```
+
+# Comptages sur les `r eligiblesRGA |> count()` unités recensées 
+<font color = "orange">**Sans prendre en compte leur appartenance au champ du RGA**</font>
 
 ## SAU déclarée
 
@@ -54,49 +74,62 @@ kable(eligiblesEleveurs |>
 
 ### Poules pondeuses - `r eligiblesEleveurs |> filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |> count()` éleveurs
 
-- Poules bio
+
 
 ```{r, echo=FALSE}
-
-kable(eligiblesEleveurs |> filter(TypeVolailles__4 == 1) |> summarize(
-  NbMoyenPoules0 = round(sum(NombrePoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE)),
-  NbOeufsMoyen0 = round(sum(ProductionPoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),0),
-  OeufsParPoules0 = round(NbOeufsMoyen0 / NbMoyenPoules0,0),
-  NbMinOeufsPoules0 = min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),
-  NbMaxOeufsPoules0 = max(ProductionPoules0 / NombrePoules0, na.rm = TRUE)
-))
+poules <- eligiblesEleveurs |> filter(TypeVolailles__4 == 1) |> summarize(
+  NbPoules0 = sum(NombrePoules0, na.rm = TRUE),
+  NbOeufs0 = sum(ProductionPoules0, na.rm = TRUE),
+  OeufsParPoules0 = round(NbOeufs0 / NbPoules0,0),
+  NbMinOeufsPoules0 = round(min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0),
+  NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0)
+)
 ```
+- Poules bio - *`r eligiblesEleveurs |> filter(TypeVolailles__4 == 1) |> count()` élevages*
+  - `r poules$NbPoules0` poules code 0 déclarées
+  - `r poules$OeufsParPoules0` oeufs par poule en moyenne
+  - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules0`
+  - Nombre maximum d'oeufs par poule : `r poules$NbMaxOeufsPoules0`
 
-- Poules plein air ou au sol
+<br/>
 
 ```{r, echo=FALSE}
-
-kable(eligiblesEleveurs |> filter(TypeVolailles__3 == 1) |> summarize(
-  NbMoyenPoules12 = round(sum(NombrePoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE)),
-  NbOeufsMoyen12 = round(sum(ProductionPoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE),0),
-  OeufsParPoules12 = round(NbOeufsMoyen12 / NbMoyenPoules12,0),
-  NbMinOeufsPoules12 = min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),
-  NbMaxOeufsPoules12 = max(ProductionPoules1 / NombrePoules1, na.rm = TRUE)
-))
+poules <- eligiblesEleveurs |> filter(TypeVolailles__3 == 1) |> summarize(
+  NbPoules12 = sum(NombrePoules1, na.rm = TRUE),
+  NbOeufs12 = sum(ProductionPoules1, na.rm = TRUE),
+  OeufsParPoules12 = round(NbOeufs12 / NbPoules12,0),
+  NbMinOeufsPoules12 = round(min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0),
+  NbMaxOeufsPoules12 = round(max(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0)
+)
 ```
+- Poules plein air ou au sol - *`r eligiblesEleveurs |> filter(TypeVolailles__3 == 1) |> count()` élevages*
+  - `r poules$NbPoules12` poules code 1 ou 2 déclarées
+  - `r poules$OeufsParPoules12` oeufs par poule en moyenne
+  - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules12`
+  - Nombre maximum d'oeufs par poule : `r poules$NbMaxOeufsPoules12`
 
-- Poules en cage
+<br/>  
 
 ```{r, echo=FALSE}
-
-kable(eligiblesEleveurs |> filter(TypeVolailles__1 == 1) |> summarize(
-  NbMoyenPoules3 = round(sum(NombrePoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE)),
-  NbOeufsMoyen3 = round(sum(ProductionPoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE),0),
-  OeufsParPoules3 = round(NbOeufsMoyen3 / NbMoyenPoules3,0),
-  NbMinOeufsPoules3 = min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),
-  NbMaxOeufsPoules3 = max(ProductionPoules3 / NombrePoules3, na.rm = TRUE)
-))
+poules <- eligiblesEleveurs |> filter(TypeVolailles__1 == 1) |> summarize(
+  NbPoules3 = sum(NombrePoules3, na.rm = TRUE),
+  NbOeufs3 = sum(ProductionPoules3, na.rm = TRUE),
+  OeufsParPoules3 = round(NbOeufs3 / NbPoules3,0),
+  NbMinOeufsPoules3 = round(min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0),
+  NbMaxOeufsPoules3 = round(max(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0)
+)
 ```
+- Poules en cage - *`r eligiblesEleveurs |> filter(TypeVolailles__1 == 1) |> count()` élevages*
+  - `r as.character(poules$NbPoules3)` poules code 3 déclarées
+  - `r as.character(poules$OeufsParPoules3)` oeufs par poule en moyenne
+  - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules3`
+  - Nombre maximum d'oeufs par poule : `r poules$NbMaxOeufsPoules3`
+
+<br/>
 
 ### Abeilles - `r eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |> count()` apiculteurs
 
 ```{r, echo=FALSE}
-
 kable(eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees) |> summarize(
   nbRuchesPourProduire = sum(NbRuchesPourProduire),
@@ -110,18 +143,26 @@ kable(eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |>
 ## Coprahculteurs
 
 ```{r, echo=FALSE}
-
-kable(eligiblesRGA |>
+table <- eligiblesRGA |>
   filter(RaisonsRecensement__3 == 1) |>
   summarize(
-    `Nb de producteurs de coprah` = n(),
-    `Nb de cocoteraies exploitées` = sum(NbCocoteraies),
-    `- en tant que propriétaire plein` = sum(nbCocoStatut1),
-    `- en tant que propriétaire en indivision` = sum(nbCocoStatut2),
-    `- en tant qu'exploitant` = sum(nbCocoStatut3),
-    `Nb moyen de cocoteraies` = round(mean(NbCocoteraies), 2),
-    `Nb min de cocoteraies` = min(NbCocoteraies),
-    `Nb max de cocoteraies` = max(NbCocoteraies)
-  ))
+    NbProdCoprah = n(),
+    NbCocoExploitees = sum(NbCocoteraies),
+    NbCocoExploiteesPP = sum(nbCocoStatut1),
+    NbCocoExploiteesPI = sum(nbCocoStatut2),
+    NbCocoExploiteesE = sum(nbCocoStatut3),
+    NbMoyCoco = round(mean(NbCocoteraies), 2),
+    NbMinCoco = min(NbCocoteraies),
+    NbMaxCoco = max(NbCocoteraies)
+  )
 ```
+- `r table$NbProdCoprah` producteurs de coprah
 
+- `r table$NbCocoExploitees` cocoteraies exploitées
+  - `r table$NbCocoExploiteesPP` en tant que propriétaire plein
+  - `r table$NbCocoExploiteesPI` en tant que propriétaire en indivision,
+  - `r table$NbCocoExploiteesE` en tant qu'exploitant
+  
+- `r table$NbMoyCoco` cocoteraies exploitées en moyenne
+  - `r table$NbMinCoco` cocoteraies exploitées au minimum
+  - `r table$NbMaxCoco` cocoteraies exploitées au maximum
