@@ -148,6 +148,11 @@ rga23 <- rga23 |>
     TRUE ~ SurfaceVegeNatur
   ))
 
+## Suppression des -99999999 pour les valeurs manquantes (non réponses)
+rga23 <- sapply(rga23, function(x) {
+  x <- gsub("-99999999", as.numeric(""), x)
+}) |> as.data.frame()
+
 rm(
   rga23Brut,
   rga23Localise1,
