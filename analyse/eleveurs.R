@@ -28,7 +28,7 @@ eligiblesEleveurs |>
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0) |>
-  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39") |>
+  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39" & interview__key != "50-81-86-04") |>
   select(interview__key, interview__status, id_enqueteur_ech, PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8)
 
 eleveursVolailles <- eligiblesEleveurs |>
@@ -46,39 +46,37 @@ eleveursPoulesPondeuses |>
   group_by(`Poules en cage - code 3`, `Poules plein air ou au sol - code 1 ou 2`, `Poules bio - code 0`) |>
   count()
 
-# eleveursPoulesPondeuses |> select(interview__key, NombrePoules3, ProductionPoules3, NombrePoules1, ProductionPoules1)
+eleveursPoulesPondeuses |> select(interview__key, NombrePoules3, ProductionPoules3, NombrePoules1, ProductionPoules1, NombrePoules0, ProductionPoules0)
 
 eleveursPoulesPondeuses |> summarize(
-  NbMoyenPoules3 = sum(NombrePoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE),
-  NbOeufsMoyenPoules3 = sum(ProductionPoules3, na.rm = TRUE) / sum(TypeVolailles__1, na.rm = TRUE),
-  OeufsParPoules3 = NbOeufsMoyenPoules3 / NbMoyenPoules3,
-  NbMinOeufsPoules3 = min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),
-  NbMaxOeufsPoules3 = max(ProductionPoules3 / NombrePoules3, na.rm = TRUE)
+  NbPoules3 = sum(NombrePoules3, na.rm = TRUE),
+  NbOeufs3 = sum(ProductionPoules3, na.rm = TRUE),
+  OeufsParPoules3 = round(NbOeufs3 / NbPoules3,0),
+  NbMinOeufsPoules3 = round(min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0),
+  NbMaxOeufsPoules3 = round(max(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0)
 )
 
-# aVerifier <- eleveursPoulesPondeuses |>
-#   mutate(OeufsParPoules3 = ProductionPoules3 / NombrePoules3) |>
-#   select(interview__key, OeufsParPoules3, ProductionPoules3, NombrePoules3)
+aVerifier <- eleveursPoulesPondeuses |>
+  mutate(OeufsParPoules3 = ProductionPoules3 / NombrePoules3) |>
+  select(interview__key, OeufsParPoules3, ProductionPoules3, NombrePoules3)
 
 eleveursPoulesPondeuses |> summarize(
-  NbMoyenPoules12 = sum(NombrePoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE),
-  NbOeufsMoyenPoules12 = sum(ProductionPoules1, na.rm = TRUE) / sum(TypeVolailles__3, na.rm = TRUE),
-  OeufsParPoules12 = NbOeufsMoyenPoules12 / NbMoyenPoules12,
-  NbMinOeufsPoules12 = min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),
-  NbMaxOeufsPoules12 = max(ProductionPoules1 / NombrePoules1, na.rm = TRUE)
-)
+  NbPoules12 = sum(NombrePoules1, na.rm = TRUE),
+  NbOeufs12 = sum(ProductionPoules1, na.rm = TRUE),
+  OeufsParPoules12 = round(NbOeufs12 / NbPoules12,0),
+  NbMinOeufsPoules12 = round(min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0),
+  NbMaxOeufsPoules12 = round(max(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0))
 
-# aVerifier <- eleveursPoulesPondeuses |>
-#   mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
-#   select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
+aVerifier <- eleveursPoulesPondeuses |>
+  mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
+  select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
 
 eleveursPoulesPondeuses |> summarize(
-  NbMoyenPoules0 = sum(NombrePoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
-  NbOeufsMoyenPoules0 = sum(ProductionPoules0, na.rm = TRUE) / sum(TypeVolailles__4, na.rm = TRUE),
-  OeufsParPoules0 = NbOeufsMoyenPoules0 / NbMoyenPoules0,
-  NbMinOeufsPoules0 = min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),
-  NbMaxOeufsPoules0 = max(ProductionPoules0 / NombrePoules0, na.rm = TRUE)
-)
+  NbPoules0 = sum(NombrePoules0, na.rm = TRUE),
+  NbOeufs0 = sum(ProductionPoules0, na.rm = TRUE),
+  OeufsParPoules0 = round(NbOeufs0 / NbPoules0,0),
+  NbMinOeufsPoules0 = round(min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0),
+  NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0))
 
 apiculteurs <- eligiblesEleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
