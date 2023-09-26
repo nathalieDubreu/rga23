@@ -104,25 +104,26 @@ contenuJardinsOceaniens <- eligiblesCultivateurs |>
 
 ## 1 seul type de cultures dans le jardin océanien
 aVerifier <- contenuJardinsOceaniens |>
-  filter(nbTypesCultures == 1) |> select(!nbTypesCultures)
+  filter(nbTypesCultures == 1) |>
+  select(!nbTypesCultures)
 
-## Fruits (30) 
+## Fruits (30)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__30 == 1)
 
-## Maraichage (10) 
+## Maraichage (10)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__10 == 1)
 
-## Vivrier (20) 
+## Vivrier (20)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__20 == 1)
 
-## Fleurs (40) 
+## Fleurs (40)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__40 == 1)
 
-## PPAM (50) 
+## PPAM (50)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__50 == 1)
 
@@ -130,3 +131,13 @@ aVerifier <- contenuJardinsOceaniens |>
 ## Zoom maraichage qui a un seuil de 1000m²
 aVerifier <- contenuJardinsOceaniens |>
   filter(SurfaceJardins < 3000 & CultPresentesJardins__10 == 1)
+
+## Jardins océaniens avec 1 ou 2 cultures
+aVerifier <- eligiblesCultivateurs |>
+  filter(ModesProduction__4 == 1 & is.na(CultPrincipJardins__2) & interview__status == 120) |>
+  select(interview__key, id_enqueteur_ech, SurfaceJardins, CultPrincipJardins__0, CultPrincipJardins__1)
+
+## Jardins océaniens avec seulement 3 cultures et au moins 1000m²
+aVerifier <- eligiblesCultivateurs |>
+  filter(ModesProduction__4 == 1 & !is.na(CultPrincipJardins__2) & is.na(CultPrincipJardins__3) & SurfaceJardins >= 1000 & interview__status == 120) |>
+  select(interview__key, id_enqueteur_ech, SurfaceJardins)
