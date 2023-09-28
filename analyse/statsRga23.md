@@ -1,6 +1,6 @@
 # \[RGA23\] Quelques stats
 
-## Zoom sur l’appartenance au champ des 1670 unités recensées
+## Zoom sur l’appartenance au champ des 1851 unités recensées
 
 <table>
 <thead>
@@ -12,9 +12,9 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">824</td>
-<td style="text-align: right;">748</td>
-<td style="text-align: right;">140</td>
+<td style="text-align: right;">905</td>
+<td style="text-align: right;">826</td>
+<td style="text-align: right;">153</td>
 </tr>
 </tbody>
 </table>
@@ -29,28 +29,28 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Australes</td>
-<td style="text-align: right;">27</td>
+<td style="text-align: right;">43</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Iles Du Vent</td>
-<td style="text-align: right;">487</td>
+<td style="text-align: right;">517</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Iles Sous-Le-Vent</td>
-<td style="text-align: right;">235</td>
+<td style="text-align: right;">250</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Marquises</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">12</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Tuamotu-Gambier</td>
-<td style="text-align: right;">73</td>
+<td style="text-align: right;">83</td>
 </tr>
 </tbody>
 </table>
 
-# Comptages sur les 1670 unités recensées
+# Comptages sur les 1851 unités recensées
 
 <font color = "orange">**Sans prendre en compte leur appartenance au
 champ du RGA**</font>
@@ -67,14 +67,14 @@ champ du RGA**</font>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">1676.5</td>
-<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1751.3</td>
+<td style="text-align: right;">1.42</td>
 <td style="text-align: right;">250</td>
 </tr>
 </tbody>
 </table>
 
-## Types de cultures des 989 cultivateurs ayant déclarés des cultures classiques organisées
+## Types de cultures des 1111 cultivateurs ayant déclarés des cultures classiques organisées
 
 <table>
 <colgroup>
@@ -98,76 +98,76 @@ champ du RGA**</font>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">10 - Cultures maraîchères</td>
-<td style="text-align: right;">270</td>
-<td style="text-align: right;">151.9</td>
-<td style="text-align: right;">1245.27</td>
+<td style="text-align: right;">305</td>
+<td style="text-align: right;">159.7</td>
+<td style="text-align: right;">1158.20</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">50000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">20 - Cultures vivrières</td>
-<td style="text-align: right;">334</td>
-<td style="text-align: right;">93.8</td>
-<td style="text-align: right;">1203.14</td>
+<td style="text-align: right;">380</td>
+<td style="text-align: right;">103.0</td>
+<td style="text-align: right;">1173.57</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">40000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">30 - Cultures fruitières (hors pépinères)
 et bois d’oeuvre</td>
-<td style="text-align: right;">518</td>
-<td style="text-align: right;">496.9</td>
-<td style="text-align: right;">2736.18</td>
+<td style="text-align: right;">604</td>
+<td style="text-align: right;">554.7</td>
+<td style="text-align: right;">2622.68</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">750000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">40 - Feuillages et cultures florales (hors
 pépinières)</td>
-<td style="text-align: right;">183</td>
-<td style="text-align: right;">54.6</td>
-<td style="text-align: right;">1163.85</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">58.1</td>
+<td style="text-align: right;">1121.28</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">75000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">50 - Plantes aromatiques, stimulantes et
 médicinales</td>
-<td style="text-align: right;">309</td>
-<td style="text-align: right;">70.3</td>
-<td style="text-align: right;">1957.49</td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">75.9</td>
+<td style="text-align: right;">1982.69</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: right;">119365</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">60 - Pépinières (plantes vendues en
 pot)</td>
-<td style="text-align: right;">86</td>
-<td style="text-align: right;">7.3</td>
-<td style="text-align: right;">600.70</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">7.8</td>
+<td style="text-align: right;">593.83</td>
 <td style="text-align: right;">10</td>
 <td style="text-align: right;">6400</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">70 - Cultures fourragères</td>
-<td style="text-align: right;">31</td>
-<td style="text-align: right;">531.3</td>
-<td style="text-align: right;">143599.46</td>
-<td style="text-align: right;">1500</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">536.5</td>
+<td style="text-align: right;">127742.86</td>
+<td style="text-align: right;">1000</td>
 <td style="text-align: right;">1500000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">80 - Jachères</td>
-<td style="text-align: right;">152</td>
-<td style="text-align: right;">124.6</td>
-<td style="text-align: right;">8093.63</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">143.9</td>
+<td style="text-align: right;">8367.95</td>
 <td style="text-align: right;">10</td>
 <td style="text-align: right;">172000</td>
 </tr>
 </tbody>
 </table>
 
-## 259 éleveurs
+## 282 éleveurs
 
 ### Répartition des élevages
 
@@ -196,58 +196,58 @@ pot)</td>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">29</td>
+<td style="text-align: right;">33</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">69</td>
-<td style="text-align: right;">45</td>
-<td style="text-align: right;">10</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">12</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">131</td>
-<td style="text-align: right;">14</td>
+<td style="text-align: right;">141</td>
+<td style="text-align: right;">17</td>
 </tr>
 </tbody>
 </table>
 
-### Poules pondeuses - 34 éleveurs
+### Poules pondeuses - 37 éleveurs
 
 -   Poules bio - *2 élevages*
-    -   0 poules code 0 déclarées
-    -   NaN oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule :
-    -   Nombre maximum d’oeufs par poule : -
+    -   785 poules code 0 déclarées
+    -   170 oeufs par poule en moyenne
+    -   Nombre minimum d’oeufs par poule : 108
+    -   Nombre maximum d’oeufs par poule : 280
 
 <br/>
 
--   Poules plein air ou au sol - *21 élevages*
-    -   3103 poules code 1 ou 2 déclarées
-    -   182 oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule : 22
+-   Poules plein air ou au sol - *22 élevages*
+    -   3303 poules code 1 ou 2 déclarées
+    -   195 oeufs par poule en moyenne
+    -   Nombre minimum d’oeufs par poule : 37
     -   Nombre maximum d’oeufs par poule : 700
 
 <br/>
 
--   Poules en cage - *11 élevages*
-    -   91061 poules code 3 déclarées
-    -   55 oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule : 47
-    -   Nombre maximum d’oeufs par poule : 730
+-   Poules en cage - *13 élevages*
+    -   50999 poules code 3 déclarées
+    -   240 oeufs par poule en moyenne
+    -   Nombre minimum d’oeufs par poule : 12
+    -   Nombre maximum d’oeufs par poule : 336
 
 <br/>
 
-### Abeilles - 131 apiculteurs
+### Abeilles - 141 apiculteurs
 
--   3108 ruches pour produire
-    -   dont 2034 ruches récoltées
--   18.56 kilos de miel produits en moyenne (de 1.6 à 72.73)
+-   3191 ruches pour produire
+    -   dont 2093 ruches récoltées
+-   18.07 kilos de miel produits en moyenne (de 1.6 à 50)
 
 ## Coprahculteurs
 
--   495 producteurs de coprah
+-   570 producteurs de coprah
 
--   1441 cocoteraies exploitées
+-   1622 cocoteraies exploitées
 
-    -   328 en tant que propriétaire plein
-    -   933 en tant que propriétaire en indivision,
-    -   180 en tant qu’exploitant
+    -   341 en tant que propriétaire plein
+    -   1062 en tant que propriétaire en indivision,
+    -   219 en tant qu’exploitant
 
--   2.91 cocoteraies exploitées en moyenne (de 1 à 20)
+-   2.85 cocoteraies exploitées en moyenne (de 1 à 20)

@@ -46,14 +46,14 @@ eleveursPoulesPondeuses |>
   group_by(`Poules en cage - code 3`, `Poules plein air ou au sol - code 1 ou 2`, `Poules bio - code 0`) |>
   count()
 
-eleveursPoulesPondeuses |> select(interview__key, NombrePoules3, ProductionPoules3, NombrePoules1, ProductionPoules1, NombrePoules0, ProductionPoules0)
+test <- eleveursPoulesPondeuses |> select(interview__key, NombrePoules3, ProductionPoules3, NombrePoules1, ProductionPoules1, NombrePoules0, ProductionPoules0)
 
 eleveursPoulesPondeuses |> summarize(
   NbPoules3 = sum(NombrePoules3, na.rm = TRUE),
   NbOeufs3 = sum(ProductionPoules3, na.rm = TRUE),
-  OeufsParPoules3 = round(NbOeufs3 / NbPoules3,0),
-  NbMinOeufsPoules3 = round(min(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0),
-  NbMaxOeufsPoules3 = round(max(ProductionPoules3 / NombrePoules3, na.rm = TRUE),0)
+  OeufsParPoules3 = round(NbOeufs3 / NbPoules3, 0),
+  NbMinOeufsPoules3 = round(min(ProductionPoules3 / NombrePoules3, na.rm = TRUE), 0),
+  NbMaxOeufsPoules3 = round(max(ProductionPoules3 / NombrePoules3, na.rm = TRUE), 0)
 )
 
 aVerifier <- eleveursPoulesPondeuses |>
@@ -63,24 +63,26 @@ aVerifier <- eleveursPoulesPondeuses |>
 eleveursPoulesPondeuses |> summarize(
   NbPoules12 = sum(NombrePoules1, na.rm = TRUE),
   NbOeufs12 = sum(ProductionPoules1, na.rm = TRUE),
-  OeufsParPoules12 = round(NbOeufs12 / NbPoules12,0),
-  NbMinOeufsPoules12 = round(min(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0),
-  NbMaxOeufsPoules12 = round(max(ProductionPoules1 / NombrePoules1, na.rm = TRUE),0))
+  OeufsParPoules12 = round(NbOeufs12 / NbPoules12, 0),
+  NbMinOeufsPoules12 = round(min(ProductionPoules1 / NombrePoules1, na.rm = TRUE), 0),
+  NbMaxOeufsPoules12 = round(max(ProductionPoules1 / NombrePoules1, na.rm = TRUE), 0)
+)
 
 aVerifier <- eleveursPoulesPondeuses |>
   mutate(OeufsParPoules1 = ProductionPoules1 / NombrePoules1) |>
-  select(interview__key, OeufsParPoules1, ProductionPoules1, NombrePoules1)
+  select(interview__key, interview__status, OeufsParPoules1, ProductionPoules1, NombrePoules1)
 
 eleveursPoulesPondeuses |> summarize(
   NbPoules0 = sum(NombrePoules0, na.rm = TRUE),
   NbOeufs0 = sum(ProductionPoules0, na.rm = TRUE),
-  OeufsParPoules0 = round(NbOeufs0 / NbPoules0,0),
-  NbMinOeufsPoules0 = round(min(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0),
-  NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE),0))
+  OeufsParPoules0 = round(NbOeufs0 / NbPoules0, 0),
+  NbMinOeufsPoules0 = round(min(ProductionPoules0 / NombrePoules0, na.rm = TRUE), 0),
+  NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE), 0)
+)
 
 apiculteurs <- eligiblesEleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
-  select(interview__key, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
+  select(interview__key, interview__status, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees)
 
 apiculteurs |> summarize(
@@ -91,6 +93,8 @@ apiculteurs |> summarize(
   minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
 
-aVerifier <- eligiblesEleveurs |> filter(AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2)
+aVerifier <- eligiblesEleveurs |>
+  filter(AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2) |>
+  select(interview__key, interview__status)
 
-rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs)
+rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs, test)

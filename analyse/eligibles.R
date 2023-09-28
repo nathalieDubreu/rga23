@@ -23,6 +23,7 @@ eligiblesRGA |>
            interview__key != "88-51-69-94" &
            interview__key != "26-04-00-30" &
            interview__key != "39-17-18-65" &
-           interview__key != "92-89-85-76") 
+           interview__key != "92-89-85-76" &
+           interview__key != "80-90-88-92") 
 
 # test <- eligiblesRGA |> filter(interview__key=="25-94-37-62")

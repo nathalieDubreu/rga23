@@ -84,6 +84,7 @@ contenuJardinsOceaniens <- eligiblesCultivateurs |>
     CultPresentesJardins__80) |>
   select(
     interview__key,
+    interview__status,
     id_enqueteur_ech,
     SurfaceJardins,
     nbTypesCultures,
@@ -141,3 +142,4 @@ aVerifier <- eligiblesCultivateurs |>
 aVerifier <- eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & !is.na(CultPrincipJardins__2) & is.na(CultPrincipJardins__3) & SurfaceJardins >= 1000 & interview__status == 120) |>
   select(interview__key, id_enqueteur_ech, SurfaceJardins)
+
