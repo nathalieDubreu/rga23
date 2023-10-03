@@ -28,7 +28,7 @@ eligiblesEleveurs |>
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0) |>
-  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39" & interview__key != "50-81-86-04") |>
+  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39" & interview__key != "50-81-86-04" & interview__key != "64-94-31-21") |>
   select(interview__key, interview__status, id_enqueteur_ech, PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8)
 
 eleveursVolailles <- eligiblesEleveurs |>
@@ -58,7 +58,7 @@ eleveursPoulesPondeuses |> summarize(
 
 aVerifier <- eleveursPoulesPondeuses |>
   mutate(OeufsParPoules3 = ProductionPoules3 / NombrePoules3) |>
-  select(interview__key, OeufsParPoules3, ProductionPoules3, NombrePoules3)
+  select(interview__key, interview__status, OeufsParPoules3, ProductionPoules3, NombrePoules3)
 
 eleveursPoulesPondeuses |> summarize(
   NbPoules12 = sum(NombrePoules1, na.rm = TRUE),
