@@ -45,6 +45,18 @@ eligiblesCultivateurs |>
     cultJacheres = sum(CulturesPresentes__80)
   )
 
+# test <- eligiblesCultivateurs |>
+#   filter(ModesProduction__1 == 1) |>
+#   select(
+#     interview__key, CulturesPresentes__10, CulturesPresentes__20,
+#     CulturesPresentes__30,
+#     CulturesPresentes__40,
+#     CulturesPresentes__50,
+#     CulturesPresentes__60,
+#     CulturesPresentes__70,
+#     CulturesPresentes__80
+#   )
+
 surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), eligiblesCultivateurs |> select(interview__key))
 
 surfacesCultures <- surfacesCulturesEligibles |>
@@ -142,4 +154,3 @@ aVerifier <- eligiblesCultivateurs |>
 aVerifier <- eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & !is.na(CultPrincipJardins__2) & is.na(CultPrincipJardins__3) & SurfaceJardins >= 1000 & interview__status == 120) |>
   select(interview__key, id_enqueteur_ech, SurfaceJardins)
-

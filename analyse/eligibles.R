@@ -15,20 +15,24 @@ eligiblesRGA |>
 
 eligiblesRGA |>
   filter(substring(id_exploitation, 0, 1) == "X" &
-           eligibilite == FALSE & eligibiliteCoprah == TRUE &
-           interview__key != "05-81-20-62" &
-           interview__key != "91-37-53-21" &
-           interview__key != "38-13-87-05" &
-           interview__key != "87-50-31-74" &
-           interview__key != "88-51-69-94" &
-           interview__key != "26-04-00-30" &
-           interview__key != "39-17-18-65" &
-           interview__key != "92-89-85-76" &
-           interview__key != "80-90-88-92" &
-           interview__key != "74-71-45-49") 
+    eligibilite == FALSE & eligibiliteCoprah == TRUE &
+    interview__key != "05-81-20-62" &
+    interview__key != "91-37-53-21" &
+    interview__key != "38-13-87-05" &
+    interview__key != "87-50-31-74" &
+    interview__key != "88-51-69-94" &
+    interview__key != "26-04-00-30" &
+    interview__key != "39-17-18-65" &
+    interview__key != "92-89-85-76" &
+    interview__key != "80-90-88-92" &
+    interview__key != "74-71-45-49" &
+    interview__key != "85-03-43-60" &
+    interview__key != "15-49-55-56" &
+    interview__key != "80-20-52-20")
 
 # test <- eligiblesRGA |> filter(interview__key=="25-94-37-62")
 
-aVerifier <- eligiblesRGA |> filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
+aVerifier <- eligiblesRGA |>
+  filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech)
 

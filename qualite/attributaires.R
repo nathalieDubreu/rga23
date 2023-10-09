@@ -1,7 +1,7 @@
 library("stringr")
 attributaires <- rbind(
   readCSV("AttributairesTraites/lotissementsAustrales.csv") |> rename(Lotissements = Lotissement),
-  readCSV("AttributairesTraites/lotissementsMarquises.csv") |> rename(Lotissements = Lotissement) |> select(!Enqueteur),
+  readCSV("AttributairesTraites/lotissementsMarquises.csv") |> rename(Lotissements = Lotissement),
   readCSV("AttributairesTraites/lotissementsHuahineTahaa.csv") |> mutate(VILLE = "", Commune = ""),
   readCSV("AttributairesTraites/lotissementsMoorea.csv"),
   readCSV("AttributairesTraites/lotissementsRaiatea_1.csv") |> mutate(VILLE = "", Commune = ""),
