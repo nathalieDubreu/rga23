@@ -28,10 +28,12 @@ eligiblesRGA |>
     interview__key != "74-71-45-49" &
     interview__key != "85-03-43-60" &
     interview__key != "15-49-55-56" &
-    interview__key != "80-20-52-20")
+    interview__key != "80-20-52-20" &
+    interview__key != "42-24-21-22")
 
 # test <- eligiblesRGA |> filter(interview__key=="25-94-37-62")
 
+# 6
 aVerifier <- eligiblesRGA |>
   filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech)
