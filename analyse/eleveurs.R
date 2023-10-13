@@ -80,6 +80,10 @@ eleveursPoulesPondeuses |> summarize(
   NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE), 0)
 )
 
+aVerifier <- eleveursPoulesPondeuses |>
+  mutate(OeufsParPoules0 = ProductionPoules0 / NombrePoules0) |>
+  select(interview__key, interview__status, OeufsParPoules0, ProductionPoules0, NombrePoules0)
+
 apiculteurs <- eligiblesEleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, interview__status, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
