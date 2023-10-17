@@ -85,8 +85,8 @@ idCultivateursChampRGA <- rbind(cultivateursChampRGA1 |> select(interview__key),
 
 # Ensemble des exploitants dans le champ
 idExploitantsDansLeChamp <- full_join(
-  eleveursChampRGA |> select(interview__key) |> mutate(ElevageValide = 1),
-  idCultivateursChampRGA |> mutate(CultureValide = 1),
+  eleveursChampRGA |> select(interview__key) |> mutate(ElevageValideRGA = 1),
+  idCultivateursChampRGA |> mutate(CultureValideRGA = 1),
   by = c("interview__key")
 )
 

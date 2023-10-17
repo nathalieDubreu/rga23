@@ -24,6 +24,9 @@ eligiblesCultivateurs |>
 
 ### Par type de cultures classiques
 
+aVerifier <- eligiblesCultivateurs |>
+  filter(ModesProduction__1 == 1 & is.na(CulturesPresentes__10))
+
 # Cultures maraîchères....................................10/10
 # Cultures vivrières......................................20/20
 # Cultures fruitières (hors pépinères) et bois d'oeuvre...30/30
@@ -33,7 +36,7 @@ eligiblesCultivateurs |>
 # Cultures fourragères....................................70/70
 # Jachères................................................80/80
 eligiblesCultivateurs |>
-  filter(ModesProduction__1 == 1) |>
+  filter(ModesProduction__1 == 1 & !is.na(CulturesPresentes__10)) |>
   summarise(
     cultMaraicheres = sum(CulturesPresentes__10),
     cultVivrieres = sum(CulturesPresentes__20),
