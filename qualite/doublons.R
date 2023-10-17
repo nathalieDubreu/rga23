@@ -15,5 +15,3 @@ commentaires <- left_join(doublonsNonInterroges, readTable("interview__comments.
 # 
 # commentairesExistePlus <- left_join(existePlus, readTable("interview__comments.tab", dossier)) |>
 #   select(!interview__id & !roster & !id1 & !id2)
-
-

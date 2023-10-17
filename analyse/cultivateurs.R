@@ -148,7 +148,7 @@ aVerifier <- contenuJardinsOceaniens |>
 ## Jardins océaniens avec 1 ou 2 cultures
 aVerifier <- eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & is.na(CultPrincipJardins__2) & interview__status == 120) |>
-  select(interview__key, id_enqueteur_ech, SurfaceJardins, CultPrincipJardins__0, CultPrincipJardins__1)
+  select(interview__key, interview__status, id_enqueteur_ech, SurfaceJardins, CultPrincipJardins__0, CultPrincipJardins__1)
 
 ## Jardins océaniens avec seulement 3 cultures et au moins 1000m²
 aVerifier <- eligiblesCultivateurs |>
