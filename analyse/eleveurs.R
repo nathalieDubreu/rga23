@@ -98,7 +98,7 @@ apiculteurs |> summarize(
 )
 
 aVerifier <- eligiblesEleveurs |>
-  filter(AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2) |>
+  filter((AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2) | (CaprinsPleinAir == 2 & AccesBatimentCaprins == 2)) |>
   select(interview__key, interview__status)
 
 rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs, test)
