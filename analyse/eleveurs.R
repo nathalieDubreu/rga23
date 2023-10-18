@@ -97,8 +97,18 @@ apiculteurs |> summarize(
   minKiloMiel = min(KiloMiel, na.rm = TRUE)
 )
 
+## Porcs et caprins ni en extérieur ni en intérieur
 aVerifier <- eligiblesEleveurs |>
   filter((AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2) | (CaprinsPleinAir == 2 & AccesBatimentCaprins == 2)) |>
   select(interview__key, interview__status)
+
+## Porcs avec bâtiments mais pas de lisier coché
+aVerifier <- eligiblesEleveurs |>
+  filter(AccesBatimentPorcins == 1 & TypeEngraisOrga__1 == 0) |>
+  select(interview__key, interview__status, id_enqueteur_ech, nbTotalPorcs, AutreTypeEngraisOrga)
+
+## Autre type d'engrais
+aVerifier <- eligiblesEleveurs |>
+  select(interview__key, interview__status, id_enqueteur_ech, AutreTypeEngraisOrga)
 
 rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs, test)
