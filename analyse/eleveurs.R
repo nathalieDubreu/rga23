@@ -28,7 +28,13 @@ eligiblesEleveurs |>
 aVerifier <- eligiblesEleveurs |>
   filter((PresenceAnimaux__1 == 1 | PresenceAnimaux__2 == 1 | PresenceAnimaux__5 == 1 | PresenceAnimaux__8 == 1) &
     RaisonsRecensement__1 == 0) |>
-  filter(interview__key != "88-95-70-40" & interview__key != "46-85-34-03" & interview__key != "56-35-32-39" & interview__key != "50-81-86-04" & interview__key != "64-94-31-21" & interview__key != "59-39-54-16") |>
+  filter(interview__key != "88-95-70-40" &
+    interview__key != "46-85-34-03" &
+    interview__key != "56-35-32-39" &
+    interview__key != "50-81-86-04" &
+    interview__key != "64-94-31-21" &
+    interview__key != "59-39-54-16" &
+    interview__key != "32-78-62-54") |>
   select(interview__key, interview__status, id_enqueteur_ech, PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8)
 
 eleveursVolailles <- eligiblesEleveurs |>
