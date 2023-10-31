@@ -92,7 +92,7 @@ exportRGA_interroges <- exportRGA_interroges |>
   - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & substring(id_exploitation, 0, 1) == "P") |> count()`</font> Producteurs physiques out - P
   - <font color = "Orange">`r exportRGA_interroges |> filter(eligibOrNot == "out") |> filter(eligibilite == 0 & eligibiliteCoprah == 0 & substring(id_exploitation, 0, 1) == "X") |> count()`</font> Chef d'exploitations ayant fait plus de 2,7 tonnes de coprah out - X
 
-### Localisation (`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()` unités éligibles)
+### Localisation (`r exportRGA_interroges |> filter(eligibOrNot == "in") |> count()` questionnaires complets)
 
 ```{r, echo=FALSE}
 
