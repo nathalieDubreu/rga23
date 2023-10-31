@@ -34,7 +34,8 @@ aVerifier <- eligiblesEleveurs |>
     interview__key != "50-81-86-04" &
     interview__key != "64-94-31-21" &
     interview__key != "59-39-54-16" &
-    interview__key != "32-78-62-54") |>
+    interview__key != "32-78-62-54" &
+    interview__key != "75-51-90-78") |>
   select(interview__key, interview__status, id_enqueteur_ech, PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8)
 
 eleveursVolailles <- eligiblesEleveurs |>
