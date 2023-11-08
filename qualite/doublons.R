@@ -6,6 +6,8 @@ doublonsNonInterroges <- readCSV("rga23.csv") |>
 commentaires <- left_join(doublonsNonInterroges, readTable("interview__comments.tab", dossier)) |>
   select(!interview__id & !roster & !id1 & !id2)
 
+# writeCSV(commentaires)
+
 ## Et ceux qui n'existent plus...
 # existePlus <- readCSV("rga23.csv") |>
 #   filter(statut_collecte == 2 & (interview__status == "120" | interview__status == "130")) |>
@@ -14,3 +16,13 @@ commentaires <- left_join(doublonsNonInterroges, readTable("interview__comments.
 #
 # commentairesExistePlus <- left_join(existePlus, readTable("interview__comments.tab", dossier)) |>
 #   select(!interview__id & !roster & !id1 & !id2)
+
+doublonsManquants <- readCSV("doublons_v2.csv") |>
+  filter(is.na(idExploit) & is.na(numAffectation)) |>
+  select(interview__keyDoublon, idExploitDoublon, numAffectationDoublon, comment, TODO) |>
+  rename(interview__key = interview__keyDoublon)
+
+nouveauxCommentaires <- left_join(doublonsManquants, readTable("interview__comments.tab", dossier), by = c("interview__key")) |>
+  select(!interview__id & !roster & !id1 & !id2)
+
+writeCSV(nouveauxCommentaires)
