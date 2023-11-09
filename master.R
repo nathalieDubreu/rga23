@@ -3,11 +3,11 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_11-08"
+dossier <- "Export_11-09"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
-date <- "08/11/2023"
+date <- "09/11/2023"
 nbExploitations <- 7832
 source("suiviCollecte/comptages.R")
 
@@ -24,6 +24,7 @@ source("miseEnForme/rosterEngraisOrganiques.R")
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")
 source("champs/champ2012.R")
+source("champs/indicatricesAppartenances.R")
 
 # Analyse
 ## Non éligibles
