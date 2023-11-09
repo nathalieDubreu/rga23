@@ -21,14 +21,16 @@ source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
 source("miseEnForme/rosterEngraisOrganiques.R")
 
+# Champs (RGA23, RGA12, seuils CAPL)
+source("champs/champRGA.R")
+source("champs/champ2012.R")
+
 # Analyse
 ## Non éligibles
 source("analyse/nonEligibles.R")
 
 ## Eligibles
 source("analyse/eligibles.R")
-## Dans le champ du RGA23
-source("analyse/champRGA.R")
 ## Divers profils
 source("analyse/cultivateurs.R")
 source("analyse/eleveurs.R")
