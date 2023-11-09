@@ -1,7 +1,9 @@
 source("analyse/eligibles.R")
 
+rga23 <- readCSV("rga23.csv")
+
 # Critères éleveurs
-eleveursChampRGA <- eligiblesRGA |>
+eleveursChampRGA <- rga23 |>
   filter(
     (
       # 10	• 2 bovins de plus de 2 ans (y compris vaches)
@@ -91,3 +93,4 @@ idExploitantsDansLeChamp <- full_join(
 )
 
 rm(cultivateursChampRGA1, cultivateursChampRGA2, culturesChampRGA, idCultivateursChampRGA, eleveursChampRGA)
+

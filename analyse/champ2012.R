@@ -1,7 +1,7 @@
-source("analyse/eligibles.R")
+rga23 <- readCSV("rga23.csv")
 
 # Critères éleveurs
-eleveursChamp2012 <- eligiblesRGA |>
+eleveursChamp2012 <- rga23 |>
   filter(
     (
       #  • Autres volailles : plus de 50 animaux de plus de 30 jours.
