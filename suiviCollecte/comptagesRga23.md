@@ -1,17 +1,17 @@
-# \[RGA23\] Suivi de la collecte - 06/11/2023
+# \[RGA23\] Suivi de la collecte - 08/11/2023
 
-## 6769 entretiens *(Taux de collecte = 86.4%)*
+## 7042 entretiens *(Taux de collecte = 89.9%)*
 
--   <font color = "Green">6618</font> entretiens approuvés
--   <font color = "Orange">73</font> entretiens terminés
--   <font color = "Red">78</font> entretiens rejetés (erreurs apparentes
+-   <font color = "Green">6858</font> entretiens approuvés
+-   <font color = "Orange">115</font> entretiens terminés
+-   <font color = "Red">69</font> entretiens rejetés (erreurs apparentes
     dans les questionnaires remplis)
 
-**=&gt; 6691 entretiens sont donc terminés et/ou validés**
+**=&gt; 6973 entretiens sont donc terminés et/ou validés**
 
 <br/>
 
-## Statut de la collecte pour les 6618 entretiens validés
+## Statut de la collecte pour les 6858 entretiens validés
 
 <table>
 <thead>
@@ -23,16 +23,16 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">1 - Oui</td>
-<td style="text-align: right;">6143</td>
+<td style="text-align: right;">6340</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">2 - Non, l’exploitation n’existe plus de
 façon définitive</td>
-<td style="text-align: right;">118</td>
+<td style="text-align: right;">120</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">3 - Non, l’exploitant est injoignable</td>
-<td style="text-align: right;">160</td>
+<td style="text-align: right;">196</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">4 - Non, l’exploitant refuse de
@@ -42,47 +42,47 @@ répondre</td>
 <tr class="odd">
 <td style="text-align: left;">5 - Non, l’exploitation a déjà été
 interrogée</td>
-<td style="text-align: right;">189</td>
+<td style="text-align: right;">194</td>
 </tr>
 </tbody>
 </table>
 
-**=&gt; 6143 unités validées ont donc été visitées**
+**=&gt; 6340 unités validées ont donc été visitées**
 
 <br/>
 
-## Profil des 6143 unités visitées
+## Profil des 6340 unités visitées
 
--   <font color = "Blue">1037</font> coprahculteurs (&gt;2,7 tonnes)
--   <font color = "Blue">4666</font> producteurs phyisques
--   <font color = "Blue">253</font> personnes morales
--   <font color = "Blue">187</font> chefs d’exploitation produisant plus
+-   <font color = "Blue">1091</font> coprahculteurs (&gt;2,7 tonnes)
+-   <font color = "Blue">4791</font> producteurs phyisques
+-   <font color = "Blue">262</font> personnes morales
+-   <font color = "Blue">196</font> chefs d’exploitation produisant plus
     de 2,7 tonnes de coprah
 
 ### Activités
 
 *Les unités peuvent cocher plusieurs cases*
 
--   4552 agriculteurs
--   1049 éleveurs
--   1392 coprahculteurs
--   235 n’ont aucune de ces 3 activités
+-   4680 agriculteurs
+-   1094 éleveurs
+-   1466 coprahculteurs
+-   242 n’ont aucune de ces 3 activités
 
 ### Eligibilité des unités
 
--   <font color = "Green">4507</font> unités ayant répondu au
-    questionnaire complet (73.4% des unités visitées)
+-   <font color = "Green">4659</font> unités ayant répondu au
+    questionnaire complet (73.5% des unités visitées)
 
--   <font color = "Red">1636</font> unités NON éligibles (fin
+-   <font color = "Red">1681</font> unités NON éligibles (fin
     d’activité, autoconsommation totale, …)
 
-    -   <font color = "Orange">70</font> Coprahculteurs out - C
-    -   <font color = "Orange">119</font> Personnes morales out - M
-    -   <font color = "Orange">1435</font> Producteurs physiques out - P
+    -   <font color = "Orange">72</font> Coprahculteurs out - C
+    -   <font color = "Orange">126</font> Personnes morales out - M
+    -   <font color = "Orange">1471</font> Producteurs physiques out - P
     -   <font color = "Orange">12</font> Chef d’exploitations ayant fait
         plus de 2,7 tonnes de coprah out - X
 
-### Localisation (4507 questionnaires complets)
+### Localisation (4659 questionnaires complets)
 
 <table>
 <thead>
@@ -102,7 +102,7 @@ interrogée</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Apataki</td>
-<td style="text-align: right;">19</td>
+<td style="text-align: right;">20</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Aratika</td>
@@ -118,11 +118,11 @@ interrogée</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Fakarava</td>
-<td style="text-align: right;">45</td>
+<td style="text-align: right;">44</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Fatu Hiva</td>
-<td style="text-align: right;">46</td>
+<td style="text-align: right;">53</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Hao</td>
@@ -134,15 +134,15 @@ interrogée</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Hikueru</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Hiva Oa</td>
-<td style="text-align: right;">117</td>
+<td style="text-align: right;">127</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Huahine</td>
-<td style="text-align: right;">292</td>
+<td style="text-align: right;">304</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Katiu</td>
@@ -178,7 +178,7 @@ interrogée</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Marokau</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">10</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Mataiva</td>
@@ -190,11 +190,11 @@ interrogée</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Maupiti</td>
-<td style="text-align: right;">81</td>
+<td style="text-align: right;">80</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Moorea</td>
-<td style="text-align: right;">214</td>
+<td style="text-align: right;">223</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Motu One (Marquises)</td>
@@ -202,99 +202,107 @@ interrogée</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Napuka</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Nuku Hiva</td>
-<td style="text-align: right;">246</td>
+<td style="text-align: left;">Niau</td>
+<td style="text-align: right;">43</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Nuku Hiva</td>
+<td style="text-align: right;">251</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Pukapuka</td>
 <td style="text-align: right;">23</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Pukarua</td>
 <td style="text-align: right;">10</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Raiatea</td>
-<td style="text-align: right;">405</td>
-</tr>
 <tr class="odd">
+<td style="text-align: left;">Raiatea</td>
+<td style="text-align: right;">422</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Raivavae</td>
 <td style="text-align: right;">34</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Rangiroa</td>
 <td style="text-align: right;">159</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Raraka</td>
 <td style="text-align: right;">13</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Raroia</td>
 <td style="text-align: right;">5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Ravahere</td>
 <td style="text-align: right;">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Reao</td>
 <td style="text-align: right;">60</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Rimatara</td>
-<td style="text-align: right;">75</td>
-</tr>
 <tr class="even">
+<td style="text-align: left;">Rimatara</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">Rurutu</td>
 <td style="text-align: right;">112</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Taenga</td>
 <td style="text-align: right;">10</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Tahaa</td>
-<td style="text-align: right;">282</td>
-</tr>
 <tr class="odd">
+<td style="text-align: left;">Tahaa</td>
+<td style="text-align: right;">289</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Tahanea</td>
 <td style="text-align: right;">2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Tahiti</td>
-<td style="text-align: right;">1030</td>
+<td style="text-align: right;">1042</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Tahuata</td>
-<td style="text-align: right;">42</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Taiaro</td>
-<td style="text-align: right;">3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Takapoto</td>
-<td style="text-align: right;">46</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Takaroa</td>
 <td style="text-align: right;">44</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Taiaro</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Takapoto</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Takaroa</td>
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Takume</td>
 <td style="text-align: right;">9</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Tatakoto</td>
 <td style="text-align: right;">42</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Tematangi</td>
-<td style="text-align: right;">19</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tepoto Nord</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Tikehau</td>
@@ -306,11 +314,11 @@ interrogée</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Tubuai</td>
-<td style="text-align: right;">133</td>
+<td style="text-align: right;">134</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Tureia</td>
-<td style="text-align: right;">26</td>
+<td style="text-align: right;">33</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Ua Huka</td>
