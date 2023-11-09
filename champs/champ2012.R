@@ -27,6 +27,7 @@ eleveursChamp2012 <- rga23 |>
       (
         # • Caprins : plus de 10 animaux de plus de 30 jours.
         ifelse(is.na(NbChevres), 0, NbChevres) +
+          ifelse(is.na(NbChevrettes), 0, NbChevrettes) +
           ifelse(is.na(NbCabris), 0, NbCabris) +
           ifelse(is.na(NbBoucs), 0, NbBoucs) >= 10) |
       (
@@ -34,9 +35,10 @@ eleveursChamp2012 <- rga23 |>
         ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs) -
           ifelse(is.na(NbPorceletsNonSevres), 0, NbPorceletsNonSevres) > 10) |
       (
-        # • ovins : plus de 10 animaux de plus de 30 jours.
+        # • Ovins : plus de 10 animaux de plus de 30 jours.
         ifelse(is.na(NbBrebis), 0, NbBrebis) +
-          ifelse(is.na(NbBeliers), 0, NbBeliers) > 10) |
+          ifelse(is.na(NbBeliers), 0, NbBeliers) +
+          ifelse(is.na(NbAgnelles), 0, NbAgnelles) > 10) |
       (
         # • Lapins : plus de 20 lapins de plus de 30 jours.
         ifelse(is.na(NbLapinesFutures), 0, NbLapinesFutures) +
@@ -92,8 +94,8 @@ idCultivateursChamp2012 <- rbind(cultivateursChamp2012_1 |> select(interview__ke
 
 # Ensemble des exploitants dans le champ
 idExploitantsDansLeChamp2012 <- full_join(
-  eleveursChamp2012 |> select(interview__key) |> mutate(ElevageValideRGA = 1),
-  idCultivateursChamp2012 |> mutate(CultureValideRGA = 1),
+  eleveursChamp2012 |> select(interview__key) |> mutate(ElevageValide2012 = 1),
+  idCultivateursChamp2012 |> mutate(CultureValide2012 = 1),
   by = c("interview__key")
 )
 

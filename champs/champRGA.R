@@ -1,5 +1,3 @@
-source("analyse/eligibles.R")
-
 rga23 <- readCSV("rga23.csv")
 
 # Critères éleveurs
