@@ -13,6 +13,11 @@ nouveauxDoublonsNonInterroges <- anti_join(doublonsNonInterroges, readCSV("doubl
                                              select(interview__keyDoublon) |>
                                              rename(interview__key = interview__keyDoublon))
 
+commentairesNouveaux <- left_join(nouveauxDoublonsNonInterroges, readTable("interview__comments.tab", dossier)) |>
+  select(!interview__id & !roster & !id1 & !id2)
+
+#writeCSV(commentairesNouveaux)
+
 ## A supprimer si besoin et augmenter la version pour la lecture suivante
 anciensDoublonsNonInterroges <- anti_join(readCSV("doublons_v3.csv") |> 
                                              select(interview__keyDoublon) |>
