@@ -97,7 +97,6 @@ writeCSVTraites(rga23_prodVegetales)
 
 # test2 <- rga23_prodVegetales |> filter(is.na(PartComFlorale__1) & ModesComFlorale__1 == 1)
 
-
 # Vérifications
 
 # ## Cultures maraichères - 10
@@ -116,8 +115,8 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComMaraic__11), 0, PartComMaraic__11) +
 #       ifelse(is.na(PartComMaraic__12), 0, PartComMaraic__12) +
 #       ifelse(is.na(PartComMaraic__13), 0, PartComMaraic__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__10), 0, CulturesPresentes__10) +
-#       ifelse(is.na(CultPresentesJardins__10), 0, CultPresentesJardins__10)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__10), 0, as.numeric(CulturesPresentes__10)) +
+#       ifelse(is.na(CultPresentesJardins__10), 0, as.numeric(CultPresentesJardins__10))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
@@ -138,8 +137,8 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComVivri__11), 0, PartComVivri__11) +
 #       ifelse(is.na(PartComVivri__12), 0, PartComVivri__12) +
 #       ifelse(is.na(PartComVivri__13), 0, PartComVivri__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__20), 0, CulturesPresentes__20) +
-#       ifelse(is.na(CultPresentesJardins__20), 0, CultPresentesJardins__20)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__20), 0, as.numeric(CulturesPresentes__20)) +
+#       ifelse(is.na(CultPresentesJardins__20), 0, as.numeric(CultPresentesJardins__20))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
@@ -160,8 +159,8 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComFruit__11), 0, PartComFruit__11) +
 #       ifelse(is.na(PartComFruit__12), 0, PartComFruit__12) +
 #       ifelse(is.na(PartComFruit__13), 0, PartComFruit__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__30), 0, CulturesPresentes__30) +
-#       ifelse(is.na(CultPresentesJardins__30), 0, CultPresentesJardins__30)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__30), 0, as.numeric(CulturesPresentes__30)) +
+#       ifelse(is.na(CultPresentesJardins__30), 0, as.numeric(CultPresentesJardins__30))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
@@ -182,13 +181,13 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComFlorale__11), 0, PartComFlorale__11) +
 #       ifelse(is.na(PartComFlorale__12), 0, PartComFlorale__12) +
 #       ifelse(is.na(PartComFlorale__13), 0, PartComFlorale__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__40), 0, CulturesPresentes__40) +
-#       ifelse(is.na(CultPresentesJardins__40), 0, CultPresentesJardins__40)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__40), 0, as.numeric(CulturesPresentes__40)) +
+#       ifelse(is.na(CultPresentesJardins__40), 0, as.numeric(CultPresentesJardins__40))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
 #
-# ## Cultures plantes aromatiques - 50
+# # ## Cultures plantes aromatiques - 50
 # left_join(rga23_prodVegetales, rga23 |> select(interview__key, ProductionAgricole)) |>
 #   mutate(
 #     pourcent = ifelse(is.na(PartComPlantes__1), 0, PartComPlantes__1) +
@@ -204,8 +203,8 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComPlantes__11), 0, PartComPlantes__11) +
 #       ifelse(is.na(PartComPlantes__12), 0, PartComPlantes__12) +
 #       ifelse(is.na(PartComPlantes__13), 0, PartComPlantes__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__50), 0, CulturesPresentes__50) +
-#       ifelse(is.na(CultPresentesJardins__50), 0, CultPresentesJardins__50)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__50), 0, as.numeric(CulturesPresentes__50)) +
+#       ifelse(is.na(CultPresentesJardins__50), 0, as.numeric(CultPresentesJardins__50))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
@@ -226,7 +225,7 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComPepinieres__11), 0, PartComPepinieres__11) +
 #       ifelse(is.na(PartComPepinieres__12), 0, PartComPepinieres__12) +
 #       ifelse(is.na(PartComPepinieres__13), 0, PartComPepinieres__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__60), 0, CulturesPresentes__60)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__60), 0, as.numeric(CulturesPresentes__60))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
 #   count()
@@ -247,10 +246,70 @@ writeCSVTraites(rga23_prodVegetales)
 #       ifelse(is.na(PartComFourrages__11), 0, PartComFourrages__11) +
 #       ifelse(is.na(PartComFourrages__12), 0, PartComFourrages__12) +
 #       ifelse(is.na(PartComFourrages__13), 0, PartComFourrages__13),
-#     presenceCultures = ifelse(is.na(CulturesPresentes__70), 0, CulturesPresentes__70) +
-#       ifelse(is.na(CultPresentesJardins__70), 0, CultPresentesJardins__70)
+#     presenceCultures = ifelse(is.na(CulturesPresentes__70), 0, as.numeric(CulturesPresentes__70)) +
+#       ifelse(is.na(CultPresentesJardins__70), 0, as.numeric(CultPresentesJardins__70))
 #   ) |>
 #   group_by(ProductionAgricole, presenceCultures, pourcent) |>
+#   count()
+
+## Miel
+# left_join(rga23_prodAnimales, rga23 |> select(interview__key, ProductionAgricole)) |>
+#   mutate(
+#     pourcent = ifelse(is.na(PartComMiel__1), 0, PartComMiel__1) +
+#       ifelse(is.na(PartComMiel__2), 0, PartComMiel__2) +
+#       ifelse(is.na(PartComMiel__3), 0, PartComMiel__3) +
+#       ifelse(is.na(PartComMiel__4), 0, PartComMiel__4) +
+#       ifelse(is.na(PartComMiel__5), 0, PartComMiel__5) +
+#       ifelse(is.na(PartComMiel__6), 0, PartComMiel__6) +
+#       ifelse(is.na(PartComMiel__7), 0, PartComMiel__7) +
+#       ifelse(is.na(PartComMiel__8), 0, PartComMiel__8) +
+#       ifelse(is.na(PartComMiel__9), 0, PartComMiel__9) +
+#       ifelse(is.na(PartComMiel__10), 0, PartComMiel__10) +
+#       ifelse(is.na(PartComMiel__11), 0, PartComMiel__11) +
+#       ifelse(is.na(PartComMiel__12), 0, PartComMiel__12) +
+#       ifelse(is.na(PartComMiel__13), 0, PartComMiel__13)
+#   ) |>
+#   group_by(ProductionAgricole, pourcent) |>
+#   count()
+
+## Oeufs
+# left_join(rga23_prodAnimales, rga23 |> select(interview__key, ProductionAgricole)) |>
+#   mutate(
+#     pourcent = ifelse(is.na(PartComOeufs__1), 0, PartComOeufs__1) +
+#       ifelse(is.na(PartComOeufs__2), 0, PartComOeufs__2) +
+#       ifelse(is.na(PartComOeufs__3), 0, PartComOeufs__3) +
+#       ifelse(is.na(PartComOeufs__4), 0, PartComOeufs__4) +
+#       ifelse(is.na(PartComOeufs__5), 0, PartComOeufs__5) +
+#       ifelse(is.na(PartComOeufs__6), 0, PartComOeufs__6) +
+#       ifelse(is.na(PartComOeufs__7), 0, PartComOeufs__7) +
+#       ifelse(is.na(PartComOeufs__8), 0, PartComOeufs__8) +
+#       ifelse(is.na(PartComOeufs__9), 0, PartComOeufs__9) +
+#       ifelse(is.na(PartComOeufs__10), 0, PartComOeufs__10) +
+#       ifelse(is.na(PartComOeufs__11), 0, PartComOeufs__11) +
+#       ifelse(is.na(PartComOeufs__12), 0, PartComOeufs__12) +
+#       ifelse(is.na(PartComOeufs__13), 0, PartComOeufs__13)
+#   ) |> 
+#   group_by(ProductionAgricole, pourcent) |>
+#   count()
+
+## Viande
+# left_join(rga23_prodAnimales, rga23 |> select(interview__key, ProductionAgricole)) |>
+#   mutate(
+#     pourcent = ifelse(is.na(PartComViande__1), 0, PartComViande__1) +
+#       ifelse(is.na(PartComViande__2), 0, PartComViande__2) +
+#       ifelse(is.na(PartComViande__3), 0, PartComViande__3) +
+#       ifelse(is.na(PartComViande__4), 0, PartComViande__4) +
+#       ifelse(is.na(PartComViande__5), 0, PartComViande__5) +
+#       ifelse(is.na(PartComViande__6), 0, PartComViande__6) +
+#       ifelse(is.na(PartComViande__7), 0, PartComViande__7) +
+#       ifelse(is.na(PartComViande__8), 0, PartComViande__8) +
+#       ifelse(is.na(PartComViande__9), 0, PartComViande__9) +
+#       ifelse(is.na(PartComViande__10), 0, PartComViande__10) +
+#       ifelse(is.na(PartComViande__11), 0, PartComViande__11) +
+#       ifelse(is.na(PartComViande__12), 0, PartComViande__12) +
+#       ifelse(is.na(PartComViande__13), 0, PartComViande__13)
+#   ) |>
+#   group_by(ProductionAgricole, pourcent) |>
 #   count()
 
 rm(
