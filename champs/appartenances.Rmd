@@ -48,6 +48,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ## `r rga23B |> filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |    (eligibilite == 1 & (substring(id_exploitation, 0, 1) == "P" | substring(id_exploitation, 0, 1) == "M")) |    ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X")) |> count()` questionnaires complets
 
+<font color = "red">**Données brutes - collecte encore en cours**</font>
+
 ### Seuils 2023
 
 <font color = "green">`r rga23B |> filter(ValideRGA == 1) |> count()`</font> exploitations agricoles au sens du RGA2023
@@ -60,6 +62,8 @@ kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
   group_by(ArchipelExploitation) |>
   count())
 ```
+
+[+ `r rga23B |> filter((is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X")) |> count()` unités qui respectent **uniquement** le seuil de 2,7 tonnes de coprah]
 
 ### Seuils 2012
 
@@ -79,8 +83,3 @@ kable(inner_join(rga23, idExploitantsDansLeChamp2012, by = c("interview__key")) 
 
 - `r rga23B |> filter(is.na(ValideRGA) & Valide2012 == 1) |> count()` unités appartiennent uniquement au champ RGA2012 
 - `r rga23B |> filter(ValideRGA == 1 & is.na(Valide2012)) |> count()` unités appartiennent uniquement au champ RGA2023 
-
-
-
-
-
