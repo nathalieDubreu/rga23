@@ -1,4 +1,5 @@
-rga23 <- readCSV("rga23.csv")
+source("champs/champRGA.R")
+source("champs/champ2012.R")
 
 # Indicatrices d'appartenance au champ 2023
 rga23A <- left_join(rga23, idExploitantsDansLeChamp |> mutate(ValideRGA = 1),
@@ -15,3 +16,5 @@ rga23B |> group_by(ValideRGA,Valide2012) |> count()
 rga23B |> group_by(ElevageValideRGA,ElevageValide2012) |> count()
 
 rga23B |> group_by(CultureValideRGA,CultureValide2012) |> count()
+
+rmarkdown::render("champs/appartenances.Rmd",encoding="UTF-8")

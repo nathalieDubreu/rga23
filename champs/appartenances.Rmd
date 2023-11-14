@@ -1,0 +1,86 @@
+---
+title: "Stats RGA"
+author: "NDubreu"
+date: '2023-09-14'
+output: md_document
+---
+
+# [RGA23] Respect des seuils - Données du `r date`
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Rappel seuils choisis pour les exploitaitons agricoles en 2023 (DOM)
+
+- Superficie agricole utilisée - 1 ha
+- Terres arables - 1 ha
+- Pomme de terre et ensemble des racines et tubercules - 3000 m²
+- Canne à sucre – 3000 m²
+- Cultures fruitières (y compris bananes et ananas) - 3000 m²
+- Jardins océnaniens - 3000 m²
+- Ensemble PPAM, cultures ornementales et pépinières - 3000 m²
+- Légumes frais et fraises - 1000 m²
+- Serres et abris hauts - 100 m²
+- 2 bovins de plus de 2 ans (y compris vaches)
+- 6 brebis ou chèvres
+- 1 truie mère
+- 10 lapines mères
+- 200 poulets
+- 100 poules pondeuses
+- 30 ruches
+- 4 naissances d'équidés
+- <font color = "orange">Présence d'atelier d'engraissement (jeunes bovins, agneaux, chevreaux, porcins, lapins)</font>
+- <font color = "orange">Production hors sol - 1 tonne de champignons ou 1 tonne d'endives</font>
+
+## Rappel seuils du RGA 2012
+
+- Superficie agricole utilisée - 1000 m²
+- Vanille sous abri - 500 m²
+- Horticulture sous abri - 500 m²
+- Pépinière - 500 m²
+- Bovins, caprins, ovins, équins : plus de 10 animaux <font color = "orange">de plus de 30 jours</font>
+- Porcins : plus de 10 animaux de plus de 30Kg.
+- Poules pondeuses et poulets de chair : plus de 100 animaux de plus de 30 jours
+- Autres volailles : plus de 50 animaux de plus de 30 jours
+- Ruches : plus de 20 ruches.
+- Lapins : plus de 20 lapins <font color = "orange">de plus de 30 jours</font>
+
+## `r rga23B |> filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |    (eligibilite == 1 & (substring(id_exploitation, 0, 1) == "P" | substring(id_exploitation, 0, 1) == "M")) |    ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X")) |> count()` questionnaires complets
+
+### Seuils 2023
+
+<font color = "green">`r rga23B |> filter(ValideRGA == 1) |> count()`</font> exploitations agricoles au sens du RGA2023
+
+- Eleveurs : `r rga23B |> filter(ElevageValideRGA == 1) |> count()` 
+- Cultivateurs : `r rga23B |> filter(CultureValideRGA == 1) |> count()` 
+
+```{r, echo=FALSE}
+kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
+  group_by(ArchipelExploitation) |>
+  count())
+```
+
+### Seuils 2012
+
+<font color = "orange">`r rga23B |> filter(Valide2012 == 1) |> count()`</font> unités avec les seuils du RGA2012
+
+- Eleveurs : `r rga23B |> filter(ElevageValide2012 == 1) |> count()` 
+- Cultivateurs : `r rga23B |> filter(CultureValide2012 == 1) |> count()` 
+
+```{r, echo=FALSE}
+kable(inner_join(rga23, idExploitantsDansLeChamp2012, by = c("interview__key")) |>
+  group_by(ArchipelExploitation) |>
+  count())
+```
+### Comparaison 
+
+`r rga23B |> filter(ValideRGA == 1 & Valide2012 == 1) |> count()` unités en commun 
+
+- `r rga23B |> filter(is.na(ValideRGA) & Valide2012 == 1) |> count()` unités appartiennent uniquement au champ RGA2012 
+- `r rga23B |> filter(ValideRGA == 1 & is.na(Valide2012)) |> count()` unités appartiennent uniquement au champ RGA2023 
+
+
+
+
+

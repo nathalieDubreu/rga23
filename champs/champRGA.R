@@ -43,7 +43,7 @@ eleveursChampRGA <- rga23 |>
 
 # Critères cultivateurs
 
-cultivateursChampRGA1 <- eligiblesRGA |>
+cultivateursChampRGA1 <- rga23 |>
   filter(
     # 1	Superficie agricole utilisée	10000	m²
     SurfaceTotalProdAgri >= 10000 |

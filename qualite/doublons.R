@@ -3,18 +3,18 @@ doublonsNonInterroges <- readCSV("rga23.csv") |>
   select(interview__key, id_exploitation, assignment__id, id_enqueteur_ech) |>
   rename(idExploitDoublon = id_exploitation, numAffectationDoublon = assignment__id)
 
-commentaires <- left_join(nouveauxDoublonsNonInterroges, readTable("interview__comments.tab", dossier)) |>
+commentaires <- left_join(doublonsNonInterroges, readTable("interview__comments.tab", dossier)) |>
   select(!interview__id & !roster & !id1 & !id2)
 
 # writeCSV(commentaires)
 
 ## A ajouter dans le fichier doublons_vX.csv et augmenter la version pour la lecture suivante
-nouveauxDoublonsNonInterroges <- anti_join(doublonsNonInterroges, readCSV("doublons_v2.csv") |>
+nouveauxDoublonsNonInterroges <- anti_join(doublonsNonInterroges, readCSV("doublons_v3.csv") |>
                                              select(interview__keyDoublon) |>
                                              rename(interview__key = interview__keyDoublon))
 
 ## A supprimer si besoin et augmenter la version pour la lecture suivante
-anciensDoublonsNonInterroges <- anti_join(readCSV("doublons_v2.csv") |> 
+anciensDoublonsNonInterroges <- anti_join(readCSV("doublons_v3.csv") |> 
                                              select(interview__keyDoublon) |>
                                              rename(interview__key = interview__keyDoublon),doublonsNonInterroges)
 

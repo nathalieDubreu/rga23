@@ -66,7 +66,7 @@ eleveursChamp2012 <- rga23 |>
 
 # Critères cultivateurs
 
-cultivateursChamp2012_1 <- eligiblesRGA |>
+cultivateursChamp2012_1 <- rga23 |>
   filter(
     # Superficie agricole utilisée > 0,1 ha
     SurfaceTotalProdAgri >= 1000 |
