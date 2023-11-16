@@ -9,32 +9,90 @@ output: md_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+
+rga23A <- left_join(rga23, idExploitantsDansLeChamp |> mutate(ValideRGA = 1),
+  by = c("interview__key")
+)
+
+rga23A_valides <- rga23A |>
+  filter(interview__status == 130 | interview__status == 120) |>
+  mutate(CoprahValideRGA = case_when((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X") ~ 1))
+
+rga23_champ <- rga23A_valides |> filter(ValideRGA == 1 | CoprahValideRGA == 1) 
+
+surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+
+coExploitants <- inner_join(readCSV("rga23_coexploitants.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+
+moPermFamiliale <- inner_join(readCSV("rga23_moPermanenteFam.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+
 ```
 
-## Zoom sur l'appartenance au champ des `r eligiblesRGA |> filter(substring(id_exploitation, 0, 1) != "C") |> count()` unités ayant répondu au questionnaire complet (en tant qu'exploitation agricole - et non en tant que coprahculteurs)
+## Données de contexte 
+
+- 7832 unités dans la base d'interrogation
+- `r rga23A_valides |> filter(statut_collecte == 1) |> count()` unités validées (hors refus, injoignables, doublons, ...)
+- `r rga23A_valides |> filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |    (eligibilite == 1 & (substring(id_exploitation, 0, 1) == "P" | substring(id_exploitation, 0, 1) == "M")) |    ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X")) |> count()` questionnaires validés complets (hors autoconsommation totale, fin d'activité, ...)
+
+## Appartenance au champ du RGA 2023
+
+### `r rga23_champ |> count()` exploitations agricoles ou coprahculteurs en 2023
+
+Nombre d'unités qui respectent au moins un critère : 
+
+- Exploitations agricoles : `r rga23_champ |> filter(ValideRGA == 1) |> count()` 
+  - Elevage : `r rga23_champ |> filter(ElevageValideRGA == 1) |> count()` 
+  - Culture : `r rga23_champ |> filter(CultureValideRGA == 1) |> count()`
+- Coprahculteurs : `r rga23_champ |> filter(CoprahValideRGA == 1) |> count()`
+
+## Main d'oeuvre et temps de travail
+
+### Temps de travail du chef d'exploitation
 
 ```{r, echo=FALSE}
-kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
-  summarise(
-    `Ensemble` = n(),
-    `Cultivateurs` = sum(CultureValideRGA == 1, na.rm = TRUE),
-    `Eleveurs` = sum(ElevageValideRGA == 1, na.rm = TRUE)
-  ))
+kable(rga23_champ |> mutate(TpsTravailChefExpl = case_when(
+    (TpsTravailChefExpl == 1) ~ "1 : Moins de 1/2 temps",
+    (TpsTravailChefExpl == 2) ~ "2 : 1/2 temps",
+    (TpsTravailChefExpl == 3) ~ "3 : Entre 1/2 temps et temps complet",
+    (TpsTravailChefExpl == 4) ~ "4 : Temps complet",
+    (is.na(TpsTravailChefExpl)) ~ "Non réponse")) |> group_by(TpsTravailChefExpl) |> count())
 ```
+
+- `r rga23_champ |> summarize(sum(NbCoExploitants, na.rm = TRUE))` coexploitants
+
 ```{r, echo=FALSE}
-kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
-  group_by(ArchipelExploitation) |>
-  count())
+kable(coExploitants |> mutate(TempsTravailCoExploit = case_when(
+    (TempsTravailCoExploit == 1) ~ "1 : Moins de 1/2 temps",
+    (TempsTravailCoExploit == 2) ~ "2 : 1/2 temps",
+    (TempsTravailCoExploit == 3) ~ "3 : Entre 1/2 temps et temps complet",
+    (TempsTravailCoExploit == 4) ~ "4 : Temps complet",
+    (is.na(TempsTravailCoExploit)) ~ "Non réponse")) |> group_by(TempsTravailCoExploit) |> count())
 ```
 
+- `r rga23_champ |> summarize(sum(NbMOPermFamiliale, na.rm = TRUE))` personnes employées en tant que main d'oeuvre permanente familiale (plus de 8 mois dans l'année, quelque soit le temps de travail)
 
-# Comptages sur les `r eligiblesRGA |> count()` unités recensées 
-<font color = "orange">**Sans prendre en compte leur appartenance au champ du RGA**</font>
+```{r, echo=FALSE}
+kable(moPermFamiliale |> mutate(TempsTravailMOFamPerm = case_when(
+    (TempsTravailMOFamPerm == 1) ~ "1 : Moins de 1/2 temps",
+    (TempsTravailMOFamPerm == 2) ~ "2 : 1/2 temps",
+    (TempsTravailMOFamPerm == 3) ~ "3 : Entre 1/2 temps et temps complet",
+    (TempsTravailMOFamPerm == 4) ~ "4 : Temps complet",
+    (is.na(TempsTravailMOFamPerm)) ~ "Non réponse")) |> group_by(TempsTravailMOFamPerm) |> count())
+```
+
+- `r (rga23_champ |> summarize(sum(nbFemmesNFPerm, na.rm = TRUE))) + (rga23_champ |> summarize(sum(nbHommesNFPerm, na.rm = TRUE)))` personnes employées en tant que main d'oeuvre permanente NON familiale (plus de 8 mois dans l'année, quelque soit le temps de travail)
+
+- `r rga23_champ |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+  summarize(sum(totalMAOccas, na.rm = TRUE))` personnes employées en tant que main d'oeuvre occasionnelle (moins de 8 mois dans l'année)
 
 ## SAU déclarée
 
 ```{r, echo=FALSE}
-kable(eligiblesCultivateurs |>
+kable(rga23_champ |>
   mutate(SAU = case_when(is.na(SurfaceTotalProdAgri) ~ as.numeric(NA), TRUE ~ as.numeric(SurfaceTotalProdAgri))) |>
   summarise(
     `SAU totale (en Ha)` = round(sum(SAU, na.rm = TRUE) / 10000, 1),
@@ -43,18 +101,42 @@ kable(eligiblesCultivateurs |>
   ))
 ```
 
+```{r, echo=FALSE}
+surfacesCultures <- surfacesCulturesEligibles |>
+  mutate(TypeCulture = case_when(
+    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
+    (TypeCulture == 20) ~ "20 - Cultures vivrières",
+    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors pépinères) et bois d'oeuvre",
+    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
+    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
+    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
+    (TypeCulture == 70) ~ "70 - Cultures fourragères",
+    (TypeCulture == 80) ~ "80 - Jachères",
+    TRUE ~ as.character(TypeCulture)
+  )) |>
+  group_by(TypeCulture) |>
+  summarize(
+    `Nombre d'exploitants` = n_distinct(interview__key),
+    `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
+    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 2),
+    `Surface min (m²)` = min(SurfaceCult, na.rm = TRUE),
+    `Surface max (m²)` = max(SurfaceCult, na.rm = TRUE)
+  )
+```
+
 ## Types de cultures des `r surfacesCulturesEligibles |> distinct(interview__key) |> count()` cultivateurs ayant déclarés des cultures classiques organisées
 
 ```{r, echo=FALSE}
 kable(surfacesCultures)
 ```
 
-## `r eligiblesEleveurs |> count()` éleveurs
+## `r rga23_champ |> filter(RaisonsRecensement__2 == 1) |> count()` exploitations agricoles font de l'élevage 
+#### (Parmi ceux-là, `r rga23_champ |> filter(ElevageValideRGA == 1) |> count()` respectent au moins un seuil propre à l'élevage)
 
 ### Répartition des élevages
 
 ```{r, echo=FALSE}
-kable(eligiblesEleveurs |>
+kable(rga23_champ |> filter(RaisonsRecensement__2 == 1) |>
   summarise(
     elevBovins = sum(PresenceAnimaux__1, na.rm = TRUE),
     elevOvins = sum(PresenceAnimaux__2, na.rm = TRUE),
@@ -67,12 +149,10 @@ kable(eligiblesEleveurs |>
   ))
 ```
 
-### Poules pondeuses - `r eligiblesEleveurs |> filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |> count()` éleveurs
-
-
+### Poules pondeuses - `r rga23_champ |> filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |> count()` éleveurs
 
 ```{r, echo=FALSE}
-poules <- eligiblesEleveurs |>
+poules <- rga23_champ |> 
   filter(TypeVolailles__4 == 1) |>
   summarize(
     NbPoules0 = sum(NombrePoules0, na.rm = TRUE),
@@ -82,7 +162,7 @@ poules <- eligiblesEleveurs |>
     NbMaxOeufsPoules0 = round(max(ProductionPoules0 / NombrePoules0, na.rm = TRUE), 0)
   )
 ```
-- Poules bio - *`r eligiblesEleveurs |> filter(TypeVolailles__4 == 1) |> count()` élevages*
+- Poules bio - *`r rga23_champ |> filter(TypeVolailles__4 == 1) |> count()` élevages*
   - `r poules$NbPoules0` poules code 0 déclarées
   - `r poules$OeufsParPoules0` oeufs par poule en moyenne
   - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules0`
@@ -91,7 +171,7 @@ poules <- eligiblesEleveurs |>
 <br/>
 
 ```{r, echo=FALSE}
-poules <- eligiblesEleveurs |>
+poules <- rga23_champ |>
   filter(TypeVolailles__3 == 1) |>
   summarize(
     NbPoules12 = sum(NombrePoules1, na.rm = TRUE),
@@ -101,7 +181,7 @@ poules <- eligiblesEleveurs |>
     NbMaxOeufsPoules12 = round(max(ProductionPoules1 / NombrePoules1, na.rm = TRUE), 0)
   )
 ```
-- Poules plein air ou au sol - *`r eligiblesEleveurs |> filter(TypeVolailles__3 == 1) |> count()` élevages*
+- Poules plein air ou au sol - *`r rga23_champ |> filter(TypeVolailles__3 == 1) |> count()` élevages*
   - `r poules$NbPoules12` poules code 1 ou 2 déclarées
   - `r poules$OeufsParPoules12` oeufs par poule en moyenne
   - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules12`
@@ -110,7 +190,7 @@ poules <- eligiblesEleveurs |>
 <br/>  
 
 ```{r, echo=FALSE}
-poules <- eligiblesEleveurs |>
+poules <- rga23_champ |>
   filter(TypeVolailles__1 == 1) |>
   summarize(
     NbPoules3 = sum(NombrePoules3, na.rm = TRUE),
@@ -120,7 +200,7 @@ poules <- eligiblesEleveurs |>
     NbMaxOeufsPoules3 = round(max(ProductionPoules3 / NombrePoules3, na.rm = TRUE), 0)
   )
 ```
-- Poules en cage - *`r eligiblesEleveurs |> filter(TypeVolailles__1 == 1) |> count()` élevages*
+- Poules en cage - *`r rga23_champ |> filter(TypeVolailles__1 == 1) |> count()` élevages*
   - `r as.character(poules$NbPoules3)` poules code 3 déclarées
   - `r as.character(poules$OeufsParPoules3)` oeufs par poule en moyenne
   - Nombre minimum d'oeufs par poule : `r poules$NbMinOeufsPoules3`
@@ -128,10 +208,10 @@ poules <- eligiblesEleveurs |>
 
 <br/>
 
-### Abeilles - `r eligiblesEleveurs |> filter(PresenceAnimaux__7 == 1) |> count()` apiculteurs
+### Abeilles - `r rga23_champ |> filter(PresenceAnimaux__7 == 1) |> count()` apiculteurs
 
 ```{r, echo=FALSE}
-table <- eligiblesEleveurs |>
+table <- rga23_champ |>
   filter(PresenceAnimaux__7 == 1) |>
   mutate(KiloMiel = ProductionRuches / NbRuchesRecoltees) |>
   summarize(
@@ -148,11 +228,14 @@ table <- eligiblesEleveurs |>
   
 ## Coprahculteurs
 
+- `r rga23_champ |> filter(RaisonsRecensement__3 == 1) |> count()` coprahculteurs
+  - dont `r rga23_champ |> filter(CoprahValideRGA == 1) |> count()` ont produit ou vendu plus de 2,7 tonnes de coprah en 2020, 2021 ou 2022
+
+
 ```{r, echo=FALSE}
-table <- eligiblesRGA |>
+table <- rga23_champ |>
   filter(RaisonsRecensement__3 == 1) |>
   summarize(
-    NbProdCoprah = n(),
     NbCocoExploitees = sum(NbCocoteraies, na.rm = TRUE),
     NbCocoExploiteesPP = sum(nbCocoStatut1, na.rm = TRUE),
     NbCocoExploiteesPI = sum(nbCocoStatut2, na.rm = TRUE),
@@ -162,7 +245,6 @@ table <- eligiblesRGA |>
     NbMaxCoco = max(NbCocoteraies, na.rm = TRUE)
   )
 ```
-- `r table$NbProdCoprah` producteurs de coprah
 
 - `r table$NbCocoExploitees` cocoteraies exploitées
   - `r table$NbCocoExploiteesPP` en tant que propriétaire plein

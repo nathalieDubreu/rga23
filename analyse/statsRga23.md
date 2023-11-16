@@ -1,59 +1,124 @@
-# \[RGA23\] Quelques stats
+# \[RGA23\] Quelques stats - Données du 15/11/2023
 
-## Zoom sur l’appartenance au champ des 3225 unités recensées
+## Données de contexte
+
+-   7832 unités dans la base d’interrogation
+-   6737 unités validées (hors refus, injoignables, doublons, …)
+-   4968 questionnaires validés complets (hors autoconsommation totale,
+    fin d’activité, …)
+
+## Appartenance au champ du RGA 2023
+
+### 3817 exploitations agricoles ou coprahculteurs en 2023
+
+Nombre d’unités qui respectent au moins un critère :
+
+-   Exploitations agricoles : 2732
+    -   Elevage : 685
+    -   Culture : 2471
+-   Coprahculteurs : 1270
+
+## Main d’oeuvre et temps de travail
+
+### Temps de travail du chef d’exploitation
 
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: right;">Ensemble</th>
-<th style="text-align: right;">Cultivateurs</th>
-<th style="text-align: right;">Eleveurs</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1704</td>
-<td style="text-align: right;">1552</td>
-<td style="text-align: right;">376</td>
-</tr>
-</tbody>
-</table>
-
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">ArchipelExploitation</th>
+<th style="text-align: left;">TpsTravailChefExpl</th>
 <th style="text-align: right;">n</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Australes</td>
-<td style="text-align: right;">155</td>
+<td style="text-align: left;">1 : Moins de 1/2 temps</td>
+<td style="text-align: right;">647</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Iles Du Vent</td>
-<td style="text-align: right;">688</td>
+<td style="text-align: left;">2 : 1/2 temps</td>
+<td style="text-align: right;">1264</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Iles Sous-Le-Vent</td>
-<td style="text-align: right;">454</td>
+<td style="text-align: left;">3 : Entre 1/2 temps et temps complet</td>
+<td style="text-align: right;">942</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Marquises</td>
-<td style="text-align: right;">287</td>
+<td style="text-align: left;">4 : Temps complet</td>
+<td style="text-align: right;">941</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Tuamotu-Gambier</td>
-<td style="text-align: right;">120</td>
+<td style="text-align: left;">Non réponse</td>
+<td style="text-align: right;">23</td>
 </tr>
 </tbody>
 </table>
 
-# Comptages sur les 3225 unités recensées
+-   764 coexploitants
 
-<font color = "orange">**Sans prendre en compte leur appartenance au
-champ du RGA**</font>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">TempsTravailCoExploit</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1 : Moins de 1/2 temps</td>
+<td style="text-align: right;">187</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2 : 1/2 temps</td>
+<td style="text-align: right;">281</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3 : Entre 1/2 temps et temps complet</td>
+<td style="text-align: right;">175</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4 : Temps complet</td>
+<td style="text-align: right;">121</td>
+</tr>
+</tbody>
+</table>
+
+-   1557 personnes employées en tant que main d’oeuvre permanente
+    familiale (plus de 8 mois dans l’année, quelque soit le temps de
+    travail)
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">TempsTravailMOFamPerm</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1 : Moins de 1/2 temps</td>
+<td style="text-align: right;">346</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2 : 1/2 temps</td>
+<td style="text-align: right;">571</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3 : Entre 1/2 temps et temps complet</td>
+<td style="text-align: right;">336</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4 : Temps complet</td>
+<td style="text-align: right;">304</td>
+</tr>
+</tbody>
+</table>
+
+-   906 personnes employées en tant que main d’oeuvre permanente NON
+    familiale (plus de 8 mois dans l’année, quelque soit le temps de
+    travail)
+
+-   2218 personnes employées en tant que main d’oeuvre occasionnelle
+    (moins de 8 mois dans l’année)
 
 ## SAU déclarée
 
@@ -67,14 +132,14 @@ champ du RGA**</font>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">3345.2</td>
-<td style="text-align: right;">1.53</td>
+<td style="text-align: right;">5375.4</td>
+<td style="text-align: right;">2.14</td>
 <td style="text-align: right;">250</td>
 </tr>
 </tbody>
 </table>
 
-## Types de cultures des 2130 cultivateurs ayant déclarés des cultures classiques organisées
+## Types de cultures des 2550 cultivateurs ayant déclarés des cultures classiques organisées
 
 <table>
 <colgroup>
@@ -98,76 +163,78 @@ champ du RGA**</font>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">10 - Cultures maraîchères</td>
-<td style="text-align: right;">551</td>
-<td style="text-align: right;">251.6</td>
-<td style="text-align: right;">1033.72</td>
+<td style="text-align: right;">644</td>
+<td style="text-align: right;">342.1</td>
+<td style="text-align: right;">1207.43</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">50000</td>
+<td style="text-align: right;">60000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">20 - Cultures vivrières</td>
-<td style="text-align: right;">818</td>
-<td style="text-align: right;">178.3</td>
-<td style="text-align: right;">986.17</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">250.3</td>
+<td style="text-align: right;">1083.37</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">40000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">30 - Cultures fruitières (hors pépinères)
 et bois d’oeuvre</td>
-<td style="text-align: right;">1372</td>
-<td style="text-align: right;">1364.6</td>
-<td style="text-align: right;">2440.21</td>
+<td style="text-align: right;">1889</td>
+<td style="text-align: right;">2599.6</td>
+<td style="text-align: right;">3029.15</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">750000</td>
+<td style="text-align: right;">1500000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">40 - Feuillages et cultures florales (hors
 pépinières)</td>
-<td style="text-align: right;">423</td>
-<td style="text-align: right;">109.8</td>
-<td style="text-align: right;">1077.72</td>
+<td style="text-align: right;">509</td>
+<td style="text-align: right;">141.3</td>
+<td style="text-align: right;">1085.38</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">140000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">50 - Plantes aromatiques, stimulantes et
 médicinales</td>
-<td style="text-align: right;">580</td>
-<td style="text-align: right;">135.9</td>
-<td style="text-align: right;">1975.84</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">119365</td>
+<td style="text-align: right;">702</td>
+<td style="text-align: right;">221.5</td>
+<td style="text-align: right;">2557.42</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">130000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">60 - Pépinières (plantes vendues en
 pot)</td>
-<td style="text-align: right;">139</td>
-<td style="text-align: right;">11.4</td>
-<td style="text-align: right;">572.02</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">8.7</td>
+<td style="text-align: right;">934.73</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">10912</td>
+<td style="text-align: right;">20000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">70 - Cultures fourragères</td>
-<td style="text-align: right;">146</td>
-<td style="text-align: right;">1001.5</td>
-<td style="text-align: right;">65459.86</td>
-<td style="text-align: right;">50</td>
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">1460.0</td>
+<td style="text-align: right;">40669.60</td>
+<td style="text-align: right;">15</td>
 <td style="text-align: right;">1500000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">80 - Jachères</td>
-<td style="text-align: right;">378</td>
-<td style="text-align: right;">303.7</td>
-<td style="text-align: right;">7970.35</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">172000</td>
+<td style="text-align: right;">477</td>
+<td style="text-align: right;">473.5</td>
+<td style="text-align: right;">9803.95</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">334100</td>
 </tr>
 </tbody>
 </table>
 
-## 605 éleveurs
+## 822 exploitations agricoles font de l’élevage
+
+#### (Parmi ceux-là, 685 respectent au moins un seuil propre à l’élevage)
 
 ### Répartition des élevages
 
@@ -196,58 +263,57 @@ pot)</td>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">84</td>
+<td style="text-align: right;">167</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">227</td>
-<td style="text-align: right;">90</td>
-<td style="text-align: right;">35</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">225</td>
-<td style="text-align: right;">85</td>
+<td style="text-align: right;">399</td>
+<td style="text-align: right;">103</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">167</td>
 </tr>
 </tbody>
 </table>
 
-### Poules pondeuses - 69 éleveurs
+### Poules pondeuses - 86 éleveurs
 
 -   Poules bio - *4 élevages*
-    -   0 poules code 0 déclarées
-    -   NaN oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule :
-    -   Nombre maximum d’oeufs par poule : -
+    -   845 poules code 0 déclarées
+    -   175 oeufs par poule en moyenne
+    -   Nombre minimum d’oeufs par poule : 100
+    -   Nombre maximum d’oeufs par poule : 367
 
 <br/>
 
--   Poules plein air ou au sol - *33 élevages*
-    -   5474 poules code 1 ou 2 déclarées
-    -   200 oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule : 0
+-   Poules plein air ou au sol - *41 élevages*
+    -   7895 poules code 1 ou 2 déclarées
+    -   221 oeufs par poule en moyenne
+    -   Nombre minimum d’oeufs par poule : 37
     -   Nombre maximum d’oeufs par poule : 700
 
 <br/>
 
--   Poules en cage - *32 élevages*
-    -   122774 poules code 3 déclarées
+-   Poules en cage - *41 élevages*
+    -   159298 poules code 3 déclarées
     -   218 oeufs par poule en moyenne
-    -   Nombre minimum d’oeufs par poule : 47
+    -   Nombre minimum d’oeufs par poule : 0
     -   Nombre maximum d’oeufs par poule : 730
 
 <br/>
 
-### Abeilles - 225 apiculteurs
+### Abeilles - 199 apiculteurs
 
--   4742 ruches pour produire
-    -   dont 3103 ruches récoltées
--   16.84 kilos de miel produits en moyenne (de 0.5 à 55.56)
+-   5863 ruches pour produire
+    -   dont 3979 ruches récoltées
+-   18.55 kilos de miel produits en moyenne (de 1 à 100)
 
 ## Coprahculteurs
 
--   994 producteurs de coprah
-
--   2628 cocoteraies exploitées
-
-    -   410 en tant que propriétaire plein
-    -   1737 en tant que propriétaire en indivision,
-    -   481 en tant qu’exploitant
-
--   2.66 cocoteraies exploitées en moyenne (de 1 à 20)
+-   1430 coprahculteurs
+    -   dont 1270 ont produit ou vendu plus de 2,7 tonnes de coprah en
+        2020, 2021 ou 2022
+-   4087 cocoteraies exploitées
+    -   423 en tant que propriétaire plein
+    -   2880 en tant que propriétaire en indivision,
+    -   784 en tant qu’exploitant
+-   2.87 cocoteraies exploitées en moyenne (de 1 à 20)
