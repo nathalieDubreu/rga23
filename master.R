@@ -3,8 +3,8 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_11-13"
-date <- "13/11/2023"
+dossier <- "Export_11-15"
+date <- "15/11/2023"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
@@ -39,11 +39,18 @@ source("analyse/coprahculteurs.R")
 source("analyse/stats.R")
 
 # Qualité 
-## OneShot : Ajout locataires lotissements agricoles
+
+## ONE SHOT : 
+### Ajout locataires lotissements agricoles
 # source("qualite/lotissementsAgricoles.R")
 # source("qualite/attributaires.R")
+### Injoignables (pour Jérôme)
+# source("qualite/injoignables.R")
+
 ## Gestion des doublons
 source("qualite/doublons.R")
+## Préparation fichiers tests pour le SIA
+source("qualite/fichiersTestSIA.R")
 
 
 

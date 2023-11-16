@@ -1,4 +1,4 @@
-# \[RGA23\] Respect des seuils - Données du 13/11/2023
+# \[RGA23\] Respect des seuils - Données du 15/11/2023
 
 ## Rappel seuils choisis pour les exploitaitons agricoles en 2023 (DOM)
 
@@ -40,15 +40,17 @@
 -   Lapins : plus de 20 lapins <font color = "orange">de plus de 30
     jours</font>
 
-## 4920 questionnaires complets
+## 5035 questionnaires complets
+
+<font color = "red">**Données brutes - collecte encore en cours**</font>
 
 ### Seuils 2023
 
-<font color = "green">2718</font> exploitations agricoles au sens du
+<font color = "green">2784</font> exploitations agricoles au sens du
 RGA2023
 
--   Eleveurs : 701
--   Cultivateurs : 2453
+-   Eleveurs : 721
+-   Cultivateurs : 2509
 
 <table>
 <thead>
@@ -60,33 +62,36 @@ RGA2023
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Australes</td>
-<td style="text-align: right;">316</td>
+<td style="text-align: right;">344</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Iles Du Vent</td>
-<td style="text-align: right;">851</td>
+<td style="text-align: right;">858</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Iles Sous-Le-Vent</td>
-<td style="text-align: right;">724</td>
+<td style="text-align: right;">739</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Marquises</td>
-<td style="text-align: right;">602</td>
+<td style="text-align: right;">611</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Tuamotu-Gambier</td>
-<td style="text-align: right;">225</td>
+<td style="text-align: right;">232</td>
 </tr>
 </tbody>
 </table>
 
+\[+ 1092 unités qui respectent **uniquement** le seuil de 2,7 tonnes de
+coprah\]
+
 ### Seuils 2012
 
-<font color = "orange">3192</font> unités avec les seuils du RGA2012
+<font color = "orange">3261</font> unités avec les seuils du RGA2012
 
--   Eleveurs : 496
--   Cultivateurs : 2991
+-   Eleveurs : 514
+-   Cultivateurs : 3054
 
 <table>
 <thead>
@@ -98,30 +103,30 @@ RGA2023
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Australes</td>
-<td style="text-align: right;">256</td>
+<td style="text-align: right;">280</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Iles Du Vent</td>
-<td style="text-align: right;">1074</td>
+<td style="text-align: right;">1085</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Iles Sous-Le-Vent</td>
-<td style="text-align: right;">926</td>
+<td style="text-align: right;">945</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Marquises</td>
-<td style="text-align: right;">673</td>
+<td style="text-align: right;">683</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Tuamotu-Gambier</td>
-<td style="text-align: right;">263</td>
+<td style="text-align: right;">268</td>
 </tr>
 </tbody>
 </table>
 
 ### Comparaison
 
-2488 unités en commun
+2544 unités en commun
 
--   704 unités appartiennent uniquement au champ RGA2012
--   230 unités appartiennent uniquement au champ RGA2023
+-   717 unités appartiennent uniquement au champ RGA2012
+-   240 unités appartiennent uniquement au champ RGA2023
