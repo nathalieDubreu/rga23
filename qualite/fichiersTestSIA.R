@@ -97,3 +97,7 @@ writeCSVTraites(rga23_moPermanenteFam, file.path(Sys.getenv("cheminAcces"), "Tes
 writeCSVTraites(rga23_parcelles, file.path(Sys.getenv("cheminAcces"), "TestSIA"))
 writeCSVTraites(rga23_sites, file.path(Sys.getenv("cheminAcces"), "TestSIA"))
 writeCSVTraites(rga23_surfacesCultures, file.path(Sys.getenv("cheminAcces"), "TestSIA"))
+
+# baseRGA23 <- readCSV("BaseRGA_v9.csv")
+# tablePassageIdentifiants <- inner_join(rga23_general |> select(interview__key, id_exploitation), baseRGA23)
+# writeCSV(tablePassageIdentifiants)
