@@ -54,6 +54,18 @@ Nombre d'unités qui respectent au moins un critère :
   - Culture : `r rga23_champ |> filter(CultureValideRGA == 1) |> count()`
 - Coprahculteurs : `r rga23_champ |> filter(CoprahValideRGA == 1) |> count()`
 
+### Profils des unités dans le champ
+
+("valides" signifie que l'unité respecte un ou plusieurs seuils dans les catégories concernées)
+
+- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides dans les 3 catégories (<font color = "Green">Cultures</font>, <font color = "Orange">Elevages</font> et <font color = "Blue">Coprah</font>)
+- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Green">Cultures</font> et <font color = "Orange">Elevages</font>
+- `r rga23_champ |> filter(CultureValideRGA == 1 & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Green">Cultures</font> et <font color = "Blue">Coprah</font>
+- `r rga23_champ |> filter(CultureValideRGA == 1 & is.na(ElevageValideRGA) & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Green">Cultures</font>
+- `r rga23_champ |> filter(is.na(CultureValideRGA) & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Orange">Elevages</font> et <font color = "Blue">Coprah</font>
+- `r rga23_champ |> filter(is.na(CultureValideRGA) & ElevageValideRGA == 1 & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Orange">Elevages</font>
+- `r rga23_champ |> filter(is.na(CultureValideRGA) & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Blue">Coprah</font>
+
 ## `r rga23_champ |> count()` chefs d'exploitations
 
 La niveau moyen de satisfaction au travail des chefs d'exploitations est de `r round(rga23_champ |> summarize(mean(NoteSatisfactionExpl, na.rm = TRUE)),1)`/10
@@ -164,13 +176,14 @@ surfacesCultures <- surfacesCulturesEligibles |>
   summarize(
     `Nombre d'exploitants` = n_distinct(interview__key),
     `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
-    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 2),
+    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 0),
     `Surface min (m²)` = min(SurfaceCult, na.rm = TRUE),
     `Surface max (m²)` = max(SurfaceCult, na.rm = TRUE)
   )
 ```
 
 ## Types de cultures des `r surfacesCulturesEligibles |> distinct(interview__key) |> count()` cultivateurs ayant déclarés des cultures classiques organisées
+#### (Parmi ceux-là, `r left_join(rga23_champ, surfacesCulturesEligibles |> distinct(interview__key), by=c("interview__key")) |> filter(CultureValideRGA == 1) |> count()` respectent au moins un seuil de cultures)
 
 ```{r, echo=FALSE}
 kable(surfacesCultures)
