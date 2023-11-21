@@ -126,23 +126,18 @@ aVerifier <- contenuJardinsOceaniens |>
 ## Fruits (30)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__30 == 1)
-
 ## Maraichage (10)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__10 == 1)
-
 ## Vivrier (20)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__20 == 1)
-
 ## Fleurs (40)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__40 == 1)
-
 ## PPAM (50)
 aVerifier <- contenuJardinsOceaniens |>
   filter(nbTypesCultures == 1 & CultPresentesJardins__50 == 1)
-
 
 ## Zoom maraichage qui a un seuil de 1000m²
 aVerifier <- contenuJardinsOceaniens |>

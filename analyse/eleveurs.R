@@ -93,7 +93,7 @@ aVerifier <- eleveursPoulesPondeuses |>
   mutate(OeufsParPoules0 = ProductionPoules0 / NombrePoules0) |>
   select(interview__key, interview__status, OeufsParPoules0, ProductionPoules0, NombrePoules0)
 
-## Poules cages sans fientes (ni fraiches ni séchées)
+## Poules cages sans fientes (ni fraiches ni séchées) -> A rejetter si plus de 100 poules
 aVerifier <- eligiblesEleveurs |>
   filter(TypeVolailles__1 == 1 & TypeEngraisOrga__3 == 0 & TypeEngraisOrga__7 == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech, NombrePoules3)

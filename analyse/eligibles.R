@@ -11,7 +11,8 @@ eligiblesRGA |>
     eligibilite == FALSE & eligibiliteCoprah == TRUE) |>
   count()
 
-# bug d'ouverture de non X ...
+# !!! BUG de non ouverture de certains X !!!
+## Ajouter ceux qu'on ne peut pas "sauver"...
 eligiblesRGA |>
   filter(substring(id_exploitation, 0, 1) == "X" &
     eligibilite == FALSE & eligibiliteCoprah == TRUE &
@@ -42,7 +43,8 @@ eligiblesRGA |>
     interview__key != "88-47-99-60" &
     interview__key != "48-67-04-30")
 
-# Main d'oeuvre familiale = OUI puis nombre de personnes = 0
+# Main d'oeuvre familiale = OUI puis nombre de personnes = 0 
+## 14 unités depuis longtemps , vérifier les nouveaux
 aVerifier <- eligiblesRGA |>
   filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech)

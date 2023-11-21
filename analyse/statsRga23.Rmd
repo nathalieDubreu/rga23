@@ -97,7 +97,7 @@ table <- rga23_champ |> mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChef
     NbFemmes = sum(femme, na.rm = TRUE),
     TauxFemmes = NbFemmes/NbHommes)
 
-rga23_champ_date <- rga23_champ |> mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl,7,10))) |> select(age, DateNaissChefExpl)
+rga23_champ_date <- rga23_champ |> mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl,7,10))) |> select(interview__key, age, DateNaissChefExpl)
 ```
 
 - `r round(table$TauxFemmes*100,1)`% des chefs d'exploitations sont des femmes
