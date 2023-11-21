@@ -32,7 +32,57 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
   mutate(SurfaceIrrigJardins = case_when(
     (Irrigation == 2 & !is.na(SurfaceJardins)) ~ 0,
     TRUE ~ SurfaceIrrigJardins
-  ))
+  )) |>
+  mutate(
+    CultPresentesJardins__10 = case_when(
+      CultPresentesJardins__10 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 1 |
+        substring(CultPrincipJardins__1, 0, 1) == 1 |
+        substring(CultPrincipJardins__2, 0, 1) == 1 |
+        substring(CultPrincipJardins__3, 0, 1) == 1 |
+        substring(CultPrincipJardins__4, 0, 1) == 1) ~ 1,
+      TRUE ~ CultPresentesJardins__10
+    ),
+    CultPresentesJardins__20 = case_when(
+      CultPresentesJardins__20 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 2 |
+        substring(CultPrincipJardins__1, 0, 1) == 2 |
+        substring(CultPrincipJardins__2, 0, 1) == 2 |
+        substring(CultPrincipJardins__3, 0, 1) == 2 |
+        substring(CultPrincipJardins__4, 0, 1) == 2) ~ 1,
+      TRUE ~ CultPresentesJardins__20
+    ),
+    CultPresentesJardins__30 = case_when(
+      CultPresentesJardins__30 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 3 |
+        substring(CultPrincipJardins__1, 0, 1) == 3 |
+        substring(CultPrincipJardins__2, 0, 1) == 3 |
+        substring(CultPrincipJardins__3, 0, 1) == 3 |
+        substring(CultPrincipJardins__4, 0, 1) == 3) ~ 1,
+      TRUE ~ CultPresentesJardins__30
+    ),
+    CultPresentesJardins__40 = case_when(
+      CultPresentesJardins__40 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 4 |
+        substring(CultPrincipJardins__1, 0, 1) == 4 |
+        substring(CultPrincipJardins__2, 0, 1) == 4 |
+        substring(CultPrincipJardins__3, 0, 1) == 4 |
+        substring(CultPrincipJardins__4, 0, 1) == 4) ~ 1,
+      TRUE ~ CultPresentesJardins__40
+    ),
+    CultPresentesJardins__50 = case_when(
+      CultPresentesJardins__50 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 5 |
+        substring(CultPrincipJardins__1, 0, 1) == 5 |
+        substring(CultPrincipJardins__2, 0, 1) == 5 |
+        substring(CultPrincipJardins__3, 0, 1) == 5 |
+        substring(CultPrincipJardins__4, 0, 1) == 5) ~ 1,
+      TRUE ~ CultPresentesJardins__50
+    ),
+    CultPresentesJardins__70 = case_when(
+      CultPresentesJardins__70 == 0 & (substring(CultPrincipJardins__0, 0, 1) == 7 |
+        substring(CultPrincipJardins__1, 0, 1) == 7 |
+        substring(CultPrincipJardins__2, 0, 1) == 7 |
+        substring(CultPrincipJardins__3, 0, 1) == 7 |
+        substring(CultPrincipJardins__4, 0, 1) == 7) ~ 1,
+      TRUE ~ CultPresentesJardins__70
+    )
+  )
 
 ## Localisation
 
