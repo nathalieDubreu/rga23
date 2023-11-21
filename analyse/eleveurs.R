@@ -93,6 +93,11 @@ aVerifier <- eleveursPoulesPondeuses |>
   mutate(OeufsParPoules0 = ProductionPoules0 / NombrePoules0) |>
   select(interview__key, interview__status, OeufsParPoules0, ProductionPoules0, NombrePoules0)
 
+## Poules cages sans fientes (ni fraiches ni séchées)
+aVerifier <- eligiblesEleveurs |>
+  filter(TypeVolailles__1 == 1 & TypeEngraisOrga__3 == 0 & TypeEngraisOrga__7 == 0) |>
+  select(interview__key, interview__status, id_enqueteur_ech, NombrePoules3)
+
 apiculteurs <- eligiblesEleveurs |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, interview__status, NbRuchesPourProduire, NbRuchesRecoltees, ProductionRuches) |>
@@ -111,13 +116,14 @@ aVerifier <- eligiblesEleveurs |>
   filter((AccesBatimentPorcins == 2 & AccesParcoursPorcins == 2) | (CaprinsPleinAir == 2 & AccesBatimentCaprins == 2)) |>
   select(interview__key, interview__status)
 
-## Porcs avec bâtiments mais pas de lisier coché
+## Porcs avec bâtiments mais pas de lisier coché (Rejetter si nb de porcs > 15 ou les plus récents)
 aVerifier <- eligiblesEleveurs |>
   filter(AccesBatimentPorcins == 1 & TypeEngraisOrga__1 == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech, nbTotalPorcs, AutreTypeEngraisOrga)
 
 ## Autre type d'engrais
 aVerifier <- eligiblesEleveurs |>
-  select(interview__key, interview__status, id_enqueteur_ech, AutreTypeEngraisOrga)
+  select(interview__key, interview__status, id_enqueteur_ech, AutreTypeEngraisOrga) |>
+  filter(!is.na(AutreTypeEngraisOrga))
 
 rm(eleveursPoulesPondeuses, eleveursVolailles, apiculteurs, test)
