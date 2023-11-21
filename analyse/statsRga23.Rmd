@@ -25,7 +25,7 @@ rga23A_valides <- rga23A |>
   filter(interview__status == 130 | interview__status == 120) |>
   mutate(CoprahValideRGA = case_when((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X") ~ 1))
 
-rga23_champ <- rga23A_valides |> filter(ValideRGA == 1 | CoprahValideRGA == 1) 
+rga23_champ <- rga23A_valides |> filter(ValideRGA == 1 | CoprahValideRGA == 1) |> mutate(Archipel_1 = case_when(!is.na(ArchipelExploitation) ~ ArchipelExploitation, TRUE ~ Archipel))
 
 surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
 
@@ -58,13 +58,31 @@ Nombre d'unités qui respectent au moins un critère :
 
 ("valides" signifie que l'unité respecte un ou plusieurs seuils dans les catégories concernées)
 
-- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides dans les 3 catégories (<font color = "Green">Cultures</font>, <font color = "Orange">Elevages</font> et <font color = "Blue">Coprah</font>)
-- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Green">Cultures</font> et <font color = "Orange">Elevages</font>
-- `r rga23_champ |> filter(CultureValideRGA == 1 & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Green">Cultures</font> et <font color = "Blue">Coprah</font>
+- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides <font color = "Green">Cultures</font>/<font color = "Orange">Elevages</font>/<font color = "Blue">Coprah</font>
+- `r rga23_champ |> filter(CultureValideRGA == 1 & ElevageValideRGA == 1 & is.na(CoprahValideRGA)) |> count()` unités valides <font color = "Green">Cultures</font>/<font color = "Orange">Elevages</font>
+- `r rga23_champ |> filter(CultureValideRGA == 1 & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> count()` unités valides <font color = "Green">Cultures</font>/<font color = "Blue">Coprah</font>
 - `r rga23_champ |> filter(CultureValideRGA == 1 & is.na(ElevageValideRGA) & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Green">Cultures</font>
-- `r rga23_champ |> filter(is.na(CultureValideRGA) & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Orange">Elevages</font> et <font color = "Blue">Coprah</font>
+- `r rga23_champ |> filter(is.na(CultureValideRGA) & ElevageValideRGA == 1 & CoprahValideRGA == 1) |> count()` unités valides <font color = "Orange">Elevages</font>/<font color = "Blue">Coprah</font>
 - `r rga23_champ |> filter(is.na(CultureValideRGA) & ElevageValideRGA == 1 & is.na(CoprahValideRGA)) |> count()` unités valides en <font color = "Orange">Elevages</font>
 - `r rga23_champ |> filter(is.na(CultureValideRGA) & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> count()` unités valides en <font color = "Blue">Coprah</font>
+
+### Archipel des unités dans le champ 
+(Exploitation si connu, habitation sinon)
+
+#### Ensemble des unités
+```{r, echo=FALSE}
+kable(rga23_champ |> group_by(Archipel_1) |> count())
+```
+
+#### Producteurs de coprah purs (valident uniquement le seuil de coprah)
+```{r, echo=FALSE}
+kable(rga23_champ |> filter(is.na(CultureValideRGA) & is.na(ElevageValideRGA) & CoprahValideRGA == 1) |> group_by(Archipel_1) |> count())
+```
+
+#### Chefs d'exploitations (valident au moins un critère de culture ou d'élevage)
+```{r, echo=FALSE}
+kable(rga23_champ |> filter(ValideRGA == 1) |> group_by(Archipel_1) |> count())
+```
 
 ## `r rga23_champ |> count()` chefs d'exploitations
 
