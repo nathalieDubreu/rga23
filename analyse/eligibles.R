@@ -6,13 +6,12 @@ eligiblesRGA <- rga23 |>
     (eligibilite == 1 & (substring(id_exploitation, 0, 1) == "P" | substring(id_exploitation, 0, 1) == "M")) |
     ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X"))
 
-## eligiblesRGA |> filter(ActivitesChefExploit__5 == 1) |> group_by(IleExploitation, id_enqueteur_ech) |> count()
-
 eligiblesRGA |>
   filter(substring(id_exploitation, 0, 1) == "X" &
     eligibilite == FALSE & eligibiliteCoprah == TRUE) |>
   count()
 
+# bug d'ouverture de non X ...
 eligiblesRGA |>
   filter(substring(id_exploitation, 0, 1) == "X" &
     eligibilite == FALSE & eligibiliteCoprah == TRUE &
@@ -43,8 +42,19 @@ eligiblesRGA |>
     interview__key != "88-47-99-60" &
     interview__key != "48-67-04-30")
 
-# test <- eligiblesRGA |> filter(interview__key=="25-94-37-62")
-
+# Main d'oeuvre familiale = OUI puis nombre de personnes = 0
 aVerifier <- eligiblesRGA |>
   filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech)
+
+# Pourcentage de destination des produits erroné
+eligiblesRGA |> filter((totalCommMaraich != 0 & totalCommMaraich != 100) |
+  (totalCommVivri != 0 & totalCommVivri != 100) |
+  (totalCommPepinieres != 0 & totalCommPepinieres != 100) |
+  (totalCommFourrages != 0 & totalCommFourrages != 100) |
+  (totalCommFruit != 0 & totalCommFruit != 100) |
+  (totalCommFlorale != 0 & totalCommFlorale != 100) |
+  (totalCommPlantes != 0 & totalCommPlantes != 100) |
+  (totalCommViande != 0 & totalCommViande != 100) |
+  (totalCommOeufs != 0 & totalCommOeufs != 100) |
+  (totalCommMiel != 0 & totalCommMiel != 100))
