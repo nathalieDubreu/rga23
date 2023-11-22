@@ -24,21 +24,21 @@
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
 - `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
 
-## Champs
+## Champs - WIP - nécessitent fichiers csv de points par critère en fonction des différents champs
 - `champRGA.R` : Champ du RGA23
-    - TODO : traiter les jardins océaniens à 1 seuil culture
+    - TODO : traiter les jardins océaniens avec une seule culture notamment
 - `champ2012.R` : Approximation des seuils de 2012
 - `indicatricesAppartenances.R` : Ajout des indicatrices d'appartenance aux champs dans le fichier rga23.csv
+- `champCAPL.R` : Calcul des points CAPL
   
 ## Analyse
 
 Ebauches des stats (et controles en cours de collecte) sur les différents profils.
-### Non éligibles
+### Eligibilité (questionnaires complets or not)
 - `nonEligibles.R`
-### Eligibles
 - `eligibles.R`
 ### Divers profils
 - `cultivateurs.R`
 - `eleveurs.R`
 - `coprahculteurs.R`
-- `stats.R` : génération d'un .md contenant qq stats sur les différents profils
+- `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
