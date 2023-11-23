@@ -115,7 +115,12 @@ contenuJardinsOceaniens <- eligiblesCultivateurs |>
     CultPresentesJardins__50,
     CultPresentesJardins__60,
     CultPresentesJardins__70,
-    CultPresentesJardins__80
+    CultPresentesJardins__80,
+    CultPrincipJardins__0,
+    CultPrincipJardins__1,
+    CultPrincipJardins__2,
+    CultPrincipJardins__3,
+    CultPrincipJardins__4
   )
 
 ## 1 seul type de cultures dans le jardin océanien
@@ -154,7 +159,7 @@ aVerifier <- eligiblesCultivateurs |>
   select(interview__key, id_enqueteur_ech, SurfaceJardins)
 
 aVerifier <- contenuJardinsOceaniens |> filter(substring(CultPrincipJardins__0, 0, 1) == 6 |
-                                                 substring(CultPrincipJardins__1, 0, 1) == 6 |
-                                                 substring(CultPrincipJardins__2, 0, 1) == 6 |
-                                                 substring(CultPrincipJardins__3, 0, 1) == 6 |
-                                                 substring(CultPrincipJardins__4, 0, 1) == 6)
+  substring(CultPrincipJardins__1, 0, 1) == 6 |
+  substring(CultPrincipJardins__2, 0, 1) == 6 |
+  substring(CultPrincipJardins__3, 0, 1) == 6 |
+  substring(CultPrincipJardins__4, 0, 1) == 6)

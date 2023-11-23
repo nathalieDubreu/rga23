@@ -43,8 +43,7 @@ eligiblesRGA |>
     interview__key != "88-47-99-60" &
     interview__key != "48-67-04-30")
 
-# Main d'oeuvre familiale = OUI puis nombre de personnes = 0 
-## 14 unités depuis longtemps , vérifier les nouveaux
+# Main d'oeuvre familiale = OUI puis nombre de personnes = 0
 aVerifier <- eligiblesRGA |>
   filter(MOPermanenteFamiliale == 1 & NbMOPermFamiliale == 0) |>
   select(interview__key, interview__status, id_enqueteur_ech)
@@ -60,3 +59,18 @@ eligiblesRGA |> filter((totalCommMaraich != 0 & totalCommMaraich != 100) |
   (totalCommViande != 0 & totalCommViande != 100) |
   (totalCommOeufs != 0 & totalCommOeufs != 100) |
   (totalCommMiel != 0 & totalCommMiel != 100))
+
+# Conjoint compté en tant que co-exploitant ET main d'oeuvre perm familiale
+conjointsCoExpl <- readCSV("rga23_coexploitants.csv") |> filter(LienCoExploit == 1)
+conjointsMOPerm <- readCSV("rga23_moPermanenteFam.csv") |> filter(LienMOFamPerm == 1)
+conjointsARejetter <- left_join(inner_join(conjointsCoExpl, conjointsMOPerm, by = c("interview__key")), rga23 |> select(interview__key, id_enqueteur_ech, NbCoExploitants, NbMOPermFamiliale), by = c("interview__key")) |>
+  select(interview__key, interview__status, id_enqueteur_ech, NbCoExploitants, NbMOPermFamiliale)
+
+# Main d'oeuvre occasionnelle
+aVerifier <- rga23 |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+  filter(totalMAOccas > 7 & (UniteDureeMOOccas == 1 | UniteDureeMOOccas == 2) & (DureeMOOccas < totalMAOccas | DureeMOOccas < 10)) |>
+  select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas)
