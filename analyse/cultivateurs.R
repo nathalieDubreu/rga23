@@ -158,6 +158,7 @@ aVerifier <- eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & !is.na(CultPrincipJardins__2) & is.na(CultPrincipJardins__3) & SurfaceJardins >= 1000 & interview__status == 120) |>
   select(interview__key, id_enqueteur_ech, SurfaceJardins)
 
+# En théorie, pas de pépinières dans les jardins océaniens
 aVerifier <- contenuJardinsOceaniens |> filter(substring(CultPrincipJardins__0, 0, 1) == 6 |
   substring(CultPrincipJardins__1, 0, 1) == 6 |
   substring(CultPrincipJardins__2, 0, 1) == 6 |
