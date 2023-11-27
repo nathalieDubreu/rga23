@@ -64,32 +64,66 @@ eligiblesRGA |> filter((totalCommMaraich != 0 & totalCommMaraich != 100) |
 # Conjoint compté en tant que co-exploitant ET main d'oeuvre perm familiale
 conjointsCoExpl <- readCSV("rga23_coexploitants.csv") |> filter(LienCoExploit == 1)
 conjointsMOPerm <- readCSV("rga23_moPermanenteFam.csv") |> filter(LienMOFamPerm == 1)
-conjointsARejetter <- left_join(inner_join(conjointsCoExpl, conjointsMOPerm, by = c("interview__key")), rga23 |> select(interview__key, interview__status, id_enqueteur_ech, NbCoExploitants, NbMOPermFamiliale), by = c("interview__key")) |>
+left_join(inner_join(conjointsCoExpl, conjointsMOPerm, by = c("interview__key")), rga23 |> select(interview__key, interview__status, id_enqueteur_ech, NbCoExploitants, NbMOPermFamiliale), by = c("interview__key")) |>
   select(interview__key, interview__status, id_enqueteur_ech, NbCoExploitants, NbMOPermFamiliale)
 
-# Main d'oeuvre occasionnelle : faible nombre de jours ou heures avec 8 pers employées ou plus
+# Main d'oeuvre occasionnelle : faible nombre de jours ou heures avec 7 pers employées ou plus
+rga23 |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+  filter(totalMAOccas > 6 & (UniteDureeMOOccas == 1 | UniteDureeMOOccas == 2) & (DureeMOOccas < totalMAOccas | DureeMOOccas < 10)) |>
+  select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas)
+
+# Main d'oeuvre occasionnelle : faible nombre de semaines ou mois avec 8 pers employées ou plus
 aVerifier <- rga23 |>
   mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
     ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
     ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
     ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
-  filter(totalMAOccas > 7 & (UniteDureeMOOccas == 1 | UniteDureeMOOccas == 2) & (DureeMOOccas < totalMAOccas | DureeMOOccas < 10)) |>
+  filter(totalMAOccas > 7 & (UniteDureeMOOccas == 3 | UniteDureeMOOccas == 4) & (DureeMOOccas < totalMAOccas)) |>
   select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas)
 
-# Main d'oeuvre occasionnelle : faible nombre de semaines avec 8 pers employées ou plus
-aVerifier <- rga23 |>
+# Main d'oeuvre occasionnelle : plus de 20 personnes
+rga23 |>
   mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-           ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-           ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-           ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
-  filter(totalMAOccas > 7 & (UniteDureeMOOccas == 3) & (DureeMOOccas < totalMAOccas)) |>
-  select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas)
-
-# Main d'oeuvre occasionelle : plus de 20 personnes
-aVerifier <- rga23 |>
-  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-           ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-           ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-           ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
   filter(totalMAOccas > 20) |>
-  select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas)
+  select(interview__key, interview__status, id_enqueteur_ech, totalMAOccas, UniteDureeMOOccas, DureeMOOccas) |>
+  arrange(desc(totalMAOccas))
+
+# Main d'oeuvre occasionnelle : estimation temps de travail
+calculTempsTravailMO <- rga23 |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+  filter(totalMAOccas > 0) |>
+  mutate(tempsTotalTravailHeures = case_when(
+    UniteDureeMOOccas == 2 ~ 8 * DureeMOOccas,
+    UniteDureeMOOccas == 3 ~ 8 * 5 * DureeMOOccas,
+    UniteDureeMOOccas == 4 ~ 8 * 5 * 4.33 * DureeMOOccas,
+    TRUE ~ DureeMOOccas
+  ), tempsTravailHeures = tempsTotalTravailHeures / totalMAOccas) |>
+  select(interview__key, interview__status, id_enqueteur_ech, tempsTotalTravailHeures, tempsTravailHeures, totalMAOccas, UniteDureeMOOccas, DureeMOOccas, SurfaceTotalProdAgri)
+
+# Main d'oeuvre occasionnelle employée pour une durée de plus de 8 mois sur l'année...
+calculTempsTravailMO |> filter(tempsTravailHeures > 8 * 5 * 52 * 8 / 12 ) |> arrange(desc(tempsTravailHeures))
+
+## Restriction au champ RGA 23 -> lancer programme Stats pour obtenir rga23_champ
+source("analyse/stats.R")
+calculTempsTravailMO_champ <- inner_join(calculTempsTravailMO, rga23_champ |>
+  filter(ValideRGA == 1 | CoprahValideRGA == 1) |> select(interview__key, ValideRGA, CoprahValideRGA))
+
+calculTempsTravailMO_champ |> summarise(
+  sommeHeures = sum(tempsTotalTravailHeures),
+  nbPersonnes = sum(totalMAOccas),
+  moyenne = sum(tempsTotalTravailHeures) / sum(totalMAOccas),
+  quantile1 = quantile(tempsTravailHeures, 0.1),
+  quantile9 = quantile(tempsTravailHeures, 0.9)
+)
+
+# writeCSV(calculTempsTravailMOBis)

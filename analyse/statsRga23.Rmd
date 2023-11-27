@@ -25,16 +25,21 @@ rga23A_valides <- rga23A |>
   filter(interview__status == 130 | interview__status == 120) |>
   mutate(CoprahValideRGA = case_when((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X") ~ 1))
 
-rga23_champ <- rga23A_valides |> filter(ValideRGA == 1 | CoprahValideRGA == 1) |> mutate(Archipel_1 = case_when(!is.na(ArchipelExploitation) ~ ArchipelExploitation, TRUE ~ Archipel))
+rga23_champ <- rga23A_valides |>
+  filter(ValideRGA == 1 | CoprahValideRGA == 1) |>
+  mutate(Archipel_1 = case_when(!is.na(ArchipelExploitation) ~ ArchipelExploitation, TRUE ~ Archipel)) |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien))
 
-surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+surfacesCulturesEligibles <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key), by = c("interview__key"))
 
-coExploitants <- inner_join(readCSV("rga23_coexploitants.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+coExploitants <- inner_join(readCSV("rga23_coexploitants.csv"), rga23_champ |> select(interview__key), by = c("interview__key"))
 
-moPermFamiliale <- inner_join(readCSV("rga23_moPermanenteFam.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
+moPermFamiliale <- inner_join(readCSV("rga23_moPermanenteFam.csv"), rga23_champ |> select(interview__key), by = c("interview__key"))
 
-mainOeuvre <- inner_join(readCSV("rga23_mainOeuvre.csv"), rga23_champ |> select(interview__key), by=c("interview__key"))
-
+mainOeuvre <- inner_join(readCSV("rga23_mainOeuvre.csv"), rga23_champ |> select(interview__key), by = c("interview__key"))
 ```
 
 ## Données de contexte 
@@ -91,13 +96,17 @@ La niveau moyen de satisfaction au travail des chefs d'exploitations est de `r r
 ### Genre et age
 
 ```{r, echo=FALSE}
-table <- rga23_champ |> mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
+table <- rga23_champ |>
+  mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
-    TauxFemmes = NbFemmes/NbHommes)
+    TauxFemmes = NbFemmes / NbHommes
+  )
 
-rga23_champ_date <- rga23_champ |> mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl,7,10))) |> select(interview__key, age, DateNaissChefExpl)
+rga23_champ_date <- rga23_champ |>
+  mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10))) |>
+  select(interview__key, age, DateNaissChefExpl)
 ```
 
 - `r round(table$TauxFemmes*100,1)`% des chefs d'exploitations sont des femmes
@@ -107,11 +116,12 @@ rga23_champ_date <- rga23_champ |> mutate(age = 2023 - as.numeric(substring(Date
 
 ```{r, echo=FALSE}
 kable(rga23_champ |> mutate(TpsTravailChefExpl = case_when(
-    (TpsTravailChefExpl == 1) ~ "1 : Moins de 1/2 temps",
-    (TpsTravailChefExpl == 2) ~ "2 : 1/2 temps",
-    (TpsTravailChefExpl == 3) ~ "3 : Entre 1/2 temps et temps complet",
-    (TpsTravailChefExpl == 4) ~ "4 : Temps complet",
-    (is.na(TpsTravailChefExpl)) ~ "Non réponse")) |> group_by(TpsTravailChefExpl) |> count())
+  (TpsTravailChefExpl == 1) ~ "1 : Moins de 1/2 temps",
+  (TpsTravailChefExpl == 2) ~ "2 : 1/2 temps",
+  (TpsTravailChefExpl == 3) ~ "3 : Entre 1/2 temps et temps complet",
+  (TpsTravailChefExpl == 4) ~ "4 : Temps complet",
+  (is.na(TpsTravailChefExpl)) ~ "Non réponse"
+)) |> group_by(TpsTravailChefExpl) |> count())
 ```
 
 ## Main d'oeuvre et temps de travail
@@ -120,36 +130,40 @@ kable(rga23_champ |> mutate(TpsTravailChefExpl = case_when(
 
 ```{r, echo=FALSE}
 kable(coExploitants |> mutate(TempsTravailCoExploit = case_when(
-    (TempsTravailCoExploit == 1) ~ "1 : Moins de 1/2 temps",
-    (TempsTravailCoExploit == 2) ~ "2 : 1/2 temps",
-    (TempsTravailCoExploit == 3) ~ "3 : Entre 1/2 temps et temps complet",
-    (TempsTravailCoExploit == 4) ~ "4 : Temps complet",
-    (is.na(TempsTravailCoExploit)) ~ "Non réponse")) |> group_by(TempsTravailCoExploit) |> count())
+  (TempsTravailCoExploit == 1) ~ "1 : Moins de 1/2 temps",
+  (TempsTravailCoExploit == 2) ~ "2 : 1/2 temps",
+  (TempsTravailCoExploit == 3) ~ "3 : Entre 1/2 temps et temps complet",
+  (TempsTravailCoExploit == 4) ~ "4 : Temps complet",
+  (is.na(TempsTravailCoExploit)) ~ "Non réponse"
+)) |> group_by(TempsTravailCoExploit) |> count())
 ```
 
 ###  `r rga23_champ |> summarize(sum(NbMOPermFamiliale, na.rm = TRUE))` personnes employées en tant que main d'oeuvre permanente familiale (au moins 8 mois dans l'année)
 
 ```{r, echo=FALSE}
 kable(moPermFamiliale |> mutate(TempsTravailMOFamPerm = case_when(
-    (TempsTravailMOFamPerm == 1) ~ "1 : Moins de 1/2 temps",
-    (TempsTravailMOFamPerm == 2) ~ "2 : 1/2 temps",
-    (TempsTravailMOFamPerm == 3) ~ "3 : Entre 1/2 temps et temps complet",
-    (TempsTravailMOFamPerm == 4) ~ "4 : Temps complet",
-    (is.na(TempsTravailMOFamPerm)) ~ "Non réponse")) |> group_by(TempsTravailMOFamPerm) |> count())
+  (TempsTravailMOFamPerm == 1) ~ "1 : Moins de 1/2 temps",
+  (TempsTravailMOFamPerm == 2) ~ "2 : 1/2 temps",
+  (TempsTravailMOFamPerm == 3) ~ "3 : Entre 1/2 temps et temps complet",
+  (TempsTravailMOFamPerm == 4) ~ "4 : Temps complet",
+  (is.na(TempsTravailMOFamPerm)) ~ "Non réponse"
+)) |> group_by(TempsTravailMOFamPerm) |> count())
 ```
 
 ###  `r (rga23_champ |> summarize(sum(nbFemmesNFPerm, na.rm = TRUE))) + (rga23_champ |> summarize(sum(nbHommesNFPerm, na.rm = TRUE)))` personnes employées en tant que main d'oeuvre permanente NON familiale (au moins 8 mois dans l'année)
 
 ```{r, echo=FALSE}
 kable(mainOeuvre |>
-        mutate(MONonFamPerm__1 = ifelse(is.na(nbFemMONonFamPerm__1), 0, nbFemMONonFamPerm__1) +
-    ifelse(is.na(nbHomMONonFamPerm__1), 0, nbHomMONonFamPerm__1),
+  mutate(
+    MONonFamPerm__1 = ifelse(is.na(nbFemMONonFamPerm__1), 0, nbFemMONonFamPerm__1) +
+      ifelse(is.na(nbHomMONonFamPerm__1), 0, nbHomMONonFamPerm__1),
     MONonFamPerm__2 = ifelse(is.na(nbFemMONonFamPerm__2), 0, nbFemMONonFamPerm__2) +
-    ifelse(is.na(nbHomMONonFamPerm__1), 0, nbHomMONonFamPerm__2),
+      ifelse(is.na(nbHomMONonFamPerm__1), 0, nbHomMONonFamPerm__2),
     MONonFamPerm__3 = ifelse(is.na(nbFemMONonFamPerm__3), 0, nbFemMONonFamPerm__3) +
-    ifelse(is.na(nbHomMONonFamPerm__3), 0, nbHomMONonFamPerm__3),
+      ifelse(is.na(nbHomMONonFamPerm__3), 0, nbHomMONonFamPerm__3),
     MONonFamPerm__4 = ifelse(is.na(nbFemMONonFamPerm__4), 0, nbFemMONonFamPerm__4) +
-    ifelse(is.na(nbHomMONonFamPerm__4), 0, nbHomMONonFamPerm__4)) |>
+      ifelse(is.na(nbHomMONonFamPerm__4), 0, nbHomMONonFamPerm__4)
+  ) |>
   summarize(
     `1 : Moins de 1/2 temps` = sum(MONonFamPerm__1, na.rm = TRUE),
     `2 : 1/2 temps` = sum(MONonFamPerm__2, na.rm = TRUE),
@@ -158,12 +172,16 @@ kable(mainOeuvre |>
   ))
 ```
 
-###  `r rga23_champ |>
-  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
-  summarize(sum(totalMAOccas, na.rm = TRUE))` personnes employées en tant que main d'oeuvre occasionnelle (moins de 8 mois dans l'année)
+###  `r rga23_champ |> summarize(sum(totalMAOccas, na.rm = TRUE))` personnes employées en tant que main d'oeuvre occasionnelle (moins de 8 mois dans l'année)
+  
+- Dont `r round(rga23_champ |>
+  filter(totalMAOccas > 0) |>
+  mutate(tempsTotalTravailHeures = case_when(
+    UniteDureeMOOccas == 2 ~ 8 * DureeMOOccas,
+    UniteDureeMOOccas == 3 ~ 8 * 5 * DureeMOOccas,
+    UniteDureeMOOccas == 4 ~ 8 * 5 * 4.33 * DureeMOOccas,
+    TRUE ~ DureeMOOccas
+  ), tempsTravailHeures = tempsTotalTravailHeures / totalMAOccas) |> filter(tempsTravailHeures < 50) |> summarize(sum(totalMAOccas)) / rga23_champ |> summarize(sum(totalMAOccas, na.rm = TRUE))*100,0)`% pour moins de 50h sur l'année
 
 ## SAU déclarée
 
@@ -229,7 +247,7 @@ kable(rga23_champ |> filter(RaisonsRecensement__2 == 1) |>
 ### Poules pondeuses - `r rga23_champ |> filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |> count()` éleveurs
 
 ```{r, echo=FALSE}
-poules <- rga23_champ |> 
+poules <- rga23_champ |>
   filter(TypeVolailles__4 == 1) |>
   summarize(
     NbPoules0 = sum(NombrePoules0, na.rm = TRUE),
