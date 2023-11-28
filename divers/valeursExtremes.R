@@ -3,7 +3,7 @@ rga23 <- readCSV("rga23.csv")
 valExtremes <- function(var, quantile) {
   rga23 |>
     filter({{ var }} > 0) |>
-    select(interview__key, Archipel, {{ var }}) |>
+    select(interview__key, Archipel, {{ var }}, interview__status) |>
     filter({{ var }} > quantile({{ var }}, probs = c(quantile))) |>
     arrange(desc({{ var }}))
 }
