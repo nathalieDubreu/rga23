@@ -42,7 +42,9 @@ eligiblesRGA |>
     interview__key != "68-62-34-63" &
     interview__key != "88-47-99-60" &
     interview__key != "48-67-04-30" &
-    interview__key != "25-62-80-35")
+    interview__key != "25-62-80-35" &
+    interview__key != "08-37-65-45" &
+    interview__key != "69-54-98-15")
 
 # Main d'oeuvre familiale = OUI puis nombre de personnes = 0
 eligiblesRGA |>
@@ -111,7 +113,9 @@ calculTempsTravailMO <- rga23 |>
   select(interview__key, interview__status, id_enqueteur_ech, tempsTotalTravailHeures, tempsTravailHeures, totalMAOccas, UniteDureeMOOccas, DureeMOOccas, SurfaceTotalProdAgri)
 
 # Main d'oeuvre occasionnelle employée pour une durée de plus de 8 mois sur l'année...
-calculTempsTravailMO |> filter(tempsTravailHeures > 8 * 5 * 52 * 8 / 12 ) |> arrange(desc(tempsTravailHeures))
+calculTempsTravailMO |>
+  filter(tempsTravailHeures > 8 * 5 * 52 * 8 / 12) |>
+  arrange(desc(tempsTravailHeures))
 
 ## Restriction au champ RGA 23 -> lancer programme Stats pour obtenir rga23_champ
 source("analyse/stats.R")
@@ -121,7 +125,8 @@ calculTempsTravailMO_champ <- inner_join(calculTempsTravailMO, rga23_champ |>
 calculTempsTravailMO_champ |> summarise(
   sommeHeures = sum(tempsTotalTravailHeures),
   nbPersonnes = sum(totalMAOccas),
-  moyenne = sum(tempsTotalTravailHeures) / sum(totalMAOccas),
+  moyenneEnJours = (sum(tempsTotalTravailHeures) / sum(totalMAOccas) / 8),
+  autreMoyenneEnJours = (mean(tempsTravailHeures) / 8),
   quantile1 = quantile(tempsTravailHeures, 0.1),
   quantile9 = quantile(tempsTravailHeures, 0.9)
 )
