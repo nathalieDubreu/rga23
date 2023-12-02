@@ -110,7 +110,7 @@ calculTempsTravailMO <- rga23 |>
     UniteDureeMOOccas == 4 ~ 8 * 5 * 4.33 * DureeMOOccas,
     TRUE ~ DureeMOOccas
   ), tempsTravailHeures = tempsTotalTravailHeures / totalMAOccas) |>
-  select(interview__key, interview__status, id_enqueteur_ech, tempsTotalTravailHeures, tempsTravailHeures, totalMAOccas, UniteDureeMOOccas, DureeMOOccas, SurfaceTotalProdAgri)
+  select(interview__key, interview__status, id_enqueteur_ech, tempsTotalTravailHeures, tempsTravailHeures, totalMAOccas, UniteDureeMOOccas, DureeMOOccas, SurfaceTotalProdAgri, SurfaceJardins)
 
 # Main d'oeuvre occasionnelle employée pour une durée de plus de 8 mois sur l'année...
 calculTempsTravailMO |>
@@ -125,10 +125,11 @@ calculTempsTravailMO_champ <- inner_join(calculTempsTravailMO, rga23_champ |>
 calculTempsTravailMO_champ |> summarise(
   sommeHeures = sum(tempsTotalTravailHeures),
   nbPersonnes = sum(totalMAOccas),
-  moyenneEnJours = (sum(tempsTotalTravailHeures) / sum(totalMAOccas) / 8),
-  autreMoyenneEnJours = (mean(tempsTravailHeures) / 8),
-  quantile1 = quantile(tempsTravailHeures, 0.1),
-  quantile9 = quantile(tempsTravailHeures, 0.9)
+  moyenne_Jours = (sum(tempsTotalTravailHeures) / sum(totalMAOccas) / 8),
+  quantile1_Heures = quantile(tempsTravailHeures, 0.1),
+  mediane_Heures = median(tempsTravailHeures, 0.5),
+  quantile9_Heures = quantile(tempsTravailHeures, 0.9)
 )
 
 # writeCSV(calculTempsTravailMOBis)
+

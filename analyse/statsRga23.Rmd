@@ -181,7 +181,7 @@ kable(mainOeuvre |>
     UniteDureeMOOccas == 3 ~ 8 * 5 * DureeMOOccas,
     UniteDureeMOOccas == 4 ~ 8 * 5 * 4.33 * DureeMOOccas,
     TRUE ~ DureeMOOccas
-  ), tempsTravailHeures = tempsTotalTravailHeures / totalMAOccas) |> filter(tempsTravailHeures < 50) |> summarize(sum(totalMAOccas)) / rga23_champ |> summarize(sum(totalMAOccas, na.rm = TRUE))*100,0)`% pour moins de 50h sur l'année
+  ), tempsTravailHeures = tempsTotalTravailHeures / totalMAOccas) |> filter(tempsTravailHeures < 64) |> summarize(sum(totalMAOccas)) / rga23_champ |> summarize(sum(totalMAOccas, na.rm = TRUE))*100,0)`% pour moins de 64h (8 jours) sur l'année
 
 ## SAU déclarée
 

@@ -24,7 +24,7 @@ eligiblesCultivateurs |>
 
 ### Par type de cultures classiques
 
-aVerifier <- eligiblesCultivateurs |>
+eligiblesCultivateurs |>
   filter(ModesProduction__1 == 1 & is.na(CulturesPresentes__10))
 
 # Cultures maraîchères....................................10/10
@@ -149,12 +149,12 @@ aVerifier <- contenuJardinsOceaniens |>
   filter(SurfaceJardins < 3000 & CultPresentesJardins__10 == 1)
 
 ## Jardins océaniens avec 1 ou 2 cultures
-aVerifier <- eligiblesCultivateurs |>
+eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & is.na(CultPrincipJardins__2) & interview__status == 120) |>
   select(interview__key, interview__status, id_enqueteur_ech, SurfaceJardins, CultPrincipJardins__0, CultPrincipJardins__1)
 
 ## Jardins océaniens avec seulement 3 cultures et au moins 1000m²
-aVerifier <- eligiblesCultivateurs |>
+eligiblesCultivateurs |>
   filter(ModesProduction__4 == 1 & !is.na(CultPrincipJardins__2) & is.na(CultPrincipJardins__3) & SurfaceJardins >= 1000 & interview__status == 120) |>
   select(interview__key, id_enqueteur_ech, SurfaceJardins)
 
