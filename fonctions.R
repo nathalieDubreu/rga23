@@ -8,6 +8,10 @@ readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t")
 }
 
+readDTA <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
+  read_dta(file.path(chemin, dossier, nomFichier))
+}
+
 ### Fichiers tab d'un dossier défini -> liste
 lireFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
   pathDossier <- file.path(chemin, dossier)
@@ -30,7 +34,7 @@ writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
       paste(
         deparse(substitute(table)),
         ".csv",
-        sep=""
+        sep = ""
       )
     ),
     append = FALSE,
@@ -47,7 +51,7 @@ writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
       paste(
         deparse(substitute(table)),
         ".csv",
-        sep=""
+        sep = ""
       )
     ),
     append = FALSE,
