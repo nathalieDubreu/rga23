@@ -14,6 +14,7 @@ source("suiviCollecte/comptages.R")
 
 # Mises en forme des données (à lancer dans l'ordre)
 source("miseEnForme/imputationVariables.R")
+source("miseEnForme/ajoutsDonneesX.R")
 source("miseEnForme/modificationsIdDoublonsEtX.R")
 source("miseEnForme/rostersSurfaces.R")
 source("miseEnForme/decoupageRga23.R")
