@@ -74,7 +74,7 @@ cultivateursChamp2012_1 <- rga23 |>
       totalSurfacePepinieres >= 500
   )
 
-culturesChamp2012 <- readCSV("culturesChamp2012.csv") |> select(culture_id, idSeuilRGA)
+culturesChamp2012 <- readInputCSV("culturesChamp2012.csv") |> select(culture_id, idSeuilRGA)
 rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 
 cultivateursChamp2012_2 <- left_join(rga23_surfacesCultures, culturesChamp2012, by = c("culture_id")) |>

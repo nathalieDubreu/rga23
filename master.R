@@ -26,6 +26,7 @@ source("miseEnForme/rosterEngraisOrganiques.R")
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")
 source("champs/champ2012.R")
+source("champs/champCAPL.R")
 source("champs/indicatricesAppartenances.R")
 
 # Analyse

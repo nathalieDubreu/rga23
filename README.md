@@ -29,7 +29,7 @@
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
 - `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
 
-## Champs - WIP - nécessitent fichiers csv de points par critère en fonction des différents champs
+## Champs - WIP
 - `champRGA.R` : Champ du RGA23
     - TODO : traiter les jardins océaniens avec une seule culture notamment
 - `champ2012.R` : Approximation des seuils de 2012

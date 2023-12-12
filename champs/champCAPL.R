@@ -42,7 +42,7 @@ eleveursPointsCAPL <- rga23 |>
   )
 
 # Points coté cultures
-culturesChampCAPL <- readCSV("culturesChampCAPL.csv") |>
+culturesChampCAPL <- readInputCSV("culturesChampCAPL.csv") |>
   rename(culture_id = idProdRGA) |>
   select(culture_id, AutreConditionNecessaire, PointsParUnite)
 rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")

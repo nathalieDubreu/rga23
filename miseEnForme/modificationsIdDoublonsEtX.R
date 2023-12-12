@@ -7,7 +7,6 @@
 # TODO
 
 rm(
-  rga23Brut
 )
 
 writeCSVTraites(rga23)

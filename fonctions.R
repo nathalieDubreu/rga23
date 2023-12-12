@@ -6,7 +6,7 @@ readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
 
 ## Pour les CSV du projet
 readInputCSV <- function(nomFichier) {
-  readr::read_csv2(file.path("input/", nomFichier))
+  readr::read_csv2(file.path("input", nomFichier))
 }
 
 readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
