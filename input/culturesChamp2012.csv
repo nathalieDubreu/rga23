@@ -1,0 +1,156 @@
+culture_id;CultureRGA;idSeuilRGA;LibelleSeuilRGA
+101;Aubergine - Plein air ou abri bas;;
+102;Aubergine - Serre ou abri haut;1;Horticulture
+103;Carotte;;
+104;Céleri;;
+105;Champignon;;
+106;Chou pommé (vert ou rouge);;
+107;Chou wong bok;;
+108;Concombre - Plein air ou abri bas;;
+109;Concombre - Serre ou abri haut pleine terre;1;Horticulture
+110;Concombre - Serre ou abri haut hors sol;1;Horticulture
+111;Courgette - Plein air ou abri bas;;
+112;Courgette - Serre ou abri haut;1;Horticulture
+113;Cresson;;
+114;Curcuma;;
+115;Epinard;;
+116;Gingembre;;
+117;Fouka;;
+118;Haricot à écosser;;
+119;Haricot vert;;
+120;Haricot long;;
+121;Herbes aromatiques (basilic, menthe, coriandre...);;
+122;Graines germées (soja, alfala...);;
+123;Laitue ou salade - Plein air ou abri bas;;
+124;Laitue ou salade - Serre ou abri haut pleine terre;1;Horticulture
+125;Laitue ou salade - Serre ou abri haut hors sol;1;Horticulture
+126;Laitue ou salade - Plein air hors sol;;
+127;Maïs doux;;
+128;Melon - plein air;;
+129;Melon - serre ou abri haut pleine terre;1;Horticulture
+130;Melon - serre ou abri haut hors sol;1;Horticulture
+131;Navet;;
+132;Oignon vert - Plein air ou abri bas;;
+133;Oignon vert - Serre ou abri haut pleine terre;1;Horticulture
+134;Oignon vert - Serre ou abri haut hors sol;1;Horticulture
+135;Oignon vert - Plein air hors sol;;
+136;Pastèque - plein air;;
+137;Pastèque - serre ou abri haut pleine terre;1;Horticulture
+138;Pastèque - serre ou abri haut hors sol;1;Horticulture
+139;Persil;;
+140;Piment;;
+141;Poireau;;
+142;Poivron vert - Plein air ou abri bas;;
+143;Poivron vert - Serre ou abri haut pleine terre;1;Horticulture
+144;Poivron vert - Serre ou abri haut hors sol;1;Horticulture
+145;Poivron couleur - Plein air ou abri bas;;
+146;Poivron couleur - Serre ou abri haut pleine terre;1;Horticulture
+147;Poivron couleur - Serre ou abri haut hors sol;1;Horticulture
+148;Pomme de terre;;
+149;Pota (vert ou blanc) - Plein air ou abri bas;;
+150;Pota (vert ou blanc) - Serre ou abri haut pleine terre;1;Horticulture
+151;Pota (vert ou blanc) - Serre ou abri haut hors sol;1;Horticulture
+152;Pota (vert ou blanc) - Plein air hors sol;;
+153;Potiron ou autre courge;;
+154;Radis;;
+155;Soja;;
+156;Tomate - Plein air ou abri bas;;
+157;Tomate - Serre ou abri haut pleine terre;1;Horticulture
+158;Tomate - Serre ou abri haut hors sol;1;Horticulture
+159;Autres;;
+201;Banane à cuire hors fei;;
+202;Fafa;;
+203;Fei;;
+204;Igname (ufi);;
+205;Manioc (maniota);;
+206;Patate douce (umara);;
+207;Taro (hors Fafa);;
+208;Tarua;;
+209;Uru;;
+210;Autres;;
+301;Abiu;;
+302;Ananas;;
+303;Avocatier;;
+304;Banane dessert;;
+305;Carambolier;;
+306;Citronnier ou Lime (citron vert);;
+307;Grand cocotier;;
+308;Cocotier nain;;
+309;Cocotier hybride;;
+310;Corossolier;;
+311;Durian;;
+312;Figuier;;
+313;Passiflore (fruit de la passion);;
+314;Goyavier;;
+315;Litchi;;
+316;Longane;;
+317;Mandarinier;;
+318;Mangoustanier;;
+319;Manguier;;
+320;Mape;;
+321;Oranger;;
+322;Pamplemoussier;;
+323;Papayer;;
+324;Pitaya;;
+325;Pommier-cannelle;;
+326;Pommier-étoile;;
+327;Ramboutan;;
+328;Raisin de table;;
+329;Raisin de cuve;;
+330;Autres agrumes (clémentine, pomelo, ...);;
+331;Divers cultures fruitières;;
+332;Bois d'oeuvre;;
+401;Alpinia (opuhi);;
+402;Anthurium - plein champ;;
+403;Anthurium - sous ombrière;1;Horticulture
+404;Anthurium - sous serre;1;Horticulture
+405;Chrysanthème - plein champ;;
+406;Chrysanthème - sous ombrière;1;Horticulture
+407;Chrysanthème - sous serre;1;Horticulture
+408;Feuillage (cordyline, croton, aglaonema, misère...) - plein champ;;
+409;Feuillage (cordyline, croton, aglaonema, misère...) - sous ombrière;1;Horticulture
+410;Feuillage (cordyline, croton, aglaonema, misère...) - sous serre;1;Horticulture
+411;Gerbera - plein champ;;
+412;Gerbera - sous ombrière;1;Horticulture
+413;Gerbera - sous serre;1;Horticulture
+414;Héliconia;;
+415;Hibiscus;;
+416;Lys - plein champ;;
+417;Lys - sous ombrière;1;Horticulture
+418;Lys - sous serre;1;Horticulture
+419;Orchidées - plein champ;;
+420;Orchidées - sous ombrière;1;Horticulture
+421;Orchidées - sous serre;1;Horticulture
+422;Pandanus toiture (rau'oro);;
+423;Pandanus vannerie (pae'ore);;
+424;Rose de pocelaine et torche;;
+425;Rosier - plein champ;;
+426;Rosier - sous ombrière;1;Horticulture
+427;Rosier - sous serre;1;Horticulture
+428;Tiare Tahiti;;
+429;Autres fleurs annuelles (ou tempérées) - plein champ;;
+430;Autres fleurs annuelles (ou tempérées) - sous ombrière;1;Horticulture
+431;Autres fleurs annuelles (ou tempérées) - sous serre;1;Horticulture
+432;Autres fleurs tropicales (strelitzia, canna, calathea, costus...);;
+501;Cacaoier;;
+502;Caféier ;;
+503;Canne à sucre;;
+504;Hibiscus (comestible);;
+505;Moringa;;
+506;Nono;;
+507;Poivrier;;
+508;Tamanu;;
+509;Vanillier - ombrage naturel;;
+510;Vanillier - serre ou ombrière;2;Vanille sous serre ou ombrière
+511;Autres (canelle, santal, bancoulier...);;
+601;Ornementales (plantes vertes et potées fleuries, orchidées...);;
+602;Fruitières;;
+603;Maraichères, aromatiques;;
+604;Médicinales;;
+701;Paturage/Prairie naturelle;;
+702;Pâturage/Prairie améliorée;;
+703;Maïs fourrage et ensilage;;
+704;Sorgho;;
+705;Autres;;
+801;Jachère;;
+802;Jachère améliorée (plantée, engrais vert);;

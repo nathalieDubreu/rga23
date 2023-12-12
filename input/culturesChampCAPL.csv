@@ -1,0 +1,156 @@
+idProdRGA;ProductionRGA;AutreConditionNecessaire;idProductionDag;Production;Unit;PointsParUnite
+101;Aubergine - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+102;Aubergine - Serre ou abri haut;;32;Cultures sous abri;m²;1
+103;Carotte;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+104;Céleri;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+105;Champignon;;37;Champignons;m²;8
+106;Chou pommé (vert ou rouge);;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+107;Chou wong bok;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+108;Concombre - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+109;Concombre - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+110;Concombre - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+111;Courgette - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+112;Courgette - Serre ou abri haut;;32;Cultures sous abri;m²;1
+113;Cresson;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+114;Curcuma;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+115;Epinard;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+116;Gingembre;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+117;Fouka;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+118;Haricot à écosser;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+119;Haricot vert;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+120;Haricot long;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+121;Herbes aromatiques (basilic, menthe, coriandre...);;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+122;Graines germées (soja, alfala...);;36;Graines germées;m²;20
+123;Laitue ou salade - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+124;Laitue ou salade - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+125;Laitue ou salade - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+126;Laitue ou salade - Plein air hors sol;;33;Cultures hors-sol sans abri;m²;0,5
+127;Maïs doux;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+128;Melon - plein air;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+129;Melon - serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+130;Melon - serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+131;Navet;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+132;Oignon vert - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+133;Oignon vert - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+134;Oignon vert - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+135;Oignon vert - Plein air hors sol;;33;Cultures hors-sol sans abri;m²;0,5
+136;Pastèque - plein air;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+137;Pastèque - serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+138;Pastèque - serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+139;Persil;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+140;Piment;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+141;Poireau;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+142;Poivron vert - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+143;Poivron vert - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+144;Poivron vert - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+145;Poivron couleur - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+146;Poivron couleur - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+147;Poivron couleur - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+148;Pomme de terre;;26;Pomme de terre;m²;0,2
+149;Pota (vert ou blanc) - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+150;Pota (vert ou blanc) - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+151;Pota (vert ou blanc) - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+152;Pota (vert ou blanc) - Plein air hors sol;;33;Cultures hors-sol sans abri;m²;0,5
+153;Potiron ou autre courge;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+154;Radis;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+155;Soja;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+156;Tomate - Plein air ou abri bas;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+157;Tomate - Serre ou abri haut pleine terre;;32;Cultures sous abri;m²;1
+158;Tomate - Serre ou abri haut hors sol;;32;Cultures sous abri;m²;1
+159;Autres;;27;Cultures maraichères ou légumières de plein champ;m²;0,2
+201;Banane à cuire hors fei;;24;Cultures vivrières;m²;0,2
+202;Fafa;;24;Cultures vivrières;m²;0,2
+203;Fei;;24;Cultures vivrières;m²;0,2
+204;Igname (ufi);;24;Cultures vivrières;m²;0,2
+205;Manioc (maniota);;24;Cultures vivrières;m²;0,2
+206;Patate douce (umara);;24;Cultures vivrières;m²;0,2
+207;Taro (hors Fafa);;24;Cultures vivrières;m²;0,2
+208;Tarua;;24;Cultures vivrières;m²;0,2
+209;Uru;;24;Cultures vivrières;m²;0,2
+210;Autres;;24;Cultures vivrières;m²;0,2
+301;Abiu;Irrigue*2;41 ou 42;;m²;0,1
+302;Ananas;;40;Ananas;m²;0,1
+303;Avocatier;Irrigue*2;41 ou 42;;m²;0,1
+304;Banane dessert;Irrigue*2;41 ou 42;;m²;0,1
+305;Carambolier;Irrigue*2;41 ou 42;;m²;0,1
+306;Citronnier ou Lime (citron vert);Irrigue*2;41 ou 42;;m²;0,1
+307;Grand cocotier;Irrigue*2;41 ou 42;;m²;0,1
+308;Cocotier nain;Irrigue*2;41 ou 42;;m²;0,1
+309;Cocotier hybride;Irrigue*2;41 ou 42;;m²;0,1
+310;Corossolier;Irrigue*2;41 ou 42;;m²;0,1
+311;Durian;Irrigue*2;41 ou 42;;m²;0,1
+312;Figuier;Irrigue*2;41 ou 42;;m²;0,1
+313;Passiflore (fruit de la passion);;;;;
+314;Goyavier;Irrigue*2;41 ou 42;;m²;0,1
+315;Litchi;Irrigue*2;41 ou 42;;m²;0,1
+316;Longane;Irrigue*2;41 ou 42;;m²;0,1
+317;Mandarinier;Irrigue*2;41 ou 42;;m²;0,1
+318;Mangoustanier;Irrigue*2;41 ou 42;;m²;0,1
+319;Manguier;Irrigue*2;41 ou 42;;m²;0,1
+320;Mape;Irrigue*2;41 ou 42;;m²;0,1
+321;Oranger;Irrigue*2;41 ou 42;;m²;0,1
+322;Pamplemoussier;Irrigue*2;41 ou 42;;m²;0,1
+323;Papayer;Irrigue*2;41 ou 42;;m²;0,1
+324;Pitaya;;;;;
+325;Pommier-cannelle;Irrigue*2;41 ou 42;;m²;0,1
+326;Pommier-étoile;Irrigue*2;41 ou 42;;m²;0,1
+327;Ramboutan;Irrigue*2;41 ou 42;;m²;0,1
+328;Raisin de table;;;;m²;0,2
+329;Raisin de cuve;;;;m²;0,2
+330;Autres agrumes (clémentine, pomelo, ...);Irrigue*2;41 ou 42;;m²;0,1
+331;Divers cultures fruitières;;;;m²;0,2
+332;Bois d'oeuvre;;;;;
+401;Alpinia (opuhi);;28;Cultures florales ou ornementales de plein champ;m²;0,4
+402;Anthurium - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+403;Anthurium - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+404;Anthurium - sous serre;;32;Cultures sous abri;m²;1
+405;Chrysanthème - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+406;Chrysanthème - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+407;Chrysanthème - sous serre;;32;Cultures sous abri;m²;1
+408;Feuillage (cordyline, croton, aglaonema, misère...) - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+409;Feuillage (cordyline, croton, aglaonema, misère...) - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+410;Feuillage (cordyline, croton, aglaonema, misère...) - sous serre;;32;Cultures sous abri;m²;1
+411;Gerbera - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+412;Gerbera - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+413;Gerbera - sous serre;;32;Cultures sous abri;m²;1
+414;Héliconia;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+415;Hibiscus;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+416;Lys - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+417;Lys - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+418;Lys - sous serre;;32;Cultures sous abri;m²;1
+419;Orchidées - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+420;Orchidées - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+421;Orchidées - sous serre;;32;Cultures sous abri;m²;1
+422;Pandanus toiture (rau'oro);;43;Pandanus;m²;0,1
+423;Pandanus vannerie (pae'ore);;43;Pandanus;m²;0,1
+424;Rose de pocelaine et torche;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+425;Rosier - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+426;Rosier - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+427;Rosier - sous serre;;32;Cultures sous abri;m²;1
+428;Tiare Tahiti;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+429;Autres fleurs annuelles (ou tempérées) - plein champ;;28;Cultures florales ou ornementales de plein champ;m²;0,4
+430;Autres fleurs annuelles (ou tempérées) - sous ombrière;;30;Autres cultures sous-ombrière;m²;0,5
+431;Autres fleurs annuelles (ou tempérées) - sous serre;;32;Cultures sous abri;m²;1
+432;Autres fleurs tropicales (strelitzia, canna, calathea, costus...);;28;Cultures florales ou ornementales de plein champ;m²;0,4
+501;Cacaoier;;50;Cacaoyer;m²;0,1
+502;Caféier ;;;;;
+503;Canne à sucre;;23;Canne à sucre;m²;0,02
+504;Hibiscus (comestible);;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+505;Moringa;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+506;Nono;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+507;Poivrier;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+508;Tamanu;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+509;Vanillier - ombrage naturel;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+510;Vanillier - serre ou ombrière;;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+511;Autres (canelle, santal, bancoulier...);;38;Plantes aromatiques, épices ou médicinales, kava;m²;0,3
+601;Ornementales (plantes vertes et potées fleuries, orchidées...);;34;Pépinières;m²;0,5
+602;Fruitières;;34;Pépinières;m²;0,5
+603;Maraichères, aromatiques;;34;Pépinières;m²;0,5
+604;Médicinales;;34;Pépinières;m²;0,5
+701;Paturage/Prairie naturelle;;;;;
+702;Pâturage/Prairie améliorée;;;;;
+703;Maïs fourrage et ensilage;;22;Céréales, oléagineux, protéagineux;m² ;0,02
+704;Sorgho;;22;Céréales, oléagineux, protéagineux;m² ;0,02
+705;Autres;;;;;
+801;Jachère;;;;;
+802;Jachère améliorée (plantée, engrais vert);;;;;
