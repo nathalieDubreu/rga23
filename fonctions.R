@@ -4,6 +4,11 @@ readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_csv2(file.path(chemin, nomFichier))
 }
 
+## Pour les CSV du projet
+readInputCSV <- function(nomFichier) {
+  readr::read_csv2(file.path("input/", nomFichier))
+}
+
 readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t")
 }
