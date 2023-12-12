@@ -1,9 +1,10 @@
 rga23_coexploitants <- readTable("RosterCoExploit.tab", dossier) |> select(!interview__id)|>
   rename(coexploitant_id = RosterCoExploit__id)
+writeCSVTraites(rga23_coexploitants)
+
 rga23_moPermanenteFam <- readTable("RosterMOPermFam.tab", dossier) |> select(!interview__id) |>
   rename(persMoPermFam_id = RosterMOPermFam__id)
-
-writeCSVTraites(rga23_coexploitants)
+# TODO : ajout des données récupérées par téléphone pour certains X dans la table rga23_moPermanenteFam
 writeCSVTraites(rga23_moPermanenteFam)
 
 # Récupération des valeurs du roster sur la main d'oeuvre permanente non familiale dans la table rga_mainOeuvre
@@ -30,6 +31,8 @@ for (i in 1:4) {
       "{nBHommesI}" := MOHomEmpl
     )
 }
+
+# TODO : ajout les données récupérées par téléphone pour certains X dans la table rga23_mainOeuvre
 
 writeCSVTraites(rga23_mainOeuvre)
 
