@@ -7,6 +7,10 @@
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
     - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
+- `miseEnForme/modificationsIdDoublonsEtX.R` : [TODO]
+    - Passage des identifiants X en P s'ils ne font plus de coprah
+    - Passage des identifiants X en C s'ils ne font que du coprah
+    - Passage des identifiants C ou P en X en cas de doublons
 - `rostersSurfaces.R` : 
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier 
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
@@ -20,6 +24,7 @@
     - création du fichier CSV correspondant au roster : roster_coco_loc.tab -> **rga23_cocoteraies**
 - `rostersMainOeuvre.R` :
     - récupération des valeurs du roster MONonFamPerm.tab dans **rga23_mainOeuvre**
+    - ajout des données récoltées par téléphone pour les X confrontés au bug dans la table rga23_mainOeuvre et dans la table rga23_moPermanenteFam
     - création de 2 fichiers CSV correspondant aux rosters RosterCoExploit.tab et RosterMOPermFam.tab -> **rga23_coexploitants** et **rga23_moPermanenteFam**
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
 - `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
