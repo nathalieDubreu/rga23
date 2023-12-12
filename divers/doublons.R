@@ -1,3 +1,5 @@
+fichierDoublonsExistants <- readInputCSV("doublons_v5.csv")
+  
 doublonsNonInterroges <- readCSV("rga23.csv") |>
   filter(statut_collecte == 5 & (interview__status == "120" | interview__status == "130")) |>
   select(interview__key, id_exploitation, assignment__id, id_enqueteur_ech) |>
@@ -9,7 +11,7 @@ commentaires <- left_join(doublonsNonInterroges, readTable("interview__comments.
 # writeCSV(commentaires)
 
 ## A ajouter dans le fichier doublons_vX.csv et augmenter la version pour la lecture suivante
-nouveauxDoublonsNonInterroges <- anti_join(doublonsNonInterroges, readCSV("doublons_v5.csv") |>
+nouveauxDoublonsNonInterroges <- anti_join(doublonsNonInterroges, fichierDoublonsExistants |>
                                              select(interview__keyDoublon) |>
                                              rename(interview__key = interview__keyDoublon))
 
@@ -19,7 +21,7 @@ commentairesNouveaux <- left_join(nouveauxDoublonsNonInterroges, readTable("inte
 #writeCSV(commentairesNouveaux)
 
 ## A supprimer si besoin et augmenter la version pour la lecture suivante
-anciensDoublonsNonInterroges <- anti_join(readCSV("doublons_v5.csv") |> 
+anciensDoublonsNonInterroges <- anti_join(fichierDoublonsExistants |> 
                                              select(interview__keyDoublon) |>
                                              rename(interview__key = interview__keyDoublon),doublonsNonInterroges)
 
@@ -34,7 +36,7 @@ anciensDoublonsNonInterroges <- anti_join(readCSV("doublons_v5.csv") |>
 # commentairesExistePlus <- left_join(existePlus, readTable("interview__comments.tab", dossier)) |>
 #   select(!interview__id & !roster & !id1 & !id2)
 
-doublonsManquants <- readCSV("doublons_v5.csv") |>
+doublonsManquants <- fichierDoublonsExistants |>
   filter(is.na(idExploit) & is.na(numAffectation)) |>
   select(interview__keyDoublon, idExploitDoublon, numAffectationDoublon, comment, TODO) |>
   rename(interview__key = interview__keyDoublon)

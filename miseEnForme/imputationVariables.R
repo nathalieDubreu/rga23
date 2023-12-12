@@ -86,9 +86,9 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
 
 ## Localisation
 
-iles <- readCSV("iles.csv")
-communes <- readCSV("communesISPF.csv")
-ilesCommunesUniques <- readCSV("ilesCommunesUniques.csv")
+iles <- readInputCSV("iles.csv")
+communes <- readInputCSV("communesISPF.csv")
+ilesCommunesUniques <- readInputCSV("ilesCommunesUniques.csv")
 
 ### Ile d'exploitation
 
