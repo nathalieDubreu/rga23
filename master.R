@@ -58,6 +58,9 @@ source("divers/doublons.R")
 ## Repérage des valeurs extremes (variables quantitatives)
 source("divers/valeursExtremes.R")
 
+## Préparation fichiers tests pour le SIA
+source("divers/vivriersPilotes.R")
+
 
 
 
