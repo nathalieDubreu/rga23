@@ -1,6 +1,7 @@
 ## Variables diverses
 
-rga23Brut <- readTable("rga23.tab", dossier) |>
+rga23Brut <- readTable("rga23.tab", dossier) |> 
+  filter(interview__key != "59-36-31-34" & interview__key != "06-79-34-97") |>
   mutate(AbeillesBio = case_when(
     (AgriBio == 1 & PresenceAnimaux__7 == 1) ~ 1,
     (AgriBio == 2 & PresenceAnimaux__7 == 1) ~ 2,
