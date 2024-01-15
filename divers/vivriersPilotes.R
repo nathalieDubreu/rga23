@@ -24,3 +24,21 @@ exploitationsPilotes <- inner_join(readCSV("rga23_exploitations.csv"), ids) |>
   select_if(~ n_distinct(.) > 1)
 cultivateursPilotes <- inner_join(readCSV("rga23_prodVegetales.csv"), ids) |>
   select_if(~ n_distinct(.) > 1)
+
+repartitionPilote <- rga23VivriersPilotes |> mutate(LieuExploitation = case_when(CommuneExploitationISPF %in% c(521,522) ~ "Teva i Uta",
+                                                                    IleExploitationISPF == 90 ~ CommuneExploitation,
+                                                                    CommuneExploitationISPF %in% c(501, 502, 503) ~ "Taputapuatea",
+                                                            TRUE ~ IleExploitation),
+                               LieuHabitation = case_when(CommuneISPF %in% c(521,522) ~ "Teva i Uta",
+                                                          IleISPF == 90 ~ Commune,
+                                                          CommuneISPF %in% c(501, 502, 503) ~ "Taputapuatea",
+                                                          TRUE ~ Ile)) |> group_by(LieuExploitation, LieuHabitation) |> count()
+
+writeCSV(repartitionPilote)
+
+# test <- rga23VivriersPilotes |> filter(totalSurfaceVivri >= 500 | SurfaceJardins >= 500)  |> select(totalSurfaceVivri, SurfaceJardins)
+# test <- rga23VivriersPilotes |> filter(is.na(totalSurfaceVivri)) |> select(interview__key, SurfaceJardins)
+
+rga23VivriersPilotes <- rga23VivriersPilotes |> select(!SituationConjChefExpl)
+writeCSV(rga23VivriersPilotes)
+writeCSV(surfacesVivriersPilotes)
