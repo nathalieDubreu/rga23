@@ -35,8 +35,6 @@ for (i in 1:4) {
     )
 }
 
-# TODO : ajout les données récupérées par téléphone pour certains X dans la table rga23_mainOeuvre
-
 writeCSVTraites(rga23_mainOeuvre)
 
 rm(
