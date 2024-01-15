@@ -7,7 +7,7 @@
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
     - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
-- `miseEnForme/modificationsIdDoublonsEtX.R` [WIP] : Récupération des données relatives aux X obtenues par téléphone (hors variables spécifiques au roster MO permanente non familiale - cf. rostersMainOeuvre.R)
+- `miseEnForme/ajoutDonneesX.R` [WIP] : Récupération des données relatives aux X obtenues par téléphone (hors variables spécifiques au roster MO permanente non familiale - cf. rostersMainOeuvre.R)
 - `miseEnForme/modificationsIdDoublonsEtX.R` : [TODO]
     - Passage des identifiants X en P s'ils ne font plus de coprah
     - Passage des identifiants X en C s'ils ne font que du coprah
