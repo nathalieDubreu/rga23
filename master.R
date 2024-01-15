@@ -42,24 +42,29 @@ source("analyse/eleveurs.R")
 source("analyse/coprahculteurs.R")
 source("analyse/stats.R")
 
-# Qualité 
+# Divers (qualités, extractions, corrections.... - programmes le plus souvent one shot) 
 
-## ONE SHOT : 
 ### Ajout locataires lotissements agricoles
 # source("divers/lotissementsAgricoles.R")
 # source("divers/attributaires.R")
+
 ### Injoignables (pour Jérôme)
 # source("divers/injoignables.R")
+
 ## Préparation fichiers tests pour le SIA
 # source("divers/fichiersTestSIA.R")
 
-## Gestion des doublons
-source("divers/doublons.R")
-## Repérage des valeurs extremes (variables quantitatives)
-source("divers/valeursExtremes.R")
+### Modifications des identifiants dans la base (doublons et X devenus P ou C)
+# source("divers/modificationsIdBase.R")
 
-## Préparation fichiers tests pour le SIA
-source("divers/vivriersPilotes.R")
+### Gestion des doublons
+# source("divers/doublons.R")
+ 
+### Repérage des valeurs extremes (variables quantitatives)
+# source("divers/valeursExtremes.R")
+
+### Préparation fichiers tests pour le SIA
+# source("divers/vivriersPilotes.R")
 
 
 
