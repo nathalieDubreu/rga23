@@ -4,8 +4,11 @@ writeCSVTraites(rga23_coexploitants)
 
 rga23_moPermanenteFam <- readTable("RosterMOPermFam.tab", dossier) |> select(!interview__id) |>
   rename(persMoPermFam_id = RosterMOPermFam__id)
-# TODO : ajout des données récupérées par téléphone pour certains X dans la table rga23_moPermanenteFam
+# Données récupérées par téléphone pour certains X dans la table rga23_moPermanenteFam
 donneesMOPermFam <- readInputCSV("donneesMainOeuvrePermFam.csv")
+
+# Regroupement des données
+rga23_moPermanenteFam <- rbind(rga23_moPermanenteFam, donneesMOPermFam)
 
 writeCSVTraites(rga23_moPermanenteFam)
 

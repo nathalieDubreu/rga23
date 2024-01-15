@@ -1,8 +1,6 @@
 ## Récupération des données relatives aux X obtenues par téléphone 
 ### (hors variables spécifiques au roster MO permanente non familiale - cf. rostersMainOeuvre.R)
 
-# WIP
-
 donneesMO <- readInputCSV("donneesMainOeuvre.csv") |> select(!id_exploitation)
 
 rga23AvecDonneesX <- left_join(rga23, donneesMO, by=c("interview__key"), suffix = c("_rga23", "_donneesMO"))
