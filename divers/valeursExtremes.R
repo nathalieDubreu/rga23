@@ -15,9 +15,9 @@ valExtremes(nbFemmesNFPerm, 0.93)
 valExtremes(nbHommesNFPerm, 0.98)
 rga23 <- rga23 |>
   mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-           ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-           ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-           ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien))
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien))
 valExtremes(totalMAOccas, 0.98)
 
 ## Surfaces les plus importantes par type de cultures
@@ -41,6 +41,7 @@ valExtremes(NbPoussins, 0.7)
 valExtremes(NbPoulettes, 0.7)
 valExtremes(NbPouletsChairCoqs, 0.7)
 valExtremes(NbCanards, 0.7)
+valExtremes(NbOies, 0.1)
 valExtremes(NbRuchesPourProduire, 0.96)
 
 rga23 |>
@@ -48,6 +49,34 @@ rga23 |>
 # 1 seul exploitant
 
 rga23 |>
-  filter(NbDindesDindons > 0 | NbPintades > 0 | NbOies > 0 | NbCailles > 0 | NbAutresVolailles > 0)
+  filter(NbDindesDindons > 0 | NbPintades > 0 | NbCailles > 0 | NbAutresVolailles > 0)
 # 0
 
+# Auto-consommation > 90%
+
+rga23_prodVegetales <- readCSV("rga23_prodVegetales.csv")
+autoConsoGrandesSurfaces <- rga23_prodVegetales |>
+  filter((PartComMaraic__1 > 90 & totalSurfaceMarai > 500) |
+    (PartComFruit__1 > 90 & totalSurfaceFruit > 10000) |
+    (PartComVivri__1 > 90 & totalSurfaceVivri >= 2500) |
+    (PartComFlorale__1 > 90 & totalSurfaceFlorale >= 2500) |
+    (PartComPlantes__1 > 90 & totalSurfacePlantes >= 2500) |
+    (PartComPepinieres__1 > 90 & totalSurfacePepinieres >= 500)) |>
+  select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, PartComMaraic__1, totalSurfaceFruit, PartComFruit__1, totalSurfaceVivri, PartComVivri__1, totalSurfaceFlorale, PartComFlorale__1, totalSurfacePlantes, PartComPlantes__1, totalSurfacePepinieres, PartComPepinieres__1)
+
+writeCSV(autoConsoGrandesSurfaces)
+
+
+rga23_prodAnimales <- readCSV("rga23_prodAnimales.csv")
+rga23_prodAnimales |>
+  filter(PartComOeufs__1 > 90 & (ifelse(is.na(ProductionPoules0), 0, ProductionPoules0) + ifelse(is.na(ProductionPoules1), 0, ProductionPoules1) + ifelse(is.na(ProductionPoules3), 0, ProductionPoules3)) > 1000) |>
+  select(interview__key, ProductionPoules3, ProductionPoules1, ProductionPoules0, PartComOeufs__1)
+
+rga23_prodAnimales |>
+  filter(PartComMiel__1 > 90 & ProductionRuches > 10) |>
+  select(interview__key, ProductionRuches, PartComMiel__1)
+
+
+valExtremes(ProductionRuches, 0.98)
+valExtremes(ProductionPoules1, 0.95)
+valExtremes(ProductionPoules3, 0.95)

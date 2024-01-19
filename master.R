@@ -4,8 +4,8 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_11-30"
-date <- "30/11/2023"
+dossier <- "Export_12-08"
+date <- "08/12/2023"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
@@ -60,8 +60,8 @@ source("analyse/stats.R")
 ### Gestion des doublons
 # source("divers/doublons.R")
  
-### Repérage des valeurs extremes (variables quantitatives)
-# source("divers/valeursExtremes.R")
+## Repérage des valeurs extremes (variables quantitatives)
+source("divers/valeursExtremes.R")
 
 ### Préparation fichiers tests pour le SIA
 # source("divers/vivriersPilotes.R")
