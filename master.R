@@ -60,8 +60,11 @@ source("analyse/stats.R")
 ### Gestion des doublons
 # source("divers/doublons.R")
  
-## Repérage des valeurs extremes (variables quantitatives)
+## Apurement
+### Repérage des valeurs extremes (variables quantitatives)
 source("divers/valeursExtremes.R")
+### Questions métier - cf. trello
+source("divers/questionsMetierApurement.R")
 
 ### Préparation fichiers tests pour le SIA
 # source("divers/vivriersPilotes.R")
