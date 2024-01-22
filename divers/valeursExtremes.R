@@ -64,7 +64,7 @@ autoConsoGrandesSurfaces <- rga23_prodVegetales |>
     (PartComPepinieres__1 > 90 & totalSurfacePepinieres >= 500)) |>
   select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, PartComMaraic__1, totalSurfaceFruit, PartComFruit__1, totalSurfaceVivri, PartComVivri__1, totalSurfaceFlorale, PartComFlorale__1, totalSurfacePlantes, PartComPlantes__1, totalSurfacePepinieres, PartComPepinieres__1)
 
-writeCSV(autoConsoGrandesSurfaces)
+# writeCSV(autoConsoGrandesSurfaces)
 
 
 rga23_prodAnimales <- readCSV("rga23_prodAnimales.csv")
