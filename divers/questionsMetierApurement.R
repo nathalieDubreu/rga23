@@ -51,8 +51,9 @@ cultivateursInferieurs10Champ_champ <- inner_join(cultivateursInferieurs10Champ,
 rga23_prodVegetales <- inner_join(readCSV("rga23_prodVegetales.csv"), cultivateursInferieurs10Champ_champ)
 autoConsoPetitesSurfaces <- rga23_prodVegetales |>
   filter(
-    # Auto-conso totale du vivrier et #3	Pomme de terre et ensemble des racines et tubercules <= 300	m²
-    ((PartComVivri__1 == 100 | is.na(PartComVivri__1)) & (TypeCultMaraich__148 == 0 | is.na(TypeCultMaraich__148) | (TypeCultMaraich__148 == 1 & PartComMaraic__1)) & surfaceSeuil3 > 0) |
+    # Auto-conso totale du vivrier + pommes de terre et #3	Pomme de terre et ensemble des racines et tubercules <= 300	m²
+    ((PartComVivri__1 == 100 | is.na(PartComVivri__1)) &
+      (TypeCultMaraich__148 == 0 | is.na(TypeCultMaraich__148) | (TypeCultMaraich__148 == 1 & PartComMaraic__1)) & surfaceSeuil3 > 0) |
       # Auto-conso totale des PPAM et #4	Canne à sucre	<= 300m²
       (PartComPlantes__1 == 100 & surfaceSeuil4 > 0) |
       # Auto-conso totale du fruitiers et #5	Cultures fruitières (y compris bananes et ananas)	<= 300	m²
@@ -61,14 +62,15 @@ autoConsoPetitesSurfaces <- rga23_prodVegetales |>
       ((PartComPlantes__1 == 100 | is.na(PartComPlantes__1)) &
         (PartComPepinieres__1 == 100 | is.na(PartComPepinieres__1)) &
         (PartComFlorale__1 == 100 | is.na(PartComFlorale__1)) & surfaceSeuil7 > 0) |
-      # Auto-conso totale du maraichage et # 8	Légumes frais et fraises	<= 100	m²
-      (PartComMaraic__1 == 100 & surfaceSeuil8 > 0) |
+      # Auto-conso totale du maraichage + fafa et # 8	Légumes frais et fraises	<= 100	m²
+      ((PartComMaraic__1 == 100 | is.na(PartComMaraic__1)) &
+        (TypeCultVivrieres__202 == 0 | is.na(TypeCultVivrieres__202) | (TypeCultVivrieres__202 == 1 & PartComVivri__1)) & surfaceSeuil8 > 0) |
       # Auto-conso totale des PPAM, des fleurs et du maraichage et #9 Serres et abris hauts	<= 10	m²
       ((PartComPlantes__1 == 100 | is.na(PartComPlantes__1)) &
         (PartComMaraic__1 == 100 | is.na(PartComMaraic__1)) &
         (PartComFlorale__1 == 100 | is.na(PartComFlorale__1)) & surfaceSeuil9 > 0)
   ) |>
-  select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, PartComMaraic__1, totalSurfaceFruit, PartComFruit__1, totalSurfaceVivri, PartComVivri__1, totalSurfaceFlorale, PartComFlorale__1, totalSurfacePlantes, PartComPlantes__1, totalSurfacePepinieres, PartComPepinieres__1)
+  select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, PartComMaraic__1, totalSurfaceFruit, PartComFruit__1, totalSurfaceVivri, PartComVivri__1, totalSurfaceFlorale, PartComFlorale__1, totalSurfacePlantes, PartComPlantes__1, totalSurfacePepinieres, PartComPepinieres__1, surfaceSeuil3, surfaceSeuil4, surfaceSeuil5, surfaceSeuil7, surfaceSeuil8, surfaceSeuil9)
 
 autoConsoPetitesSurfaces_champ <- inner_join(autoConsoPetitesSurfaces, idExploitantsDansLeChamp)
 
