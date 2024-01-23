@@ -1,6 +1,6 @@
 ## Variables diverses
 
-rga23Brut <- readTable("rga23.tab", dossier) |> 
+rga23Brut <- readTable("rga23.tab", dossier) |>
   filter(interview__key != "59-36-31-34" & interview__key != "06-79-34-97" & interview__key != "26-72-53-00" & interview__key != "49-29-35-86") |>
   mutate(AbeillesBio = case_when(
     (AgriBio == 1 & PresenceAnimaux__7 == 1) ~ 1,
@@ -83,7 +83,8 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
         substring(CultPrincipJardins__4, 0, 1) == 7) ~ 1,
       TRUE ~ CultPresentesJardins__70
     )
-  )
+  ) |>
+  mutate(sommeSurfaces = as.numeric(as.character(round(sommeSurfaces, 0))))
 
 ## Localisation
 
