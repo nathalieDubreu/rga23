@@ -52,8 +52,7 @@ rga23 |>
   filter(NbDindesDindons > 0 | NbPintades > 0 | NbCailles > 0 | NbAutresVolailles > 0)
 # 0
 
-# Auto-consommation > 90%
-
+# Auto-consommation > 90% - cultures
 rga23_prodVegetales <- readCSV("rga23_prodVegetales.csv")
 autoConsoGrandesSurfaces <- rga23_prodVegetales |>
   filter((PartComMaraic__1 > 90 & totalSurfaceMarai > 500) |
@@ -63,20 +62,31 @@ autoConsoGrandesSurfaces <- rga23_prodVegetales |>
     (PartComPlantes__1 > 90 & totalSurfacePlantes >= 2500) |
     (PartComPepinieres__1 > 90 & totalSurfacePepinieres >= 500)) |>
   select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, PartComMaraic__1, totalSurfaceFruit, PartComFruit__1, totalSurfaceVivri, PartComVivri__1, totalSurfaceFlorale, PartComFlorale__1, totalSurfacePlantes, PartComPlantes__1, totalSurfacePepinieres, PartComPepinieres__1)
-
 # writeCSV(autoConsoGrandesSurfaces)
 
-
+# Auto-consommation > 90% - productions animales
 rga23_prodAnimales <- readCSV("rga23_prodAnimales.csv")
+
+## Oeufs
 rga23_prodAnimales |>
   filter(PartComOeufs__1 > 90 & (ifelse(is.na(ProductionPoules0), 0, ProductionPoules0) + ifelse(is.na(ProductionPoules1), 0, ProductionPoules1) + ifelse(is.na(ProductionPoules3), 0, ProductionPoules3)) > 1000) |>
   select(interview__key, ProductionPoules3, ProductionPoules1, ProductionPoules0, PartComOeufs__1)
 
+## Miel
 rga23_prodAnimales |>
   filter(PartComMiel__1 > 90 & ProductionRuches > 10) |>
   select(interview__key, ProductionRuches, PartComMiel__1)
 
+## Viande (bovins, équidés, porc et caprins)
+rga23_prodAnimales |>
+  filter(PartComViande__1 == 100 &
+    (ifelse(is.na(nbTotalBovins), 0, nbTotalBovins) +
+      ifelse(is.na(nbTotalEquides), 0, nbTotalEquides) +
+      ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins) +
+      ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs)) > 50) |>
+  select(interview__key, nbTotalBovins, nbTotalEquides, nbTotalCaprins, nbTotalPorcs, PartComViande__1)
 
+# Valeurs extrèmes productions ruches et poules
 valExtremes(ProductionRuches, 0.98)
 valExtremes(ProductionPoules1, 0.95)
 valExtremes(ProductionPoules3, 0.95)
