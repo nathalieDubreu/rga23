@@ -21,3 +21,5 @@ rga23B |> group_by(ElevageValideRGA,ElevageValide2012) |> count()
 rga23B |> group_by(CultureValideRGA,CultureValide2012) |> count()
 
 rmarkdown::render("champs/appartenances.Rmd",encoding="UTF-8")
+
+rm(rga23A, rga23B)

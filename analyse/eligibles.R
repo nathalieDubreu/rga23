@@ -131,5 +131,4 @@ calculTempsTravailMO_champ |> summarise(
   quantile9_Heures = quantile(tempsTravailHeures, 0.9)
 )
 
-# writeCSV(calculTempsTravailMOBis)
-
+rm(aVerifier, calculTempsTravailMO, calculTempsTravailMO_champ, coExploitants, conjointsCoExpl, conjointsMOPerm, mainOeuvre, moPermFamiliale, poules)

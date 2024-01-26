@@ -25,6 +25,10 @@ nonEligiblesRGA_PMC |>
   count()
 
 ################## TODO -> Vérifier les "Autre ?!?" et les "Aucune utilisation de la production"
+aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "Autre ?!?")
+# 9 cas que coprah
+aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "6. Non production pour une raison non prévue")
+# 46 cas validés gestionnaires
 aVerifier <- nonEligiblesRGA_PMC |> filter(Raison == "5. Aucune utilisation de la production" & interview__key != "01-00-20-50" & interview__key != "74-92-39-14" & interview__key != "81-75-46-06")
 
 ## Double casquette : production de coprah définitivement arrêté + raison identifiée ci-dessous pour la partie exploitation agricole
@@ -42,8 +46,7 @@ nonEligiblesRGA_X <- nonEligiblesRGA |>
 
 ################## TODO -> Vérifier les "Autre ?!?" et les "Aucune utilisation de la production"
 aVerifier <- nonEligiblesRGA_X |>
-  filter(Raison == "5. Aucune utilisation de la production" | Raison == "Autre ?!?") |>
+  filter(Raison == "5. Aucune utilisation de la production" | Raison == "Autre ?!?" | Raison == "6. Non production pour une raison non prévue") |>
   filter(interview__key != "39-90-06-55" & interview__key != "84-75-99-87")
-
 
 rm(nonEligiblesRGA, nonEligiblesRGA_PMC, nonEligiblesRGA_X, aVerifier)

@@ -19,7 +19,7 @@ commercialisation <- function(typeProduction, roster, rga23) {
         TRUE ~ as.numeric(PourcentCom)
       )) |>
       rename("{PartCommerI}" := PourcentCom) |>
-      select(!variableI)
+      select(!all_of(variableI))
   }
   return(rga23)
 }

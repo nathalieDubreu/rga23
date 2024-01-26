@@ -84,7 +84,7 @@ rga23_prodAnimales |>
       ifelse(is.na(nbTotalEquides), 0, nbTotalEquides) +
       ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins) +
       ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs)) > 50) |>
-  select(interview__key, nbTotalBovins, nbTotalEquides, nbTotalCaprins, nbTotalPorcs, PartComViande__1)
+  select(interview__key, nbTotalBovins, nbTotalCaprins, nbTotalPorcs)
 
 # Valeurs extrèmes productions ruches et poules
 valExtremes(ProductionRuches, 0.98)

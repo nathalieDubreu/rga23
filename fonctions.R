@@ -1,21 +1,21 @@
 ## Lecture
 
 readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
-  readr::read_csv2(file.path(chemin, nomFichier))
+  readr::read_csv2(file.path(chemin, nomFichier), col_types = "c", guess_max = 7832)
 }
 
 ## Pour les CSV du projet
 readInputCSV <- function(nomFichier) {
-  readr::read_csv2(file.path("input", nomFichier))
+  readr::read_csv2(file.path("input", nomFichier),show_col_types = FALSE)
 }
 
 readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
-  readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t")
+  readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t", col_types = "c", guess_max = 7832)
 }
 
-readDTA <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
-  read_dta(file.path(chemin, dossier, nomFichier))
-}
+# readDTA <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
+#   read_dta(file.path(chemin, dossier, nomFichier))
+# }
 
 ### Fichiers tab d'un dossier défini -> liste
 lireFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {

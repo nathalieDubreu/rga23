@@ -4,7 +4,7 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_12-08"
+dossier <- "Export_01-25"
 date <- "08/12/2023"
 
 # Suivi de la collecte

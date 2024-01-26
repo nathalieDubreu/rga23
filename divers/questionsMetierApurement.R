@@ -102,35 +102,38 @@ fleurs <- autoConsoPetitesSurfaces |>
 
 pepinieres <- autoConsoPetitesSurfaces |>
   filter(PartComPepinieres__1 == 100 &
-           (surfaceSeuil7 > 0 & surfaceSeuil7 <= 300)) |>
+    (surfaceSeuil7 > 0 & surfaceSeuil7 <= 300)) |>
   filter(surfaceSeuil7 <= 3000)
 
-total <- rbind(maraichage, 
-               vivrier,
-               fruitier,
-               plantes,
-               fleurs,
-               pepinieres) |> group_by(interview__key) |> count()
+total <- rbind(
+  maraichage,
+  vivrier,
+  fruitier,
+  plantes,
+  fleurs,
+  pepinieres
+) |>
+  group_by(interview__key) |>
+  count()
 
 dansLeChamp <- inner_join(total, idExploitantsDansLeChamp)
 
 # SAU inconnue
-sauInconnue <- rga23 |> filter(is.na(SurfaceTotalProdAgri) & (sommeSurfaces > 0 | !is.na(totalSurfDeclarees))) |>
+sauInconnue <- rga23 |>
+  filter(is.na(SurfaceTotalProdAgri) & (sommeSurfaces > 0 | !is.na(totalSurfDeclarees))) |>
   select(interview__key, SurfaceTotalProdAgri, sommeSurfaces, totalSurfDeclarees)
 
-# Jardins océaniens / Permaculture
-
-### Uniquement du maraichage
+# Jardins océaniens / Permaculture - Uniquement du maraichage (> 1000m²)
 
 queMaraichage <- anti_join(rga23 |>
   mutate(nbTypesCultures = CultPresentesJardins__10 +
-           CultPresentesJardins__20 +
-           CultPresentesJardins__30 +
-           CultPresentesJardins__40 +
-           CultPresentesJardins__50 +
-           CultPresentesJardins__60 +
-           CultPresentesJardins__70 +
-           CultPresentesJardins__80) |>
+    CultPresentesJardins__20 +
+    CultPresentesJardins__30 +
+    CultPresentesJardins__40 +
+    CultPresentesJardins__50 +
+    CultPresentesJardins__60 +
+    CultPresentesJardins__70 +
+    CultPresentesJardins__80) |>
   filter(SurfaceJardins >= 1000 & nbTypesCultures == 1 & CultPresentesJardins__10 == 1) |>
   select(interview__key, SurfaceTotalProdAgri, sommeSurfaces, totalSurfDeclarees, SurfaceJardins), idExploitantsDansLeChamp)
 
@@ -141,13 +144,13 @@ queMaraichage <- anti_join(rga23 |>
 ## Le fait d’additionner 1/3 de la surface du jardin avec chacun des 3 types de cultures permettrait peut-être de dépasser le seuil du maraichage par exemple.
 ## Ou au contraire, considérer en cas de jardins océaniens de 1500m² par exemple que s'il y a plus de 4500m² d'autres cultures, on considère le seuil atteint ?
 
-jardinsOcenaniensTropPetits <- rga23 |> filter(SurfaceJardins < 3000 & SurfaceJardins > 0 )
+jardinsOcenaniensTropPetits <- rga23 |> filter(SurfaceJardins < 3000 & SurfaceJardins > 0)
 # 148
 
-jardinsOcenaniensOUT <- anti_join(jardinsOcenaniensTropPetits,idExploitantsDansLeChamp) 
+jardinsOcenaniensOUT <- anti_join(jardinsOcenaniensTropPetits, idExploitantsDansLeChamp)
 # 119
 
-avecCulturesClassiques <- jardinsOcenaniensOUT |> 
+avecCulturesClassiques <- jardinsOcenaniensOUT |>
   filter(ModesProduction__1 == 1 & (SurfaceTotalProdAgri > 3000 | totalSurfDeclarees > 3000)) |>
-  select(interview__key, SurfaceTotalProdAgri, sommeSurfaces, totalSurfDeclarees, SurfaceJardins)
+  select(interview__key, SurfaceTotalProdAgri, totalSurfDeclarees, totalSurfaceMarai, totalSurfaceFruit, totalSurfaceVivri, totalSurfaceFlorale, totalSurfacePlantes, totalSurfacePepinieres, SurfaceJardins)
 # 14 font également de la culture classique et ont une SAU (ou total surf déclarées) > 3000m²
