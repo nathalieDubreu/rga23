@@ -41,16 +41,26 @@ eleveursChampRGA <- rga23 |>
         ifelse(is.na(NbNaissEquides), 0, NbNaissEquides) >= 4)
   )
 
-# Critères cultivateurs
+# Critères cultivateurs + cas des jardins océaniens au sens de permaculture avec plus de 1000m² de maraichage
 
 cultivateursChampRGA1 <- rga23 |>
+  mutate(nbTypesCultures = CultPresentesJardins__10 +
+           CultPresentesJardins__20 +
+           CultPresentesJardins__30 +
+           CultPresentesJardins__40 +
+           CultPresentesJardins__50 +
+           CultPresentesJardins__60 +
+           CultPresentesJardins__70 +
+           CultPresentesJardins__80) |>
   filter(
     # 1	Superficie agricole utilisée	10000	m²
     SurfaceTotalProdAgri >= 10000 |
       # 2	Terres arables	10000	m²
       totalSurfDeclarees >= 10000 |
       # 6	Jardins océaniens	3000	m²
-      SurfaceJardins >= 3000
+      SurfaceJardins >= 3000 |
+      # Permaculture de plus de 1000m² de maraichage (critère 8)
+      (SurfaceJardins >= 1000 & nbTypesCultures == 1 & CultPresentesJardins__10 == 1) 
   )
 
 culturesChampRGA <- readInputCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA)
