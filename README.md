@@ -12,14 +12,17 @@
     - Passage des identifiants X en P s'ils ne font plus de coprah
     - Passage des identifiants X en C s'ils ne font que du coprah
     - Passage des identifiants C ou P en X en cas de doublons
-- `rostersSurfaces.R` : 
-    - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier 
-    - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
-    - création du fichier csv correspondant -> **rga23_surfacesCultures**
 - `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (**rga23_coprahculteurs**, **rga23_exploitations**, **rga23_general**, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, **rga23_gestion**, **rga23_peche** et **rga23_tape**)
 - `rostersCommercialisation.R` :
-    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
+    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et rga23_prodVegetales
     - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
+- `rostersSurfaces.R` : 
+    - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier
+    - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
+    - création du fichier csv correspondant -> rga23_surfacesCultures
+- `surfacesPetitesSurfacesAutoConsom.R` WIP
+    - suppression de certaines valeurs hors champ (surfaces très petites entièrement autoconsommées - potagers familiaux)
+    - Mises à jour de **rga23_prodVegetales** et **rga23_surfacesCultures**
 - `rosterCocoteraies.R` :
     - imputation de la valeur 100 à PartCoco si tout le revenu est conservé
     - création du fichier CSV correspondant au roster : roster_coco_loc.tab -> **rga23_cocoteraies**
