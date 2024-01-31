@@ -91,9 +91,8 @@ TablePourcentMode <- readTable("PourcentModeFourrages.tab", dossier) |> rename(
 )
 rga23_prodVegetales <- commercialisation("Fourrages", TablePourcentMode, rga23_prodVegetales)
 
-## Export fichiers traités
+## Export fichier traité (rga23_prodAnimales) - Le fichier rga23_prodVegetales doit encore être modifié
 writeCSVTraites(rga23_prodAnimales)
-writeCSVTraites(rga23_prodVegetales)
 
 # test2 <- rga23_prodVegetales |> filter(is.na(PartComFlorale__1) & ModesComFlorale__1 == 1)
 
