@@ -20,7 +20,7 @@
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
     - création du fichier csv correspondant -> rga23_surfacesCultures
-- `surfacesPetitesSurfacesAutoConsom.R` WIP
+- `suppPetitesSurfacesAutoConsom.R` WIP
     - suppression de certaines valeurs hors champ (surfaces très petites entièrement autoconsommées - potagers familiaux)
     - Mises à jour de **rga23_prodVegetales** et **rga23_surfacesCultures**
 - `rosterCocoteraies.R` :
