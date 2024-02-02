@@ -1,8 +1,5 @@
 # rga23
 
-## Suivi de la collecte
-- `comptages.R` : création d'un fichier md à destination de la Dag (comptages par statut de la collecte, par éligibilité, par île, ...)
-
 ## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
@@ -38,13 +35,17 @@
 - `champCAPL.R` : Calcul des points CAPL
   
 ## Analyse
-
-Ebauches des stats (et controles en cours de collecte) sur les différents profils.
-### Eligibilité (questionnaires complets or not)
-- `nonEligibles.R`
-- `eligibles.R`
-### Divers profils
-- `cultivateurs.R`
-- `eleveurs.R`
-- `coprahculteurs.R`
 - `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
+
+
+## Collecte
+### Mise à jour du fichier Rmd
+- `comptages.R` : création d'un fichier md à destination de la Dag (comptages par statut de la collecte, par éligibilité, par île, ...)
+### Contrôles en cours de collecte
+- Eligibilité (questionnaires complets or not)
+	- `nonEligibles.R`
+	- `eligibles.R`
+- Divers profils
+	- `cultivateurs.R`
+	- `eleveurs.R`
+	- `coprahculteurs.R`

@@ -6,11 +6,7 @@ source("fonctions.R")
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
 dossier <- "Export_02-01"
 date <- "01/02/2024"
-
-# Suivi de la collecte
-## Mise à jour du fichier Rmd
 nbExploitations <- 7832
-# source("suiviCollecte/comptages.R")
 
 # Mises en forme des données (à lancer dans l'ordre)
 source("miseEnForme/imputationVariables.R")
@@ -32,17 +28,22 @@ source("champs/champCAPL.R")
 source("champs/indicatricesAppartenances.R")
 
 # Analyse
-## Non éligibles
-source("analyse/nonEligibles.R")
-
-## Eligibles
-source("analyse/eligibles.R")
-## Divers profils
-source("analyse/cultivateurs.R")
-source("analyse/eleveurs.R")
-source("analyse/coprahculteurs.R")
 source("analyse/stats.R")
 source("analyse/publicationDoubleTimbre.R")
+
+# Suivi de la collecte
+
+## Mise à jour du fichier Rmd
+# source("suiviCollecte/comptages.R")
+
+## Contrôles en cours de collecte
+### Eligibles or not
+# source("suiviCollecte/nonEligibles.R")
+# source("suiviCollecte/eligibles.R")
+### Divers profils
+# source("suiviCollecte/cultivateurs.R")
+# source("suiviCollecte/eleveurs.R")
+# source("suiviCollecte/coprahculteurs.R")
 
 # Divers (qualités, extractions, corrections.... - programmes le plus souvent one shot) 
 
