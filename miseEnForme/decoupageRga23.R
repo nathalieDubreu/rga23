@@ -1,5 +1,5 @@
 rga23_coprahculteurs <- rga23 |>
-  filter(RaisonsRecensement__3 == 1) |>
+  filter(eligibiliteCoprah == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",

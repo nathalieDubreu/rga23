@@ -4,13 +4,13 @@ library("dplyr")
 source("fonctions.R")
 
 # TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
-dossier <- "Export_01-26"
-date <- "26/01/2023"
+dossier <- "Export_02-01"
+date <- "01/02/2024"
 
 # Suivi de la collecte
 ## Mise à jour du fichier Rmd
 nbExploitations <- 7832
-source("suiviCollecte/comptages.R")
+# source("suiviCollecte/comptages.R")
 
 # Mises en forme des données (à lancer dans l'ordre)
 source("miseEnForme/imputationVariables.R")
@@ -19,7 +19,7 @@ source("miseEnForme/modificationsIdDoublonsEtX.R")
 source("miseEnForme/decoupageRga23.R")
 source("miseEnForme/rostersSurfaces.R")
 source("miseEnForme/rostersCommercialisation.R")
-source("suppPetitesSurfacesAutoConsom.R")
+source("miseEnForme/suppPetitesSurfacesAutoConsom.R")
 source("miseEnForme/rosterCocoteraies.R")
 source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
@@ -42,6 +42,7 @@ source("analyse/cultivateurs.R")
 source("analyse/eleveurs.R")
 source("analyse/coprahculteurs.R")
 source("analyse/stats.R")
+source("analyse/publicationDoubleTimbre.R")
 
 # Divers (qualités, extractions, corrections.... - programmes le plus souvent one shot) 
 
@@ -66,6 +67,7 @@ source("analyse/stats.R")
 source("divers/valeursExtremes.R")
 ### Questions métier - cf. trello
 source("divers/questionsMetierApurement.R")
+source("divers/surfacesTresPetitesAutoconsommees.R")
 
 ### Préparation fichiers tests pour le SIA
 # source("divers/vivriersPilotes.R")

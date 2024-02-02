@@ -1,0 +1,152 @@
+---
+title: "Publication double timbre"
+author: "NDubreu"
+date: '2024-02-01'
+output: md_document
+---
+
+## [RGA23] Publication sous double timbre - Avril 2024 - Données en cours d'apurement au `r date`
+
+### <font color = "red">WARNING</font>
+
+- Les données sont en cours d'apurement
+- Le mode de prise en compte des seuils n'est pas encore définitif (quelques ajustements à faire notamment sur les jardins océaniens et la permaculture)
+- <font color = "orange">Ces premières statistiques ont pour seule vocation de donner un ordre d'idées.</font>
+
+## Profil des exploitations agricoles polynésiennes (par archipel)
+
+- Nombre d'exploitations (par type : cultures et/ou élevages)
+
+Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations valident au moins un seuil
+
+- Exploitations agricoles : <font color="blue">`r rga23_champ |> filter(ValideRGA == 1) |> count()`</font>
+  - Elevage : <font color="blue">`r rga23_champ |> filter(ElevageValideRGA == 1) |> count()`</font>
+  - Culture : <font color="blue">`r rga23_champ |> filter(CultureValideRGA == 1) |> count()`</font>
+- Coprahculteurs : <font color="blue">`r rga23_champ |> filter(CoprahValideRGA == 1) |> count()`</font>
+
+- Par archipel
+
+<font color="blue">`r kable(profilExploitationsParArchipelEtTotal)`</font>
+
+- Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ?
+
+## Surface agricole 
+
+- Surface agricole utilisée (SAU - en Ha) : <font color="blue">`r surfaces$SAUTotale`</font>
+- Surface mesurée par parcelle (en Ha) : <font color="blue">`r round(surfacesParcelles,0)`</font>
+- Surface déclarée par culture (en Ha) : <font color="blue">`r surfaces$SurfaceTotaleDeclaree`</font>
+
+- Par mode de faire valoir 
+
+<font color="blue">`r kable(surfacesParFaireValoirPercent)`</font>
+
+- Cheptels
+
+<font color="blue">`r kable(cheptels)`</font>
+  
+- Actifs agricoles :
+  - Nombre de personnes
+  - Type de main d’oeuvre: coexploitant / main d’oeuvre permanente ou occasionnelle, familiale ou non
+  - Corrélation avec le type d'exploitation (taille de l'exploitation et type de cultures ou d'élevage) ?
+
+- Équipement en matériel des exploitations (en fonction de la SAU ? Du type de cultures ?) <font color = "red">[TODO côté DAG : sélection du matériel “intéressant” parmi les nombreuses listes]</font>
+
+## Profil des chefs d'exploitation (par archipel)
+
+- Genre et âge des chefs d'exploitation
+  - <font color="blue">`r round(genreChef$TauxFemmes*100,1)`</font>% des chefs d'exploitations sont des femmes
+  - L'age moyen des chefs d'exploitation est de <font color="blue">`r round(rga23_general |> summarize(mean(age, na.rm = TRUE)),1)`</font> ans.
+
+- Niveau de formation
+- Temps de travail annuel en lien avec l’exploitation (temps complet, mi-temps, …)
+
+<font color="blue">`r kable(tempsTravailChef)`</font>
+
+- Sources de revenus (et part de l’agriculture dans ces revenus) - pluriactivité 
+- Transformation des produits agricoles
+- Niveau de satisfaction au travail et insertion dans leur environnement
+
+## Cultures (par archipel, bio/non)
+
+- Surface déclarée
+  - Cultures maraîchères
+  - Cultures vivrières
+  - Cultures fruitières (hors pépinières) et bois d'oeuvre
+  - Feuillages et cultures florales (hors pépinières)
+  - Plantes aromatiques, stimulantes et médicinales
+  - Pépinières (plantes vendues en pot)
+  - Cultures fourragères
+  - Jachères
+  - Jardins océaniens
+  
+<font color="blue">`r kable(surfacesCulturesBioNon)`</font>
+
+- Jardins océaniens
+
+<font color="blue">`r kable(surfacesJardinsOceaniensBioNon)`</font>
+
+- Destination des produits des cultures
+- Lien entre le type de produit et le type de circuit utilisé (court ou long)
+- Irrigation
+
+## Elevage (par archipel, bio/non)
+
+<font color="blue">`r kable(eleveursBio)`</font>
+
+- Cheptels d’animaux
+  - Bovins
+  - Ovins
+  - Caprins
+  - Porcins
+  - Volailles
+  - Equidés
+  - Lapins élevés pour la chair
+  - Abeilles
+
+- Identification des principaux canaux de distribution et de vente des produits animaux (type de circuit) 
+
+## Coprahculture
+
+- Nombre de producteurs ayant vendu plus de 2,7 tonnes en 2020, 2021 ou 2022 encore en activité : <font color="blue">`r rga23_coprahculteurs |> filter(CoprahValideRGA == 1) |> count()`</font>
+
+- Temps de travail annuel en lien avec l’exploitation des cocoteraies (temps complet, mi-temps, …)
+
+- Nombre de producteurs de coprah (moins de 2,7 tonnes) parmi les exploitants agricoles : <font color="blue">`r rga23_coprahculteurs |> filter(is.na(CoprahValideRGA)) |> count()`</font> coprahculteurs
+
+- Part de la production de coprah dans les revenus annuels
+
+- <font color="blue">`r coprahculteursSommes$NbCocoExploitees`</font> cocoteraies exploitées
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPP`</font> en tant que propriétaire plein
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPI`</font> en tant que propriétaire en indivision,
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesE`</font> en tant qu'exploitant
+  
+- <font color="blue">`r coprahculteursSommes$NbMoyCoco`</font> cocoteraies exploitées en moyenne (de <font color="blue">`r coprahculteursSommes$NbMinCoco`</font> à <font color="blue">`r coprahculteursSommes$NbMaxCoco`</font>)
+
+- Part du revenu de la vente de coprah conservé
+
+- Proportion de producteurs par statut avec: 
+  - Plantation de nouveaux cocotiers
+  - Suppression de cocotiers
+  - Entretien (par mode: défrichage/débroussaillage, engrais, pose de bagues) 
+
+## Fertilisation et autres techniques culturales
+
+- Part d’exploitants qui utilisent des produits phytosanitaires (par type et par archipel)
+
+<font color="blue">`r kable(produitsPhyto)`</font>
+
+- Part d’exploitants qui utilisent des engrais (par type d’engrais et par archipel)
+
+Parmi les cultivateurs :
+<font color="blue">`r kable(engrais)`</font>
+
+- Valorisation des déjections animales
+
+## Annexes: tableaux détaillés par commune (sous réserve du respect du secret statistique)
+- Nombre d’exploitations 
+- SAU
+- Nombre d’animaux
+- Pourcentage de femmes chef d’exploitation
+- Effectifs de main d’oeuvre
+- Nb d’exploitations et SAU par type de culture
+- Nb d’animaux par type (bovins, caprins, …)

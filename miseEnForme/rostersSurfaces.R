@@ -97,12 +97,35 @@ rga23_surfacesCultures <- bind_rows(
   SurfacesPepinieres,
   SurfacesPlantes,
   SurfacesFourrages
-) |> select(!interview__id) |>
+) |>
+  select(!interview__id) |>
   mutate(SurfaceCult = case_when(
     (SurfaceCult < 0) ~ as.numeric(NA),
-    TRUE ~  SurfaceCult
+    TRUE ~ SurfaceCult
   )) |>
-  rename(culture_id  = Culture__id, TypeCulture = TypeCultures)
+  rename(culture_id = Culture__id, TypeCulture = TypeCultures)
+
+
+rga23_surfacesCultures <- left_join(rga23_surfacesCultures, rga23 |> select(interview__key, AgriBio, Irrigation)) |>
+  ## Ajout de la réponse sur la surface bio si l'exploitation est entièrement bio ou pas du tout
+  mutate(SurfaceBio = case_when(
+    (AgriBio == 1) ~ 1,
+    (AgriBio == 2) ~ 2,
+    TRUE ~ SurfaceBio
+  )) |>
+  ## Ajout de la non irrigation sur la surface si l'exploitation n'est pas irriguée
+  mutate(SurfaceIrrig = case_when(
+    (Irrigation == 2) ~ 0,
+    TRUE ~ SurfaceIrrig
+  )) |>
+  select(!AgriBio & !Irrigation) |>
+  filter(interview__key != "59-36-31-34" &
+    interview__key != "06-79-34-97" &
+    interview__key != "26-72-53-00" &
+    interview__key != "49-29-35-86" &
+    interview__key != "93-83-94-94")
+
+writeCSVTraites(rga23_surfacesCultures)
 
 rm(
   SurfacesCultFlorale,

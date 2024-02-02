@@ -1,7 +1,11 @@
 ## Variables diverses
 
 rga23Brut <- readTable("rga23.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" & interview__key != "06-79-34-97" & interview__key != "26-72-53-00" & interview__key != "49-29-35-86") |>
+  filter(interview__key != "59-36-31-34" &
+    interview__key != "06-79-34-97" &
+    interview__key != "26-72-53-00" &
+    interview__key != "49-29-35-86" &
+    interview__key != "93-83-94-94") |>
   mutate(AbeillesBio = case_when(
     (AgriBio == 1 & PresenceAnimaux__7 == 1) ~ 1,
     (AgriBio == 2 & PresenceAnimaux__7 == 1) ~ 2,
@@ -189,10 +193,10 @@ rga23 <- rga23Localise |>
 #   filter(Infos_a_corriger__1 == 1 | Infos_a_corriger__2 == 1) |>
 #   select(id_exploitation, nom_ech, Nom, prenoms_ech, Prenoms)
 
-# Passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
+# Passage des NSP (valeur par défaut = 1) en total des surfaces déclarées pour la SAU et en NA pour la surface de végétation naturelle
 rga23 <- rga23 |>
   mutate(SurfaceTotalProdAgri = case_when(
-    (SurfaceTotalProdAgri == 1) ~ as.numeric(NA),
+    (SurfaceTotalProdAgri == 1) ~ totalSurfDeclarees,
     TRUE ~ SurfaceTotalProdAgri
   )) |>
   mutate(SurfaceVegeNatur = case_when(
@@ -202,8 +206,14 @@ rga23 <- rga23 |>
 
 ## Suppression des -99999999 pour les valeurs manquantes (non réponses)
 rga23 <- sapply(rga23, function(x) {
-  x <- gsub("-99999999", as.numeric(""), x)
+  x <- gsub("-99999999", NA, x)
 }) |> as.data.frame()
+
+# rga23z <- rga23 %>%
+#   mutate_all(~ ifelse(. == "-99999999", NA, .))
+
+# class(rga23$ActivitesChefExploit__1)
+# class(rga23z$ActivitesChefExploit__1)
 
 rm(
   rga23Brut,
