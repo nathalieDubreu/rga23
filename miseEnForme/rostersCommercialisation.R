@@ -13,9 +13,10 @@ commercialisation <- function(typeProduction, roster, rga23) {
         pourcentagesI |> select(!PourcentMode__id & !interview__id),
         by = c("interview__key")
       ) |>
-      ## ETAPE 2 : Imputation de valeurs -> 100% s'il n'y a qu'une modalité
+      ## ETAPE 2 : Imputation de valeurs -> 100% s'il n'y a qu'une modalité et 0 si ce n'est pas coché
       mutate(PourcentCom = case_when(
         (eval(parse(text = variableI)) == 1 & is.na(PourcentCom)) ~ 100,
+        (eval(parse(text = variableI)) == 0) ~ 0,
         TRUE ~ as.numeric(PourcentCom)
       )) |>
       rename("{PartCommerI}" := PourcentCom) |>

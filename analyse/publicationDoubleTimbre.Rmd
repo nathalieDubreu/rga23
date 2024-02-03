@@ -79,13 +79,23 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
   - Jachères
   - Jardins océaniens
   
-<font color="blue">`r kable(surfacesCulturesBioNon)`</font>
+<font color="blue">`r kable(surfacesCulturesBioNonEtTotal)`</font>
 
 - Jardins océaniens
 
 <font color="blue">`r kable(surfacesJardinsOceaniensBioNon)`</font>
 
 - Destination des produits des cultures
+
+  - Autoconsommation
+  
+<font color="blue">`r kable(autoConsoMaraicha)`</font>
+<font color="blue">`r kable(autoConsoVivrier)`</font>
+<font color="blue">`r kable(autoConsoFruit)`</font>
+<font color="blue">`r kable(autoConsoPlantes)`</font>
+<font color="blue">`r kable(autoConsoFlorales)`</font>
+<font color="blue">`r kable(autoConsoPepinieres)`</font>
+
 - Lien entre le type de produit et le type de circuit utilisé (court ou long)
 - Irrigation
 

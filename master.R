@@ -1,9 +1,8 @@
 library("dplyr")
-# library("haven")
 
 source("fonctions.R")
 
-# TODO - mettre à jour le nom du dossier contenant l'export dézippé de SuSo
+# TODO - mettre à jour les variables
 dossier <- "Export_02-01"
 date <- "01/02/2024"
 nbExploitations <- 7832
@@ -15,7 +14,6 @@ source("miseEnForme/modificationsIdDoublonsEtX.R")
 source("miseEnForme/decoupageRga23.R")
 source("miseEnForme/rostersSurfaces.R")
 source("miseEnForme/rostersCommercialisation.R")
-source("miseEnForme/suppPetitesSurfacesAutoConsom.R")
 source("miseEnForme/rosterCocoteraies.R")
 source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
