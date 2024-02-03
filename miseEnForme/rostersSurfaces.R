@@ -119,11 +119,7 @@ rga23_surfacesCultures <- left_join(rga23_surfacesCultures, rga23 |> select(inte
     TRUE ~ SurfaceIrrig
   )) |>
   select(!AgriBio & !Irrigation) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94")
+  filter(!(interview__key %in% interviewKeyAExclure))
 
 writeCSVTraites(rga23_surfacesCultures)
 

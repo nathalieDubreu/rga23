@@ -1,9 +1,5 @@
 rga23_sites <- readTable("roster_accesSite.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   select(!interview__id) |>
   mutate(
     sommeSurfacesSite = as.numeric(as.character(round(sommeSurfacesSite, 0))),
@@ -12,14 +8,12 @@ rga23_sites <- readTable("roster_accesSite.tab", dossier) |>
   rename(site_id = roster_accesSite__id)
 
 rga23_parcelles <- readTable("roster_parcelles.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   select(!interview__id) |>
-  mutate(polygone__area = case_when(polygone__area == -999999999 ~ as.numeric(NA),
-                                     TRUE ~ as.numeric(as.character(round(polygone__area, 0))))) |>
+  mutate(polygone__area = case_when(
+    polygone__area == -999999999 ~ as.numeric(NA),
+    TRUE ~ as.numeric(as.character(round(polygone__area, 0)))
+  )) |>
   rename(parcelle_id = roster_parcelles__id, site_id = roster_accesSite__id)
 
 writeCSVTraites(rga23_sites)

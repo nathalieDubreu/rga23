@@ -1,11 +1,9 @@
+interviewKeyAExclure <- c("59-36-31-34", "06-79-34-97", "26-72-53-00", "49-29-35-86", "93-83-94-94")
+
 ## Variables diverses
 
 rga23Brut <- readTable("rga23.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   mutate(AbeillesBio = case_when(
     (AgriBio == 1 & PresenceAnimaux__7 == 1) ~ 1,
     (AgriBio == 2 & PresenceAnimaux__7 == 1) ~ 2,

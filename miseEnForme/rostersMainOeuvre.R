@@ -1,19 +1,11 @@
 rga23_coexploitants <- readTable("RosterCoExploit.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   select(!interview__id) |>
   rename(coexploitant_id = RosterCoExploit__id)
 writeCSVTraites(rga23_coexploitants)
 
 rga23_moPermanenteFam <- readTable("RosterMOPermFam.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   select(!interview__id) |>
   rename(persMoPermFam_id = RosterMOPermFam__id)
 # Données récupérées par téléphone pour certains X dans la table rga23_moPermanenteFam
@@ -25,11 +17,7 @@ rga23_moPermanenteFam <- rbind(rga23_moPermanenteFam, donneesMOPermFam)
 writeCSVTraites(rga23_moPermanenteFam)
 
 rosterMoPermanenteNonFam <- readTable("MONonFamPerm.tab", dossier) |>
-  filter(interview__key != "59-36-31-34" &
-    interview__key != "06-79-34-97" &
-    interview__key != "26-72-53-00" &
-    interview__key != "49-29-35-86" &
-    interview__key != "93-83-94-94") |>
+  filter(!(interview__key %in% interviewKeyAExclure)) |>
   select(!interview__id)
 
 head(rosterMoPermanenteNonFam)
