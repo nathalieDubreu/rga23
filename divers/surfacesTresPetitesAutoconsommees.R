@@ -119,6 +119,7 @@ total |>
   summarize(n_distinct(interview__key))
 # 142 au 31/01
 # 75 au 01/02
+# 46 au 02/02
 
 # writeCSV(total)
 
