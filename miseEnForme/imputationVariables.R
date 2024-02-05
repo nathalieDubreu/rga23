@@ -4,6 +4,10 @@ interviewKeyAExclure <- c("59-36-31-34", "06-79-34-97", "26-72-53-00", "49-29-35
 
 rga23Brut <- readTable("rga23.tab", dossier) |>
   filter(!(interview__key %in% interviewKeyAExclure)) |>
+  mutate(AgriBio = case_when(
+    (is.na(AgriBio)) ~ 2,
+    TRUE ~ AgriBio
+  )) |>
   mutate(AbeillesBio = case_when(
     (AgriBio == 1 & PresenceAnimaux__7 == 1) ~ 1,
     (AgriBio == 2 & PresenceAnimaux__7 == 1) ~ 2,

@@ -30,6 +30,10 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ?
 
+- Nombre d'exploitations bio :
+
+<font color="blue">`r kable(exploitationsBio)`</font>
+
 ## Surface agricole 
 
 - Surface agricole utilisée (SAU - en Ha) : <font color="blue">`r surfaces$SAUTotale`</font>
@@ -144,6 +148,9 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 - Part d’exploitants qui utilisent des produits phytosanitaires (par type et par archipel)
 
 <font color="blue">`r kable(produitsPhyto)`</font>
+
+- Type de produits utilisés :
+<font color="blue">`r kable(typeProduitsPhyto)`</font>
 
 - Part d’exploitants qui utilisent des engrais (par type d’engrais et par archipel)
 
