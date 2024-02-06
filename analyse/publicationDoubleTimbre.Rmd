@@ -19,10 +19,10 @@ output: md_document
 
 Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations valident au moins un seuil
 
-- Exploitations agricoles : <font color="blue">`r rga23_champ |> filter(ValideRGA == 1) |> count()`</font>
-  - Elevage : <font color="blue">`r rga23_champ |> filter(ElevageValideRGA == 1) |> count()`</font>
-  - Culture : <font color="blue">`r rga23_champ |> filter(CultureValideRGA == 1) |> count()`</font>
-- Coprahculteurs : <font color="blue">`r rga23_champ |> filter(CoprahValideRGA == 1) |> count()`</font>
+- Exploitations agricoles : <font color="blue">`r rga23_champ |> filter(indicRGA23 == 1) |> count()`</font>
+  - Elevage : <font color="blue">`r rga23_champ |> filter(indicRGA23_Elevage == 1) |> count()`</font>
+  - Culture : <font color="blue">`r rga23_champ |> filter(indicRGA23_Cultures == 1) |> count()`</font>
+- Coprahculteurs : <font color="blue">`r rga23_champ |> filter(indicRGA23_Coprah == 1) |> count()`</font>
 
 - Par archipel
 
@@ -129,11 +129,11 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 ## Coprahculture
 
-- Nombre de producteurs ayant vendu plus de 2,7 tonnes en 2020, 2021 ou 2022 encore en activité : <font color="blue">`r rga23_coprahculteurs |> filter(CoprahValideRGA == 1) |> count()`</font>
+- Nombre de producteurs ayant vendu plus de 2,7 tonnes en 2020, 2021 ou 2022 encore en activité : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 1) |> count()`</font>
 
 - Temps de travail annuel en lien avec l’exploitation des cocoteraies (temps complet, mi-temps, …)
 
-- Nombre de producteurs de coprah (moins de 2,7 tonnes) parmi les exploitants agricoles : <font color="blue">`r rga23_coprahculteurs |> filter(is.na(CoprahValideRGA)) |> count()`</font> coprahculteurs
+- Nombre de producteurs de coprah (moins de 2,7 tonnes) parmi les exploitants agricoles : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 0) |> count()`</font> coprahculteurs
 
 - Part de la production de coprah dans les revenus annuels
 

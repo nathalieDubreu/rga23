@@ -1,22 +1,8 @@
-library(rmarkdown)
-library(knitr)
 library(tidyr)
 
-source("champs/champRGA.R")
-
-## Ajout d'une indicatrice dans la table RGA pour les exploitants dans le champ (cultures et/ou élevage)
-rga23A <- left_join(rga23, idExploitantsDansLeChamp |> mutate(ValideRGA = 1),
-  by = c("interview__key")
-)
-
-## Ajout d'une indicatrice dans la table RGA pour les coprahculteurs de plus de 2,7 tonnes (identifiants C et X éligibles)
-rga23A_valides <- rga23A |>
-  mutate(CoprahValideRGA = case_when((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X") ~ 1))
-
 ## Restriction au champ 23 du RGA
-rga23_champ <- rga23A_valides |>
-  filter(ValideRGA == 1 | CoprahValideRGA == 1) |>
-  mutate(Archipel_1 = case_when(!is.na(ArchipelExploitation) ~ ArchipelExploitation, TRUE ~ Archipel))
+rga23_champ <- readCSV("rga23_gestion.csv") |>
+  filter(indicRGA23 == 1) 
 
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(readCSV("rga23_parcelles.csv"), rga23_champ |> select(interview__key))
@@ -24,7 +10,7 @@ rga23_prodVegetales <- inner_join(readCSV("rga23_prodVegetales.csv"), rga23_cham
 rga23_prodAnimales <- inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ |> select(interview__key))
 rga23_surfacesCultures <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key))
 rga23_tape <- inner_join(readCSV("rga23_tape.csv"), rga23_champ |> select(interview__key))
-rga23_coprahculteurs <- inner_join(readCSV("rga23_coprahculteurs.csv"), rga23_champ |> select(interview__key, CoprahValideRGA))
+rga23_coprahculteurs <- inner_join(readCSV("rga23_coprahculteurs.csv"), rga23_champ |> select(interview__key, indicRGA23_Coprah))
 rga23_exploitations <- inner_join(readCSV("rga23_exploitations.csv"), rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2))
 rga23_general <- inner_join(readCSV("rga23_general.csv"), rga23_champ |> select(interview__key)) |>
   mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)))
