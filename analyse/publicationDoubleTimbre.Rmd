@@ -135,26 +135,31 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 ## Coprahculture
 
-- Nombre de producteurs ayant vendu plus de 2,7 tonnes en 2020, 2021 ou 2022 encore en activité : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 1) |> count()`</font>
+- Nombre de producteurs ayant vendu plus de 2,7 tonnes en 2020, 2021 ou 2022 encore en activité : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 1 & eligibiliteCoprah == 1) |> count()`</font>
 
-- Temps de travail annuel en lien avec l’exploitation des cocoteraies (temps complet, mi-temps, …)
-
-- Nombre de producteurs de coprah (moins de 2,7 tonnes) parmi les exploitants agricoles : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 0) |> count()`</font> coprahculteurs
+- Nombre de producteurs de coprah (moins de 2,7 tonnes) parmi les exploitants agricoles : <font color="blue">`r rga23_coprahculteurs |> filter(indicRGA23_Coprah == 0 & eligibiliteCoprah == 1) |> count()`</font> coprahculteurs
 
 - Part de la production de coprah dans les revenus annuels
 
+<font color="blue">`r kable(partRevenusCoprah)`</font>
+
 - <font color="blue">`r coprahculteursSommes$NbCocoExploitees`</font> cocoteraies exploitées
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPP`</font> en tant que propriétaire plein
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPI`</font> en tant que propriétaire en indivision,
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesE`</font> en tant qu'exploitant
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPP`</font> en tant que propriétaire plein (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesPP`</font> entretenues)
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPI`</font> en tant que propriétaire en indivision (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesPI`</font> entretenues),
+  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesE`</font> en tant qu'exploitant (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesE`</font> entretenues).
   
 - <font color="blue">`r coprahculteursSommes$NbMoyCoco`</font> cocoteraies exploitées en moyenne (de <font color="blue">`r coprahculteursSommes$NbMinCoco`</font> à <font color="blue">`r coprahculteursSommes$NbMaxCoco`</font>)
 
 - Part du revenu de la vente de coprah conservé
+Les producteurs ont conservé 100% du revenu de la cocoteraie pour <font color="blue">`r nbCocoteraiesToutRevenu`</font> cocoteraies
 
 - Proportion de producteurs par statut avec: 
   - Plantation de nouveaux cocotiers
-  - Suppression de cocotiers
+<font color="blue">`r kable(replanter)`</font>
+  
+  - Suppression des anciens cocotiers (parmi ceux qui ont replanté)
+<font color="blue">`r kable(supprimer)`</font>
+
   - Entretien (par mode: défrichage/débroussaillage, engrais, pose de bagues) 
 
 ## Fertilisation et autres techniques culturales
