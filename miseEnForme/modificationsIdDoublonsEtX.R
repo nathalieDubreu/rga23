@@ -56,3 +56,27 @@ rga23 <- left_join(rga23, doublonsAPasserEnX, by=c("id_exploitation")) |>
 rm(xAPasserEnC, xAPasserEnP, doublonsAPasserEnX)
 
 writeCSVTraites(rga23)
+
+
+## Ajout de l'interview__id dans la base d interrogation - Suppression des variables inutiles
+# baseComplete <- readCSV("BaseRGA_def.csv")
+# baseBis <- inner_join(rga23 |>
+#                         select(interview__key, id_exploitation), baseComplete, by = c("id_exploitation")) |>
+#   select(!Statut &
+#            !DateNaissChefExpl &
+#            !Commentaire &
+#            !ile_hab_codeISPF &
+#            !ile_hab &
+#            !commune_hab_codeISPF &
+#            !commune_hab &
+#            !adresse_hab &
+#            !ile_expl_codeISPF &
+#            !ile_expl &
+#            !commune_expl_codeISPF &
+#            !commune_expl &
+#            !adresse_expl &
+#            !derniereAnneeCoprah &
+#            !numEnqueteur &
+#            !geo_ile &
+#            !geo_com) |>
+#   mutate_all(~ifelse(is.na(.), "", .))
