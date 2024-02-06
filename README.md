@@ -9,7 +9,8 @@
     - Passage des identifiants X en P s'ils ne font plus de coprah
     - Passage des identifiants X en C s'ils ne font que du coprah
     - Passage des identifiants C ou P en X en cas de doublons
-- `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (**rga23_coprahculteurs**, **rga23_exploitations**, **rga23_general**, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, **rga23_gestion**, **rga23_peche** et **rga23_tape**)
+- `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (**rga23_coprahculteurs**, **rga23_exploitations**, **rga23_general**, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, rga23_gestion, **rga23_peche** et **rga23_tape**)
+- `ajoutIndicatrices.R` : ajout des indicatrices d'appartenance aux différents champs (inclus le lancement des programmes `champ....R`) dans **rga23_gestion**
 - `rostersCommercialisation.R` :
     - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
     - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
