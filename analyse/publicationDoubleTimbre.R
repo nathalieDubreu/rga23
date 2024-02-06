@@ -30,4 +30,3 @@ source("analyse/coprahculteurs.R")
 
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
-rm(coExploitants, mainOeuvre, moPermFamiliale, poules, rga23_champ_date, rga23A, rga23A_valides, surfacesCultures, surfacesCulturesEligibles, table)

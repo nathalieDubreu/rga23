@@ -28,7 +28,7 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 <font color="blue">`r kable(profilExploitationsParArchipelEtTotal)`</font>
 
-- Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ?
+- Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ? [Comparaison seuils 2012 et 2023](https://hackmd.io/@hXnaxghhS0iCd1Ro92vvbA/BkfujWh7a)
 
 - Nombre d'exploitations bio :
 
