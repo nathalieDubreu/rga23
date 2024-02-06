@@ -90,7 +90,7 @@ kable(rga23_champ |> filter(ValideRGA == 1) |> group_by(Archipel_1) |> count())
 
 ## `r rga23_champ |> count()` chefs d'exploitations
 
-La niveau moyen de satisfaction au travail des chefs d'exploitations est de `r round(rga23_champ |> summarize(mean(NoteSatisfactionExpl, na.rm = TRUE)),1)`/10
+Le niveau moyen de satisfaction au travail des chefs d'exploitations est de `r round(rga23_champ |> summarize(mean(NoteSatisfactionExpl, na.rm = TRUE)),1)`/10
 
 ### Genre et age
 

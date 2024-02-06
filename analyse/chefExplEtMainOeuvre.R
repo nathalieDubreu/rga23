@@ -23,3 +23,35 @@ tempsTravailChef <- rga23_mainOeuvre |>
   summarise(count = n()) |>
   mutate(`En %` = round(count / sum(count) * 100, 1)) |>
   select(`Temps de travail du chef d'exploitation`, `En %`)
+
+
+formNAChefExpl <- rga23_general |>
+  filter(!is.na(FormNAChefExpl)) |>
+  mutate(`Formation générale non agricole du chef d'exploitation` = case_when(
+    (FormNAChefExpl == 1) ~ "1 : Aucune",
+    (FormNAChefExpl == 2) ~ "2 : Primaire",
+    (FormNAChefExpl == 3) ~ "3 : Secondaire court",
+    (FormNAChefExpl == 4) ~ "4 : Secondaire long",
+    (FormNAChefExpl == 5) ~ "5 : Supérieure",
+    (is.na(FormNAChefExpl)) ~ "Non réponse"
+  )) |>
+  group_by(`Formation générale non agricole du chef d'exploitation` ) |>
+  summarise(count = n()) |>
+  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
+  select(`Formation générale non agricole du chef d'exploitation`, `En %`)
+
+formAgriChefExpl <- rga23_general |>
+  filter(!is.na(FormNAChefExpl)) |>
+  mutate(`Formation générale agricole du chef d'exploitation` = case_when(
+    (FormAgriChefExpl == 1) ~ "1 : Aucune / Formation sur le tas",
+    (FormAgriChefExpl == 2) ~ "2 : MFR, CJA sans obtention de diplôme",
+    (FormAgriChefExpl == 3) ~ "3 : Secondaire courte (CAPA, BEPA)",
+    (FormAgriChefExpl == 4) ~ "4 : Secondaire longue (BTA, Bac agricole)",
+    (FormAgriChefExpl == 5) ~ "5 : Supérieure courte (BTSA)",
+    (FormAgriChefExpl == 6) ~ "6 : Supérieure longue (ingénieur)",
+    (is.na(FormAgriChefExpl)) ~ "Non réponse"
+  )) |>
+  group_by(`Formation générale agricole du chef d'exploitation` ) |>
+  summarise(count = n()) |>
+  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
+  select(`Formation générale agricole du chef d'exploitation`, `En %`)

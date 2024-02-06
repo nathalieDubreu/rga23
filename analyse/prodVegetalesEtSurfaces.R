@@ -1,3 +1,16 @@
+# Irrigation ?
+
+irrigation <- rga23_prodVegetales |>
+  filter(!is.na(Irrigation)) |>
+  mutate(Irrigation = case_when(
+    Irrigation == 1 ~ "Oui",
+    Irrigation == 2 ~ "Non"
+  )) |>
+  group_by(Irrigation) |>
+  summarise(n = n()) |>
+  mutate(`En %` = round((n / sum(n) * 100), 2)) |>
+  select(!n)
+
 # Surface agricole utilisée par type de faire-valoir (parcelles)
 
 surfacesParFaireValoir <- rga23_parcelles |>

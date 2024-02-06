@@ -62,6 +62,10 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
   - L'age moyen des chefs d'exploitation est de <font color="blue">`r round(rga23_general |> summarize(mean(age, na.rm = TRUE)),1)`</font> ans.
 
 - Niveau de formation
+
+<font color="blue">`r kable(formNAChefExpl)`</font>
+<font color="blue">`r kable(formAgriChefExpl)`</font>
+
 - Temps de travail annuel en lien avec l’exploitation (temps complet, mi-temps, …)
 
 <font color="blue">`r kable(tempsTravailChef)`</font>
@@ -69,6 +73,8 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 - Sources de revenus (et part de l’agriculture dans ces revenus) - pluriactivité 
 - Transformation des produits agricoles
 - Niveau de satisfaction au travail et insertion dans leur environnement
+
+Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <font color="blue">`r round(rga23_tape |> summarize(mean(NoteSatisfactionExpl, na.rm = TRUE)),1)`/10</font>
 
 ## Cultures (par archipel, bio/non)
 
@@ -102,6 +108,8 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Lien entre le type de produit et le type de circuit utilisé (court ou long)
 - Irrigation
+
+<font color="blue">`r kable(irrigation)`</font>
 
 ## Elevage (par archipel, bio/non)
 
