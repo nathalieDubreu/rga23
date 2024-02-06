@@ -3,7 +3,7 @@
 ## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
-    - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en NA pour la SAU et la surface de végétation naturelle
+    - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en somme des surfaces déclarées dans le détail pour la SAU et en NA pour la surface de végétation naturelle
 - `ajoutDonneesX.R` : Récupération des données relatives aux X obtenues par téléphone (hors variables spécifiques au roster MO permanente familiale - cf. rostersMainOeuvre.R)
 - `modificationsIdDoublonsEtX.R` :
     - Passage des identifiants X en P s'ils ne font plus de coprah
@@ -11,8 +11,8 @@
     - Passage des identifiants C ou P en X en cas de doublons
 - `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (**rga23_coprahculteurs**, **rga23_exploitations**, **rga23_general**, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, **rga23_gestion**, **rga23_peche** et **rga23_tape**)
 - `rostersCommercialisation.R` :
-    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
     - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
+    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
 - `rostersSurfaces.R` : 
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
@@ -36,7 +36,7 @@
   
 ## Analyse
 - `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
-
+- `publicationDoubleTimbre.R` : contours de la première publi(avec Rmd associé)
 
 ## Collecte
 ### Mise à jour du fichier Rmd
