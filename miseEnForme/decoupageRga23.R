@@ -1404,7 +1404,7 @@ rga23_peche <- rga23 |>
     "MontantRevenuPeche"
   ))
 
-writeCSVTraites(rga23_gestion)
+# writeCSVTraites(rga23_gestion)
 writeCSVTraites(rga23_peche)
 writeCSVTraites(rga23_coprahculteurs)
 writeCSVTraites(rga23_exploitations)
