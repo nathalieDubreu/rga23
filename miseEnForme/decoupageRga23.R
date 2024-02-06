@@ -1,5 +1,5 @@
 rga23_coprahculteurs <- rga23 |>
-  filter(eligibiliteCoprah == 1) |>
+  filter(RaisonsRecensement__3 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -89,7 +89,8 @@ rga23_coprahculteurs <- rga23 |>
     "ProprieteSechoir__1",
     "ProprieteSechoir__2",
     "finCoprahculture"
-  )) |> rename(ProportionExploit3 = ProportionExploit23)
+  )) |>
+  rename(ProportionExploit3 = ProportionExploit23)
 
 rga23_exploitations <- rga23 |>
   filter(RaisonsRecensement__1 == 1 | RaisonsRecensement__2 == 1) |>
@@ -1310,6 +1311,7 @@ rga23_mainOeuvre <- rga23 |>
 
 rga23_gestion <- rga23 |>
   as_tibble() |>
+  mutate(Archipel_1 = case_when(!is.na(ArchipelExploitation) ~ ArchipelExploitation, TRUE ~ Archipel)) |>
   select(c(
     "interview__key",
     "interview__id",
@@ -1326,7 +1328,8 @@ rga23_gestion <- rga23 |>
     "sssys_irnd",
     "has__errors",
     "interview__status",
-    "assignment__id"
+    "assignment__id",
+    "Archipel_1"
   ))
 
 rga23_peche <- rga23 |>
