@@ -364,7 +364,7 @@ rga23_general <- rga23 |>
   ))
 
 rga23_prodAnimales <- rga23 |>
-  filter(RaisonsRecensement__2 == 1) |>
+  filter(RaisonsRecensement__2 == 1 & eligibilite == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -682,7 +682,7 @@ rga23_prodAnimales <- rga23 |>
   ))
 
 rga23_prodVegetales <- rga23 |>
-  filter(RaisonsRecensement__1 == 1) |>
+  filter(RaisonsRecensement__1 == 1 & eligibilite == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -1333,6 +1333,7 @@ rga23_gestion <- rga23 |>
   ))
 
 rga23_peche <- rga23 |>
+  filter(ActivitesChefExploit__5 == 1)  |>
   as_tibble() |>
   select(c(
     "interview__key",
