@@ -19,7 +19,7 @@ output: md_document
 
 Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations valident au moins un seuil
 
-- Exploitations agricoles : <font color="blue">`r rga23_champ |> filter(indicRGA23 == 1) |> count()`</font>
+- Exploitations agricoles : <font color="blue">`r rga23_champ |> filter(indicRGA23_Elevage == 1 | indicRGA23_Cultures == 1) |> count()`</font>
   - Elevage : <font color="blue">`r rga23_champ |> filter(indicRGA23_Elevage == 1) |> count()`</font>
   - Culture : <font color="blue">`r rga23_champ |> filter(indicRGA23_Cultures == 1) |> count()`</font>
 - Coprahculteurs : <font color="blue">`r rga23_champ |> filter(indicRGA23_Coprah == 1) |> count()`</font>
@@ -51,6 +51,12 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 - Actifs agricoles :
   - Nombre de personnes
   - Type de main d’oeuvre: coexploitant / main d’oeuvre permanente ou occasionnelle, familiale ou non
+  
+- <font color="blue">`r nbCoexploitants`</font> coexploitants
+- <font color="blue">`r nbMOPermFamiliale`</font> personnes employées en tant que main d'oeuvre permanente familiale (au moins 8 mois dans l'année)
+- <font color="blue">`r nbMOPermNonFamiliale`</font> personnes employées en tant que main d'oeuvre permanente NON familiale (au moins 8 mois dans l'année)
+- <font color="blue">`r nbMOOccasionnelle`</font> personnes employées en tant que main d'oeuvre occasionnelle (moins de 8 mois dans l'année)
+
   - Corrélation avec le type d'exploitation (taille de l'exploitation et type de cultures ou d'élevage) ?
 
 - Équipement en matériel des exploitations (en fonction de la SAU ? Du type de cultures ?) <font color = "red">[TODO côté DAG : sélection du matériel “intéressant” parmi les nombreuses listes]</font>

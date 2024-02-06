@@ -35,7 +35,7 @@ formNAChefExpl <- rga23_general |>
     (FormNAChefExpl == 5) ~ "5 : Supérieure",
     (is.na(FormNAChefExpl)) ~ "Non réponse"
   )) |>
-  group_by(`Formation générale non agricole du chef d'exploitation` ) |>
+  group_by(`Formation générale non agricole du chef d'exploitation`) |>
   summarise(count = n()) |>
   mutate(`En %` = round(count / sum(count) * 100, 1)) |>
   select(`Formation générale non agricole du chef d'exploitation`, `En %`)
@@ -51,7 +51,18 @@ formAgriChefExpl <- rga23_general |>
     (FormAgriChefExpl == 6) ~ "6 : Supérieure longue (ingénieur)",
     (is.na(FormAgriChefExpl)) ~ "Non réponse"
   )) |>
-  group_by(`Formation générale agricole du chef d'exploitation` ) |>
+  group_by(`Formation générale agricole du chef d'exploitation`) |>
   summarise(count = n()) |>
   mutate(`En %` = round(count / sum(count) * 100, 1)) |>
   select(`Formation générale agricole du chef d'exploitation`, `En %`)
+
+## Main d'oeuvre
+
+nbCoexploitants <- rga23_mainOeuvre |> summarize(sum(NbCoExploitants, na.rm = TRUE))
+
+nbMOPermFamiliale <- rga23_mainOeuvre |> summarize(sum(NbMOPermFamiliale, na.rm = TRUE))
+
+nbMOPermNonFamiliale <- (rga23_mainOeuvre |> summarize(sum(nbFemmesNFPerm, na.rm = TRUE))) + (rga23_mainOeuvre |> summarize(sum(nbHommesNFPerm, na.rm = TRUE)))
+
+nbMOOccasionnelle <- rga23_mainOeuvre |> summarize(sum(totalMAOccas, na.rm = TRUE))
+
