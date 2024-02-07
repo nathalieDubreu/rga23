@@ -3,6 +3,9 @@ rga23_cocoteraies <- readTable("roster_coco_loc.tab", dossier) |>
   mutate(PartCoco = case_when(
     ToutRevenu == 1 ~ 100,
     TRUE ~ PartCoco
+  ), ToutRevenu = case_when(
+    PartCoco == 100 ~ 1,
+    TRUE ~ ToutRevenu
   )) |>
   select(!interview__id & !cocoGps__area & !cocoGps__len & !cocoGps__num & !cocoGps__racc & !cocoGps__rfrq) |>
   rename(cocoteraie_id = roster_coco_loc__id)
