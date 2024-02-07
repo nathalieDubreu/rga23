@@ -77,6 +77,8 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 <font color="blue">`r kable(tempsTravailChef)`</font>
 
 - Sources de revenus (et part de l’agriculture dans ces revenus) - pluriactivité 
+<font color="blue">`r kable(partRevenusAgriculture)`</font>
+
 - Transformation des produits agricoles
 - Niveau de satisfaction au travail et insertion dans leur environnement
 
@@ -150,8 +152,11 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
   
 - <font color="blue">`r coprahculteursSommes$NbMoyCoco`</font> cocoteraies exploitées en moyenne (de <font color="blue">`r coprahculteursSommes$NbMinCoco`</font> à <font color="blue">`r coprahculteursSommes$NbMaxCoco`</font>)
 
-- Part du revenu de la vente de coprah conservé
-Les producteurs ont conservé 100% du revenu de la cocoteraie pour <font color="blue">`r nbCocoteraiesToutRevenu`</font> cocoteraies
+- Part du revenu de la vente de coprah conservé :
+
+- Les producteurs ont conservé 100% du revenu de la cocoteraie pour <font color="blue">`r nbCocoteraiesToutRevenu`</font> cocoteraies
+
+<font color="blue">`r kable(cocoteraiesExploiteesPartRevenu)`</font>
 
 - Proportion de producteurs par statut avec: 
   - Plantation de nouveaux cocotiers

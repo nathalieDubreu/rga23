@@ -32,7 +32,7 @@ surfacesParcelles <- sum(surfacesParFaireValoir$`Surface (en Ha)`)
 
 surfacesParFaireValoirPercent <- surfacesParFaireValoir |>
   mutate(Pourcentage = round(`Surface (en Ha)` / surfacesParcelles * 100, 1)) |>
-  select(`Faire valoir`, Pourcentage)
+  select(`Faire valoir`, `Surface (en Ha)`, Pourcentage)
 
 surfaces <- rga23_prodVegetales |> summarize(
   SAUTotale = round(sum(SurfaceTotalProdAgri, na.rm = TRUE) / 10000),
@@ -73,6 +73,13 @@ class(surfacesCulturesBioNon$`Nombre d'exploitants`)
 class(surfaceTotaleBio)
 
 surfacesCulturesBioNonEtTotal <- surfacesCulturesBioNon |>
+  add_row(
+    TypeCulture = "Total",
+    `Nombre d'exploitants` = nbExploitantsTotal,
+    `Surface Totale BIO (Ha)` = surfaceTotaleBio,
+    `Surface Totale (Ha)` = surfaceTotale,
+    `Surface moyenne (m²)` = surfaceMoyenneTotale
+  ) |>
   add_row(
     TypeCulture = "Total",
     `Nombre d'exploitants` = nbExploitantsTotal,

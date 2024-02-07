@@ -30,13 +30,45 @@ partRevenusCoprah <- rga23_coprahculteurs |>
 
 
 nbCocoteraiesToutRevenu <- rga23_cocoteraies |>
-  filter(ToutRevenu == 1) |>
+  filter(PartCoco == 100) |>
   count()
 
+nbCocoteraiesPartInf100 <- rga23_cocoteraies |>
+  mutate(
+    PartConservee = case_when(
+      PartCoco <= 25 ~ "0 à 25%",
+      PartCoco <= 50 ~ "26 à 50%",
+      PartCoco <= 75 ~ "51 à 75%",
+      PartCoco < 100 ~ "76 à 99%",
+      PartCoco == 100 ~ "Tout le revenu - 100%"
+    ),
+    Statut = case_when(
+      statutCoco == 1 ~ "Cocoteraies exploitées en tant que Propriétaire plein",
+      statutCoco == 2 ~ "Cocoteraies exploitées en tant que Propriétaire en indivision",
+      statutCoco == 3 ~ "Cocoteraies exploitées en tant que Exploitant"
+    )
+  ) |>
+  group_by(PartConservee, Statut) |>
+  count() |>
+  ungroup()
+
+nbCocoExploiteesE <- coprahculteursSommes$NbCocoExploiteesE
+nbCocoExploiteesPI <- coprahculteursSommes$NbCocoExploiteesPI
+nbCocoExploiteesPP <- coprahculteursSommes$NbCocoExploiteesPP
+
+pivotNbCocoteraiesPartInf100 <- nbCocoteraiesPartInf100 |>
+  pivot_wider(names_from = Statut, values_from = n, values_fill = 0) 
+
+totaux <- pivotNbCocoteraiesPartInf100 |>
+  summarise(across(starts_with("Cocoteraies"), sum))
+
+cocoteraiesExploiteesPartRevenu <- pivotNbCocoteraiesPartInf100 |>
+  mutate(across(starts_with("Cocoteraies"), ~ round(. / totaux[[cur_column()]] * 100, 1))) |>
+  rename_with(~ paste0(., "- en %"), starts_with("Cocoteraies"))
 
 # Propriétaire plein
 
-actionParStatut <- function(nbCocoStatut, ActionCocoteraie, label){
+actionParStatut <- function(nbCocoStatut, ActionCocoteraie, label) {
   rga23_coprahculteurs |>
     rename(Action = {{ ActionCocoteraie }}) |>
     filter({{ nbCocoStatut }} > 0 & !is.na(Action)) |>
@@ -48,30 +80,33 @@ actionParStatut <- function(nbCocoStatut, ActionCocoteraie, label){
 ## Replanter nouveaux cocotiers
 
 producteursProprietairePlein <- actionParStatut(nbCocoStatut1, ReplanterCocoteraie1, "Producteurs en tant que Propriétaire plein - En %")
-producteursProprietaireIndivision <- actionParStatut( nbCocoStatut2, ReplanterCocoteraie2, "Producteurs en tant que Propriétaire en indivision - En %")
+producteursProprietaireIndivision <- actionParStatut(nbCocoStatut2, ReplanterCocoteraie2, "Producteurs en tant que Propriétaire en indivision - En %")
 producteursExploitants <- actionParStatut(nbCocoStatut3, ReplanterCocoteraie3, "Producteurs en tant que Exploitant - En %")
 
 replanter <- producteursProprietairePlein |>
-  left_join(producteursProprietaireIndivision, by = "Action")  |>
+  left_join(producteursProprietaireIndivision, by = "Action") |>
   left_join(producteursExploitants, by = "Action") |>
-  mutate(`Plantation de nouveaux cocotiers` = ifelse(Action == 1, "OUI", "NON"))  |>
-  select(`Plantation de nouveaux cocotiers`,
-         `Producteurs en tant que Propriétaire plein - En %`,
-         `Producteurs en tant que Propriétaire en indivision - En %`,
-         `Producteurs en tant que Exploitant - En %`)
+  mutate(`Plantation de nouveaux cocotiers` = ifelse(Action == 1, "OUI", "NON")) |>
+  select(
+    `Plantation de nouveaux cocotiers`,
+    `Producteurs en tant que Propriétaire plein - En %`,
+    `Producteurs en tant que Propriétaire en indivision - En %`,
+    `Producteurs en tant que Exploitant - En %`
+  )
 
 ## Supprimer anciens cocotiers
 
 producteursProprietairePlein <- actionParStatut(nbCocoStatut1, SuppAnciensCocotiers1, "Producteurs en tant que Propriétaire plein - En %")
-producteursProprietaireIndivision <- actionParStatut( nbCocoStatut2, SuppAnciensCocotiers2, "Producteurs en tant que Propriétaire en indivision - En %")
+producteursProprietaireIndivision <- actionParStatut(nbCocoStatut2, SuppAnciensCocotiers2, "Producteurs en tant que Propriétaire en indivision - En %")
 producteursExploitants <- actionParStatut(nbCocoStatut3, SuppAnciensCocotiers3, "Producteurs en tant que Exploitant - En %")
 
 supprimer <- producteursProprietairePlein |>
-  left_join(producteursProprietaireIndivision, by = "Action")  |>
+  left_join(producteursProprietaireIndivision, by = "Action") |>
   left_join(producteursExploitants, by = "Action") |>
-  mutate(`Suppression des anciens cocotiers` = ifelse(Action == 1, "OUI", "NON"))  |>
-  select(`Suppression des anciens cocotiers`,
-         `Producteurs en tant que Propriétaire plein - En %`,
-         `Producteurs en tant que Propriétaire en indivision - En %`,
-         `Producteurs en tant que Exploitant - En %`)
-
+  mutate(`Suppression des anciens cocotiers` = ifelse(Action == 1, "OUI", "NON")) |>
+  select(
+    `Suppression des anciens cocotiers`,
+    `Producteurs en tant que Propriétaire plein - En %`,
+    `Producteurs en tant que Propriétaire en indivision - En %`,
+    `Producteurs en tant que Exploitant - En %`
+  )

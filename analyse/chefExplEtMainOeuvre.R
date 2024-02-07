@@ -66,3 +66,19 @@ nbMOPermNonFamiliale <- (rga23_mainOeuvre |> summarize(sum(nbFemmesNFPerm, na.rm
 
 nbMOOccasionnelle <- rga23_mainOeuvre |> summarize(sum(totalMAOccas, na.rm = TRUE))
 
+## Part de l'agriculture dans les revenus
+
+partRevenusAgriculture <- rga23_tape |>
+  filter(!is.na(PartRevenusAgriExpl)) |>
+  mutate(`Part de l'agriculture dans les revenus` = case_when(
+    (PartRevenusAgriExpl == 1) ~ "1 : 0 à 25%",
+    (PartRevenusAgriExpl == 2) ~ "2 : 25 à 50%",
+    (PartRevenusAgriExpl == 3) ~ "3 : 50 à 75%",
+    (PartRevenusAgriExpl == 4) ~ "4 : Plus de 75%",
+    (is.na(PartRevenusAgriExpl)) ~ "Non réponse"
+  )) |>
+  group_by(`Part de l'agriculture dans les revenus`) |>
+  summarise(count = n()) |>
+  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
+  select(`Part de l'agriculture dans les revenus`, `En %`)
+
