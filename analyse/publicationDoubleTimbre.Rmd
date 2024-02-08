@@ -96,12 +96,8 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
   - Cultures fourragères
   - Jachères
   - Jardins océaniens
-  
-<font color="blue">`r kable(surfacesCulturesBioNonEtTotal)`</font>
 
-- Jardins océaniens
-
-<font color="blue">`r kable(surfacesJardinsOceaniensBioNon)`</font>
+<font color="blue">`r kable(surfacesCulturesClassEtOceaniens)`</font>
 
 - Destination des produits des cultures
 

@@ -26,7 +26,7 @@ surfacesParFaireValoir <- rga23_parcelles |>
     TRUE ~ as.character(faireValoirParcelle)
   )) |>
   group_by(`Faire valoir`) |>
-  summarize(`Surface (en Ha)` = (sum(polygone__area, na.rm = TRUE) + sum(surfaceParcelleNonDelimitee, na.rm = TRUE)) / 10000)
+  summarize(`Surface (en Ha)` = round((sum(polygone__area, na.rm = TRUE) + sum(surfaceParcelleNonDelimitee, na.rm = TRUE)) / 10000), 1)
 
 surfacesParcelles <- sum(surfacesParFaireValoir$`Surface (en Ha)`)
 
@@ -58,34 +58,23 @@ surfacesCulturesBioNon <- rga23_surfacesCultures |>
     TRUE ~ 0
   )) |>
   summarize(
-    `Nombre d'exploitants` = n_distinct(interview__key),
-    `Surface Totale BIO (Ha)` = round((sum(surfaceBioCult, na.rm = TRUE) / 10000), 1),
-    `Surface Totale (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
+    `Nb Exploitants` = n_distinct(interview__key),
+    `Surface BIO (Ha)` = round((sum(surfaceBioCult, na.rm = TRUE) / 10000), 1),
+    `Surface (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
     `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 0)
   )
 
-surfaceTotaleBio <- as.numeric(sum(surfacesCulturesBioNon$`Surface Totale BIO (Ha)`, na.rm = TRUE))
-surfaceTotale <- as.numeric(sum(surfacesCulturesBioNon$`Surface Totale (Ha)`, na.rm = TRUE))
-nbExploitantsTotal <- as.integer(rga23_surfacesCultures |> summarize(n_distinct(interview__key)))
-surfaceMoyenneTotale <- as.integer(rga23_surfacesCultures |> summarize(round(mean(SurfaceCult, na.rm = TRUE), 0)))
-
-class(surfacesCulturesBioNon$`Nombre d'exploitants`)
-class(surfaceTotaleBio)
+surfaceTotaleBioClassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface BIO (Ha)`, na.rm = TRUE))
+surfaceTotaleClassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface (Ha)`, na.rm = TRUE))
+nbExploitantsTotalClassiques <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1) |> count())
 
 surfacesCulturesBioNonEtTotal <- surfacesCulturesBioNon |>
   add_row(
-    TypeCulture = "Total",
-    `Nombre d'exploitants` = nbExploitantsTotal,
-    `Surface Totale BIO (Ha)` = surfaceTotaleBio,
-    `Surface Totale (Ha)` = surfaceTotale,
-    `Surface moyenne (m²)` = surfaceMoyenneTotale
-  ) |>
-  add_row(
-    TypeCulture = "Total",
-    `Nombre d'exploitants` = nbExploitantsTotal,
-    `Surface Totale BIO (Ha)` = surfaceTotaleBio,
-    `Surface Totale (Ha)` = surfaceTotale,
-    `Surface moyenne (m²)` = surfaceMoyenneTotale
+    TypeCulture = "Total cultures classiques",
+    `Nb Exploitants` = nbExploitantsTotalClassiques,
+    `Surface BIO (Ha)` = surfaceTotaleBioClassiques,
+    `Surface (Ha)` = surfaceTotaleClassiques,
+    `Surface moyenne (m²)` = as.numeric(NA)
   )
 
 surfacesJardinsOceaniensBioNon <- rga23_prodVegetales |>
@@ -95,11 +84,32 @@ surfacesJardinsOceaniensBioNon <- rga23_prodVegetales |>
     TRUE ~ 0
   )) |>
   summarize(
-    `Nombre d'exploitants` = n_distinct(interview__key),
-    `Surface Totale Bio (Ha)` = round((sum(SurfaceBioJardins, na.rm = TRUE) / 10000), 1),
-    `Surface Totale (Ha)` = round((sum(SurfaceJardins, na.rm = TRUE) / 10000), 1),
+    `Nb Exploitants` = n_distinct(interview__key),
+    `Surface Bio (Ha)` = round((sum(SurfaceBioJardins, na.rm = TRUE) / 10000), 1),
+    `Surface (Ha)` = round((sum(SurfaceJardins, na.rm = TRUE) / 10000), 1),
     `Surface moyenne (m²)` = round(mean(SurfaceJardins, na.rm = TRUE), 0)
   )
+
+surfaceTotaleBio <- surfaceTotaleBioClassiques + surfacesJardinsOceaniensBioNon$`Surface Bio (Ha)`
+surfaceTotale <- surfaceTotaleClassiques + surfacesJardinsOceaniensBioNon$`Surface (Ha)`
+nbExploitantsTotal <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1 | ModesProduction__4 == 1) |> count())
+
+surfacesCulturesClassEtOceaniens <- surfacesCulturesBioNonEtTotal |>
+  add_row(
+    TypeCulture = "Jardins Oceaniens",
+    `Nb Exploitants` = surfacesJardinsOceaniensBioNon$`Nb Exploitants`,
+    `Surface BIO (Ha)` = surfacesJardinsOceaniensBioNon$`Surface Bio (Ha)`,
+    `Surface (Ha)` = surfacesJardinsOceaniensBioNon$`Surface (Ha)`,
+    `Surface moyenne (m²)` = surfacesJardinsOceaniensBioNon$`Surface moyenne (m²)`
+  ) |>
+  add_row(
+    TypeCulture = "Total",
+    `Nb Exploitants` = nbExploitantsTotal,
+    `Surface BIO (Ha)` = surfaceTotaleBio,
+    `Surface (Ha)` = surfaceTotale,
+    `Surface moyenne (m²)` = as.numeric(NA)
+  )
+
 
 # Auto-consommation familiale.....................................1/1
 # Alimentation des animaux .......................................2/2
@@ -127,10 +137,10 @@ calculPartsDestination <- function(partComVar, destinationVar, libelleDestinatio
         {{ partComVar }} <= 100 ~ paste("Plus de 75%", !!libelleDestination)
       )
     ) |>
-    group_by( {{ destinationVar }}) |>
+    group_by({{ destinationVar }}) |>
     summarise(`Nb exploitants` = n()) |>
     mutate(`En %` = round(`Nb exploitants` / sum(`Nb exploitants`) * 100, 1))
-  
+
   return(result)
 }
 
@@ -140,4 +150,3 @@ autoConsoFruit <- calculPartsDestination(PartComFruit__1, Fruitier, "AutoConsomm
 autoConsoPlantes <- calculPartsDestination(PartComPlantes__1, PPAM, "AutoConsommation")
 autoConsoFlorales <- calculPartsDestination(PartComFlorale__1, Florales, "AutoConsommation")
 autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, "AutoConsommation")
-

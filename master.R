@@ -5,8 +5,8 @@ library("knitr")
 source("fonctions.R")
 
 # TODO - mettre à jour les variables
-dossier <- "Export_02-05"
-date <- "05/02/2024"
+dossier <- "Export_02-07"
+date <- "07/02/2024"
 nbExploitations <- 7832
 
 # Mises en forme des données (à lancer dans l'ordre)
