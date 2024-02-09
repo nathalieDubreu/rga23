@@ -63,6 +63,15 @@ inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ, by = c("interview__k
     Plantes2023 = round(sum(ifelse(indicRGA23 == 1, totalSurfacePlantes, 0), na.rm = TRUE) / 10000)
   )
 
+# Paturages
+inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ, by = c("interview__key")) |>
+  summarize(
+    nbPaturages2012 = sum(ifelse(indicRGA12 == 1 & totalSurfaceFourrages > 0, 1, 0), na.rm = TRUE),
+    paturages2012 = round(sum(ifelse(indicRGA12 == 1, totalSurfaceFourrages, 0), na.rm = TRUE) / 10000),
+    nbPaturages2023 = sum(ifelse(indicRGA23 == 1 & totalSurfaceFourrages > 0, 1, 0), na.rm = TRUE),
+    paturages2023 = round(sum(ifelse(indicRGA23 == 1, totalSurfaceFourrages, 0), na.rm = TRUE) / 10000)
+  )
+
 # Bovins........................1/1
 # Ovins.........................2/2
 # Caprins.......................8/8
@@ -102,6 +111,17 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
     Animaux2023 = sum(ifelse(indicRGA23 == 1, nbTotalBovins, 0), na.rm = TRUE)
   )
 
+## Partie en divagation
+inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
+  filter(PresenceAnimaux__1 == 1) |>
+  select(interview__key, Archipel_1, nbTotalBovins, NbBovinsLiberte, SurfacePaturageBovins) |>
+  group_by(Archipel_1) |>
+  summarize(
+    nbTotalBovins = sum(nbTotalBovins),
+    nbBovinsLiberte = sum(NbBovinsLiberte, na.rm = TRUE),
+    SurfacePaturageBovins = sum(SurfacePaturageBovins, na.rm = TRUE)/10000
+  )
+
 # L’élevage de caprins - En 2012, 165 exploitations élèvent 9 301 bêtes
 inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
   filter(PresenceAnimaux__8 == 1) |>
@@ -110,6 +130,17 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
     Animaux2012 = sum(ifelse(indicRGA12 == 1, nbTotalCaprins, 0), na.rm = TRUE),
     nbEleveurs2023 = sum(ifelse(indicRGA23 == 1, 1, 0), na.rm = TRUE),
     Animaux2023 = sum(ifelse(indicRGA23 == 1, nbTotalCaprins, 0), na.rm = TRUE)
+  )
+
+## Partie en divagation
+inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
+  filter(PresenceAnimaux__8 == 1) |>
+  select(interview__key, Archipel_1, nbTotalCaprins, NbCaprinsLiberte, SurfacePaturageCaprins) |>
+  group_by(Archipel_1) |>
+  summarize(
+    nbTotalCaprins = sum(nbTotalCaprins),
+    NbCaprinsLiberte = sum(NbCaprinsLiberte, na.rm = TRUE),
+    SurfacePaturageCaprins = sum(SurfacePaturageCaprins, na.rm = TRUE)/10000
   )
 
 # L’élevage de volailles - En 2012, 210 257 volailles sont élevées dans 55 exploitations
@@ -125,3 +156,28 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
     nbEleveurs2023 = sum(ifelse(indicRGA23 == 1, 1, 0), na.rm = TRUE),
     Animaux2023 = sum(ifelse(indicRGA23 == 1, NombreVolailles, 0), na.rm = TRUE)
   )
+
+## Equidés y compris en divagation
+inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
+  filter(PresenceAnimaux__5 == 1) |>
+  select(interview__key, Archipel_1, nbTotalEquides, NbEquidesLiberte, SurfacePaturageEquides) |>
+  group_by(Archipel_1) |>
+  summarize(
+    nbTotalEquides = sum(nbTotalEquides),
+    NbEquidesLiberte = sum(NbEquidesLiberte, na.rm = TRUE),
+    SurfacePaturageEquides = sum(SurfacePaturageEquides, na.rm = TRUE)/10000
+  )
+
+inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
+  mutate(SurfacesPaturages = rowSums(across(
+    c("SurfacePaturageBovins", "SurfacePaturageOvins", "SurfacePaturageCaprins", "SurfacePaturageEquides"),
+    ~ coalesce(.x, 0)
+  ))) |> group_by(Archipel_1) |>
+  summarize(
+    SurfacePaturageBovins = sum(SurfacePaturageBovins, na.rm = TRUE)/10000,
+    SurfacePaturageOvins = sum(SurfacePaturageOvins, na.rm = TRUE)/10000,
+    SurfacePaturageCaprins = sum(SurfacePaturageCaprins, na.rm = TRUE)/10000,
+    SurfacePaturageEquides = sum(SurfacePaturageEquides, na.rm = TRUE)/10000,
+    SurfacesPaturages = sum(SurfacesPaturages, na.rm = TRUE)/10000
+  )
+

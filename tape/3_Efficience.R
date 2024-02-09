@@ -15,6 +15,10 @@
 # > 3 - Les engrais synthétiques ne sont utilisés qu’exceptionnellement. Une variété de pratiques biologiques sont la norme.
 # > 4 - Aucun engrais synthétique n’est utilisé, la fertilité du sol est gérée uniquement à travers une variété de pratiques biologiques.
 
+# Engrais (ou amendements) de synthèse............1
+# Engrais (ou amendements) minéraux biologiques...3
+# Engrais (ou amendements) organiques.............2
+
 scoreEngrais <- rga23_exploitations |>
   mutate(score = case_when(
     ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse -> 0"
@@ -35,9 +39,6 @@ scoreEngrais |>
   group_by(score) |>
   count()
 
-# Engrais (ou amendements) de synthèse............1
-# Engrais (ou amendements) minéraux biologiques...3
-# Engrais (ou amendements) organiques.............2
 
 
 # GESTION DES PESTES ET DES MALADIES
