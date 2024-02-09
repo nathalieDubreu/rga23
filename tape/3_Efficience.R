@@ -55,3 +55,18 @@ scoreEngrais |>
 # > 2 - La production couvre les besoins alimentaires du ménage et les excédents génèrent de l’argent pour acheter les produits essentiels mais ne permettent pas d’économiser.
 # > 3 - La production couvre les besoins alimentaires du ménage et les excédents génèrent des liquidités pour acheter les produits essentiels et réaliser des économies sporadiques.
 # > 4 - Tous les besoins du ménage sont satisfaits, à la fois en nourriture et en espèces, pour acheter tous les produits nécessaires et pour avoir des économies régulières.
+
+
+scoreProductiviteBesoins <- rga23_tape |>
+  mutate(score = case_when(
+    BesoinsSatisf == 2 ~ 0,
+    (Economies == 3 & Vente == 2)~ 1,
+    Economies == 3 ~ 2,
+    Economies == 2 ~ 3,
+    Economies == 1 ~ 4,
+    TRUE ~ BesoinsSatisf
+  )) 
+
+scoreProductiviteBesoins |>
+  group_by(score) |>
+  count()
