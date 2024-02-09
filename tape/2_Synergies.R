@@ -14,7 +14,7 @@
 # > 2 - 50 pour cent du sol est recouvert de résidus ou de cultures de couverture. Certaines cultures sont tournées ou intercalées (ou un pâturage en rotation est effectué).
 # > 3 - Plus de 80 pour cent du sol est recouvert de résidus ou de cultures de couverture. Les cultures sont alternées régulièrement ou intercalées (ou le pâturage en rotation est systématique). La perturbation du sol est minimisée.
 # > 4 - Tout le sol est couvert de résidus ou de cultures de couverture. Les cultures sont tournées régulièrement et les cultures intercalaires sont courantes (ou le pâturage en rotation est systématique). Peu ou pas de perturbation du sol.
-# 
+
 # INTEGRATION AVEC LES ARBRES (AGROFORESTERIE, SILVOPASTORALISME, AGROSILVOPASTORALISME)
 # Considérez aussi les zones forestières communales.
 # > 0 - Pas d’intégration: les arbres (et autres plantes vivaces) n’ont pas de rôle pour l’homme ou dans la production végétale ou animale.
