@@ -10,11 +10,16 @@
 #   "10928"
 # ))
 
-bio <- rga23 |>
-  filter(AgriBio == 1) |>
-  select(interview__key, id_exploitation, RaisonSociale, Nom, Prenoms, SurfaceTotalProdAgri, totalSurfDeclarees) |>
-  arrange(desc(as.numeric(SurfaceTotalProdAgri)))
-# writeCSV(bio)
+bio <- readCSV("rga23.csv") |>
+  filter(AgriBio == 1 | AgriBio == 3) |>  
+  mutate(`Bio ?` = case_when(
+    AgriBio == 1 ~ "Oui en totalité",
+    AgriBio == 3 ~ "Oui en partie"
+  ))|>
+  group_by(`Bio ?`) |>
+  select(interview__key, id_exploitation, RaisonSociale, Nom, Prenoms, `Bio ?`, SurfaceTotalProdAgri) |>
+  arrange(Nom, Prenoms)
+writeCSV(bio)
 
 base <- readCSV("BaseRGA_v9.csv") |>
   filter(id_sia %in% c(
