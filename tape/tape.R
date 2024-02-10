@@ -19,23 +19,59 @@ rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 # Vente aux restaurants (hors collectifs) / hôtels................12/12
 # Sans objet (pas de production de ce type).......................13/13
 
-rga23 <- rga23_prodVegetales |> 
+rga23_venteVegetales <- rga23_prodVegetales |>
   mutate(
-    partVendueMaraic = PartComMaraic__5 + PartComMaraic__6 + PartComMaraic__7 + PartComMaraic__8 + PartComMaraic__9 + PartComMaraic__10 + PartComMaraic__11 + PartComMaraic__12,
-    partVenduePlantes = PartComPlantes__5 + PartComPlantes__6 + PartComPlantes__7 + PartComPlantes__8 + PartComPlantes__9 + PartComPlantes__10 + PartComPlantes__11 + PartComPlantes__12,
-    partVendueFlorale = PartComFlorale__5 + PartComFlorale__6 + PartComFlorale__7 + PartComFlorale__8 + PartComFlorale__9 + PartComFlorale__10 + PartComFlorale__11 + PartComFlorale__12,
-    partVendueVivri = PartComVivri__5 + PartComVivri__6 + PartComVivri__7 + PartComVivri__8 + PartComVivri__9 + PartComVivri__10 + PartComVivri__11 + PartComVivri__12,
-    partVendueFruit = PartComFruit__5 + PartComFruit__6 + PartComFruit__7 + PartComFruit__8 + PartComFruit__9 + PartComFruit__10 + PartComFruit__11 + PartComFruit__12,
-    partVenduePepinieres = PartComPepinieres__5 + PartComPepinieres__6 + PartComPepinieres__7 + PartComPepinieres__8 + PartComPepinieres__9 + PartComPepinieres__10 + PartComPepinieres__11 + PartComPepinieres__12,
-    partVendueFourrages = PartComFourrages__5 + PartComFourrages__6 + PartComFourrages__7 + PartComFourrages__8 + PartComFourrages__9 + PartComFourrages__10 + PartComFourrages__11 + PartComFourrages__12
-  )
+    partVendueMaraic = rowSums(across(
+      all_of(paste0("PartComMaraic__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueVivri = rowSums(across(
+      all_of(paste0("PartComVivri__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueFruit = rowSums(across(
+      all_of(paste0("PartComFruit__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVenduePlantes = rowSums(across(
+      all_of(paste0("PartComPlantes__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueFlorale = rowSums(across(
+      all_of(paste0("PartComFlorale__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVenduePepinieres = rowSums(across(
+      all_of(paste0("PartComPepinieres__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueFourrages = rowSums(across(
+      all_of(paste0("PartComFourrages__", 5:12)),
+      ~ coalesce(., 0)
+    )),
+    venteProduitsVegetaux = ifelse(partVendueMaraic > 0, 1, 0) +
+      ifelse(partVendueVivri > 0, 1, 0) +
+      ifelse(partVendueFruit > 0, 1, 0) +
+      ifelse(partVenduePlantes > 0, 1, 0) +
+      ifelse(partVendueFlorale > 0, 1, 0) +
+      ifelse(partVenduePepinieres > 0, 1, 0) +
+      ifelse(partVendueFourrages > 0, 1, 0)
+  ) |>
+  select(interview__key, partVendueMaraic, partVendueVivri, partVendueFruit, partVenduePlantes, partVendueFlorale, partVenduePepinieres, partVendueFourrages, venteProduitsVegetaux)
 
-rga23 <- rga23_prodAnimales |>
+rga23_venteAnimales <- rga23_prodAnimales |>
   mutate(
-    partVendueOeufs = PartComOeufs__5 + PartComOeufs__6 + PartComOeufs__7 + PartComOeufs__8 + PartComOeufs__9 + PartComOeufs__10 + PartComOeufs__11 + PartComOeufs__12,
-    partVendueMiel = PartComMiel__5 + PartComMiel__6 + PartComMiel__7 + PartComMiel__8 + PartComMiel__9 + PartComMiel__10 + PartComMiel__11 + PartComMiel__12,
-    partVendueViande = PartComViande__5 + PartComViande__6 + PartComViande__7 + PartComViande__8 + PartComViande__9 + PartComViande__10 + PartComViande__11 + PartComViande__12
-  )
+    partVendueOeufs = rowSums(across(
+      all_of(paste0("PartComOeufs__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueMiel = rowSums(across(
+      all_of(paste0("PartComMiel__", 5:12)),
+      ~ coalesce(., 0)
+    )), partVendueViande = rowSums(across(
+      all_of(paste0("PartComViande__", 5:12)),
+      ~ coalesce(., 0)
+    )),
+    venteProduitsAnimaux = ifelse(partVendueOeufs > 0, 1, 0) +
+      ifelse(partVendueMiel > 0, 1, 0) +
+      ifelse(partVendueViande > 0, 1, 0)
+  ) |>
+  select(interview__key, partVendueOeufs, partVendueMiel, partVendueViande, venteProduitsAnimaux)
+
+rga23_tapeAvecVentes <- left_join(left_join(rga23_tape, rga23_venteAnimales, by=c("interview__key")), rga23_venteVegetales, by=c("interview__key"))
 
 source("tape/1_Diversite.R")
 source("tape/2_Synergies.R")
