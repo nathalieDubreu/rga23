@@ -27,3 +27,16 @@
 # > 2 - La moitié de l’énergie utilisée est autoproduite, l’autre moitié est achetée.
 # > 3 - Production importante d’énergie renouvelable, utilisation négligeable de carburant et d’autres sources non renouvelables.
 # > 4 - Toute l’énergie utilisée est renouvelable et/ou autoproduite. Le ménage est autosuffisant pour l’approvisionnement en énergie, qui est garanti à tout moment. L’utilisation de combustibles fossiles est négligeable.
+
+scoreEnergie <- rga23_tape |>
+  mutate(score = case_when(
+    EnergiesRenouv == 2 ~ 0,
+    NivAutoEnergiesR == 1 ~ 1,
+    NivAutoEnergiesR == 2 ~ 2,
+    NivAutoEnergiesR == 3 ~ 3,
+    NivAutoEnergiesR == 4 ~ 4
+  )) 
+
+scoreEnergie |>
+  group_by(score) |>
+  count()

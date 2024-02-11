@@ -39,8 +39,6 @@ scoreEngrais |>
   group_by(score) |>
   count()
 
-
-
 # GESTION DES PESTES ET DES MALADIES
 # > 0 - Les pesticides chimiques et les médicaments sont utilisés régulièrement pour la lutte contre les ravageurs et les maladies. Aucune autre gestion n’est utilisée.
 # > 1 - Les pesticides et médicaments chimiques sont utilisés pour une culture/un animal spécifique uniquement. Certaines substances biologiques et pratiques organiques sont appliquées sporadiquement.
@@ -48,6 +46,33 @@ scoreEngrais |>
 # > 3 – Aucun pesticide ni médicament chimique n’est utilisé. Les substances biologiques sont la norme.
 # > 4 - Aucun pesticide ni médicament chimique n’est utilisé. Les ravageurs et les maladies sont gérés par une variété de substances biologiques et de mesures de prévention.
 #
+
+# UtilisationPhytosanit
+
+# TypePhytosanit
+# Synthétique (chimique)...1
+# Biologique...............2
+
+# NbCultEspPhytoChim
+# Toutes vos cultures/espèces..........1
+# Une partie de vos cultures/espèces...2
+# Une seule culture/espèce.............3
+
+scorePesticides <- rga23_exploitations |> mutate(
+  score = case_when(
+    TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 ~ 3,
+    UtilisationPhytosanit == 2 ~ 4,
+    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
+    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 2 ~ 1,
+    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 3 ~ 2
+  )
+)
+
+scorePesticides |>
+  group_by(score) |>
+  count()
+
+
 # PRODUCTIVITÉ ET BESOINS DU MÉNAGE
 # Considérez tous les types d’actifs, y compris les animaux, les arbres vivaces, etc.
 # > 0 - Les besoins du ménage ne sont pas satisfaits en nourriture ni en d’autres produits essentiels.
@@ -59,7 +84,7 @@ scoreEngrais |>
 scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
   mutate(score = case_when(
     BesoinsSatisf == 2 ~ 0,
-    (Economies == 3 & (is.na(venteProduitsVegetaux) | venteProduitsVegetaux == 0) & (is.na(venteProduitsAnimaux) | venteProduitsAnimaux == 0)) ~ 1,
+    (Economies == 3 & venteProduits == 0) ~ 1,
     Economies == 3 ~ 2,
     Economies == 2 ~ 3,
     Economies == 1 ~ 4,

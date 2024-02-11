@@ -1,8 +1,12 @@
-rga23_tape <- readCSV("rga23_tape.csv")
-rga23_prodVegetales <- readCSV("rga23_prodVegetales.csv")
-rga23_prodAnimales <- readCSV("rga23_prodAnimales.csv")
-rga23_exploitations <- readCSV("rga23_exploitations.csv")
-rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
+rga23_eligibles <- full_join(
+  readCSV("rga23_exploitations.csv") |> filter(eligibilite == 1) |> select(interview__key),
+  readCSV("rga23_coprahculteurs.csv") |> filter(eligibiliteCoprah == 1) |> select(interview__key)
+)
+rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"))
+rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.csv"))
+rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"))
+rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"))
+rga23_surfacesCultures <- left_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"))
 
 # Vente
 # Auto-consommation familiale.....................................1/1
@@ -71,7 +75,8 @@ rga23_venteAnimales <- rga23_prodAnimales |>
   ) |>
   select(interview__key, partVendueOeufs, partVendueMiel, partVendueViande, venteProduitsAnimaux)
 
-rga23_tapeAvecVentes <- left_join(left_join(rga23_tape, rga23_venteAnimales, by=c("interview__key")), rga23_venteVegetales, by=c("interview__key"))
+rga23_tapeAvecVentes <- left_join(left_join(rga23_tape, rga23_venteAnimales, by = c("interview__key")), rga23_venteVegetales, by = c("interview__key")) |>
+  mutate(venteProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(venteProduitsVegetaux), 0, venteProduitsVegetaux))
 
 source("tape/1_Diversite.R")
 source("tape/2_Synergies.R")
