@@ -8,7 +8,7 @@ genreChef <- rga23_general |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
-    TauxFemmes = NbFemmes / NbHommes
+    TauxFemmes = NbFemmes / (NbHommes + NbFemmes)
   )
 
 genreChefArchipel <- rga23_general |>
@@ -17,7 +17,7 @@ genreChefArchipel <- rga23_general |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
-    TauxFemmes = NbFemmes / NbHommes
+    TauxFemmes = NbFemmes / (NbHommes + NbFemmes)
   ) |> select(Archipel_1, TauxFemmes)
 writeCSV(genreChefArchipel)
 
