@@ -128,6 +128,8 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
   - Equidés
   - Lapins élevés pour la chair
   - Abeilles
+  
+<font color="blue">`r kable(cheptels)`</font>
 
 - Identification des principaux canaux de distribution et de vente des produits animaux (type de circuit) 
 
@@ -163,7 +165,7 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
   - Entretien (par mode: défrichage/débroussaillage, engrais, pose de bagues) 
 
-## Fertilisation et autres techniques culturales
+## Fertilisation et protection des cultures
 
 - Part d’exploitants qui utilisent des produits phytosanitaires (par type et par archipel)
 
