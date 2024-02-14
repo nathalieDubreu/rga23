@@ -32,7 +32,7 @@ scoreEngrais <- rga23_exploitations |>
     ## Engrais de synthèse + engrais organiques -> 1
     (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 1) ~ 1,
     ## Aucun engrais de synthèse -> 4
-    (TypeEngrais__1 == 0) ~ 4
+    (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) ~ 4
   ))
 
 scoreEngrais |>

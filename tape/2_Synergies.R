@@ -103,7 +103,7 @@ scoreIntegration |>
   count()
 
 test <- scoreIntegration |>
-  filter(score == 5) |>
+  filter(score == 4) |>
   select(
     interview__key,
     AutAlimAnimauxBasseCour,

@@ -37,7 +37,7 @@ scoreStabiliteProduction <- rga23_tape |>
     # > 3 - Le revenu est stable et la production varie peu d’une année à l’autre (à intrants constants). Le revenu et la production se rétablissent en grande partie après des chocs / perturbations.
     RevenusExpl == 1 & CapaciteRecup == 3 & (EvolutionProduction == 1 | EvolutionProduction == 2) ~ 3,
     # > 4 - Le revenu et la production sont stables et augmentent avec le temps. Ils se rétablissent complètement et rapidement après des chocs / perturbations.
-    RevenusExpl == 3 & CapaciteRecup == 3 & EvolutionProduction == 1 ~ 1,
+    RevenusExpl == 3 & CapaciteRecup == 3 & EvolutionProduction == 1 ~ 4,
     TRUE ~ 5
 ))  
 
