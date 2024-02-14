@@ -7,7 +7,7 @@ rga23_champ <- readCSV("rga23_gestion.csv") |>
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(readCSV("rga23_parcelles.csv"), rga23_champ |> select(interview__key))
 rga23_prodVegetales <- inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ |> select(interview__key))
-rga23_prodAnimales <- inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ |> select(interview__key))
+rga23_prodAnimales <- inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ |> select(interview__key, Archipel_1))
 rga23_surfacesCultures <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key))
 rga23_tape <- inner_join(readCSV("rga23_tape.csv"), rga23_champ |> select(interview__key, Archipel_1))
 rga23_coprahculteurs <- inner_join(readCSV("rga23_coprahculteurs.csv"), rga23_champ |> select(interview__key, indicRGA23_Coprah))
