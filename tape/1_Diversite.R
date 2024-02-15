@@ -5,7 +5,13 @@
 # > 3 - Plus de 3 cultures avec une superficie cultivée importante adaptée aux conditions climatiques locales et changeantes.
 # > 4 - Plus de 3 cultures de variétés différentes adaptées aux conditions locales et ferme spatialement diversifiée avec multi, poly- ou interculture.
 
-rga23_surfacesCultures <- inner_join(inner_join(rga23_surfacesCultures, rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, SurfaceJardins)), rga23_tape |> select(interview__key, PratiquesCulturales__2)) |>
+rga23_surfacesCultures <- inner_join(
+  inner_join(
+    rga23_surfacesCultures,
+    rga23_prodVegetales |> select(interview__key, ModesProduction__4, SurfaceTotalProdAgri, SurfaceJardins)
+  ),
+  rga23_tape |> select(interview__key, PratiquesCulturales__2)
+) |>
   mutate(partCulture = SurfaceCult / SurfaceTotalProdAgri * 100)
 
 nbCulturesDeclarees <- rga23_surfacesCultures |>
@@ -13,11 +19,12 @@ nbCulturesDeclarees <- rga23_surfacesCultures |>
 
 scoreCultures <- left_join(rga23_surfacesCultures, nbCulturesDeclarees) |>
   mutate(score = case_when(
+    RaisonsRecensement__1 == 0 ~ 9,
+    (nbCultures > 3 & PratiquesCulturales__2 == 1) | ModesProduction__4 == 1 ~ 4,
     nbCultures == 1 ~ 0,
     partCulture > 80 ~ 1,
     nbCultures == 2 | nbCultures == 3 ~ 2,
-    nbCultures > 3 & PratiquesCulturales__2 == 1 ~ 4,
-    nbCultures > 3 ~ 3.4
+    nbCultures > 3 ~ 3
   )) |>
   group_by(interview__key, SurfaceTotalProdAgri, SurfaceJardins, nbCultures) |>
   summarize(score = min(score))
@@ -41,13 +48,14 @@ rga23_prodAnimales <- rga23_prodAnimales %>%
     ~ coalesce(., 0)
   )))
 
-scoreAnimaux <- rga23_prodAnimales |>
+scoreAnimaux <- left_join(rga23_prodAnimales, rga23_gestion |> select(interview__key, indicRGA23_Elevage)) |>
   mutate(score = case_when(
     nbEspeces == 0 ~ 0,
     nbEspeces == 1 ~ 1,
+    nbEspeces == 3 & indicRGA23_Elevage == 1 ~ 3,
     nbEspeces == 2 | nbEspeces == 3 ~ 2,
-    nbEspeces > 3 ~ 3.4
-  )) 
+    nbEspeces > 3 ~ 3
+  ))
 
 scoreAnimaux |>
   group_by(score) |>
@@ -60,13 +68,16 @@ scoreAnimaux |>
 # > 3 - Nombre important d’arbres (et / ou autres vivaces) d’espèces différentes.
 # > 4 - Nombre élevé d’arbres (et / ou autres plantes vivaces) de différentes espèces intégrées dans les terres agricoles.
 
-rga23_tape |> mutate(PresenceArbre = case_when(
-  PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 1 ~ "1 - Présents en bord de parcelle et dans la parcelle",
-  PsceArbresHorsRente__1 == 1  ~ "2 - Présents en bord de parcelle",
-  PsceArbresHorsRente__2 == 1 ~ "3 - Présents dans la parcelle",
-  PsceArbresHorsRente__3 == 1 ~ "4 - Absents",
-  TRUE ~ "Non concernés")) |>
-  group_by(PresenceArbre) |> count()
+rga23_tape |>
+  mutate(PresenceArbre = case_when(
+    PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 1 ~ "1 - Présents en bord de parcelle et dans la parcelle",
+    PsceArbresHorsRente__1 == 1 ~ "2 - Présents en bord de parcelle",
+    PsceArbresHorsRente__2 == 1 ~ "3 - Présents dans la parcelle",
+    PsceArbresHorsRente__3 == 1 ~ "4 - Absents",
+    TRUE ~ "Non concernés"
+  )) |>
+  group_by(PresenceArbre) |>
+  count()
 
 
 # DIVERSITÉ DES ACTIVITÉS, PRODUITS ET SERVICES
@@ -75,4 +86,3 @@ rga23_tape |> mutate(PresenceArbre = case_when(
 # > 2 - Plus de 3 activités productives.
 # > 3 - Plus de 3 activités productives et un service (par ex. transformation de produits à la ferme, écotourisme, transport de produits agricoles, formation, etc.).
 # > 4 - Plus de 3 activités productives et plusieurs services.
-

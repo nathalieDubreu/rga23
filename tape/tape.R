@@ -1,26 +1,27 @@
 rga23_eligibles <- full_join(
-  inner_join(readCSV("rga23_exploitations.csv"),
+ inner_join(readCSV("rga23_exploitations.csv"),
     readCSV("rga23_general.csv") |>
-      select(interview__key, id_exploitation),
+      select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
     by = c("interview__key")
   ),
   inner_join(readCSV("rga23_coprahculteurs.csv"),
     readCSV("rga23_general.csv") |>
-      select(interview__key, id_exploitation),
+      select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
     by = c("interview__key")
   ),
-  by = c("interview__key", "id_exploitation")
+  by = c("interview__key", "id_exploitation", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
 ) |>
   filter((eligibilite == 1 & (substring(id_exploitation, 0, 1) != "C" | eligibiliteCoprah == 1)) |
     (eligibiliteCoprah == 1 & (substring(id_exploitation, 0, 1) == "C" | eligibilite == 1))) |>
   mutate(TypeExploitation = substring(id_exploitation, 0, 1)) |>
-  select(interview__key, TypeExploitation)
+  select(interview__key, TypeExploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
 rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"))
 rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.csv"))
 rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"))
 rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"))
 rga23_surfacesCultures <- left_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"))
+rga23_gestion <- left_join(rga23_eligibles, readCSV("rga23_gestion.csv"))
 
 # Vente
 # Auto-consommation familiale.....................................1/1
