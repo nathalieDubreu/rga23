@@ -24,9 +24,7 @@ partRevenusCoprah <- rga23_coprahculteurs |>
     (is.na(PartRevenusCoprahExpl)) ~ "Non réponse"
   )) |>
   group_by(`Part de la production de coprah dans les revenus annuels`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(`Part de la production de coprah dans les revenus annuels`, `En %`)
+  calculPourcentage()
 
 
 nbCocoteraiesToutRevenu <- rga23_cocoteraies |>
@@ -57,7 +55,7 @@ nbCocoExploiteesPI <- coprahculteursSommes$NbCocoExploiteesPI
 nbCocoExploiteesPP <- coprahculteursSommes$NbCocoExploiteesPP
 
 pivotNbCocoteraiesPartInf100 <- nbCocoteraiesPartInf100 |>
-  pivot_wider(names_from = Statut, values_from = n, values_fill = 0) 
+  pivot_wider(names_from = Statut, values_from = n, values_fill = 0)
 
 totaux <- pivotNbCocoteraiesPartInf100 |>
   summarise(across(starts_with("Cocoteraies"), sum))

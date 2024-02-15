@@ -126,11 +126,7 @@ eleveursBio <- rga23_exploitations |>
     AgriBio == 3 ~ "En partie bio"
   )) |>
   group_by(`Exploitations avec élevages`) |>
-  summarise(n = n()) |>
-  mutate(`En %` = round((n / sum(n) * 100), 2)) |>
-  select(!n)
-
-
+  calculPourcentage()
 
 detailsCheptels <- summary <- rga23_prodAnimales |>
   summarise(

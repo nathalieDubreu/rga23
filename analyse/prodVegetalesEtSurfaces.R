@@ -7,9 +7,7 @@ irrigation <- rga23_prodVegetales |>
     Irrigation == 2 ~ "Non"
   )) |>
   group_by(Irrigation) |>
-  summarise(n = n()) |>
-  mutate(`En %` = round((n / sum(n) * 100), 2)) |>
-  select(!n)
+  calculPourcentage()
 
 # Surface agricole utilisée par type de faire-valoir (parcelles)
 
