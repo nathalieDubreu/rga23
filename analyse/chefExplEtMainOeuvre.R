@@ -16,6 +16,11 @@ chefsExploitClasseAgeArchipel <- rga23_general |>
   groupByTotalEtPourcent(Archipel_1, `Chefs d'exploitation par classe d'âge`)
 writeCSV(chefsExploitClasseAgeArchipel)
 
+chefsExploitClasseAgeTypeExploitation <- rga23_general |>
+  filter(!is.na(age)) |>
+  groupByTotalEtPourcent(TypeExploitation, `Chefs d'exploitation par classe d'âge`)
+writeCSV(chefsExploitClasseAgeTypeExploitation)
+
 genreChef <- rga23_general |>
   mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
   summarize(
@@ -39,12 +44,6 @@ genreChefArchipel <- rga23_general |>
 writeCSV(genreChefArchipel)
 
 genreTypeExploitation <- rga23_general |>
-  mutate(TypeExploitation = case_when(
-    RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 0 ~ "Cultivateurs seuls",
-    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & RaisonsRecensement__3 == 0 ~ "Eleveurs seuls",
-    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
-    TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
-  )) |>
   group_by(TypeExploitation) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),

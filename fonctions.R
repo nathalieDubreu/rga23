@@ -1,30 +1,18 @@
+# GESTION DE FICHIERS 
+
 ## Lecture
 
+### Lecture de fichiers CSV (en général les CSV exportés de données)
 readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_csv2(file.path(chemin, nomFichier), col_types = "c", guess_max = 7832)
 }
-
-## Pour les CSV du projet
+### Lecture des CSV d'inputs dans le projet
 readInputCSV <- function(nomFichier) {
   readr::read_csv2(file.path("input", nomFichier),show_col_types = FALSE)
 }
-
+### Lecture du fichier en paramètre (en général les .tab du dossier de données)
 readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t", col_types = "c", guess_max = 7832)
-}
-
-# readDTA <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
-#   read_dta(file.path(chemin, dossier, nomFichier))
-# }
-
-### Fichiers tab d'un dossier défini -> liste
-lireFichiers <- function(dossier, chemin = Sys.getenv("cheminAcces")) {
-  pathDossier <- file.path(chemin, dossier)
-  fichiers <- list.files(pathDossier, pattern = ".tab")
-  lapply(fichiers, function(x) {
-    data <- data.frame(readr::read_delim(file.path(pathDossier, x), delim = "\t"))
-    data <- names(data)
-  })
 }
 
 ## Ecriture
@@ -46,7 +34,6 @@ writeCSV <- function(table, chemin = Sys.getenv("cheminAcces")) {
     col_names = TRUE
   )
 }
-
 ### Ecriture à la racine du chemin (A utiliser pour les données traitées)
 writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
   readr::write_csv2(
@@ -66,28 +53,25 @@ writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
 
 ########################"
 
-# Stats
+# STATISTIQUES
 
-## Calcul des pourcentages pour la répartition dans la colonne en paramètre
+## Calcul des pourcentages 
 calculPourcentage <- function(data) {
   data |>
     summarise(count = n()) |>
     mutate(`En %` = round(count / sum(count) * 100, 1)) |>
     select(-count)
 }
-
-## Group by sur la colonne groupByColonne + ajout d'une ligne TOTAL et Calcul des pourcentages pour la répartition dans la colonne en paramètre
+## Group by sur la colonne groupByColonne + ajout d'une ligne TOTAL et calcul des pourcentages 
 groupByTotalEtPourcent <- function(data, groupByColonne, nomColonne) {
   dataGroupBy <- data |>
     group_by({{ groupByColonne }}, {{ nomColonne }}) |>
     calculPourcentage() |>
     spread(key = {{ nomColonne }}, value = `En %`)
-  
   dataTotal <- data |>
     mutate({{ groupByColonne }} := "Total") |>
     group_by({{ groupByColonne }}, {{ nomColonne }}) |>
     calculPourcentage() |>
     spread(key = {{ nomColonne }}, value = `En %`)
-  
   result <- rbind(dataGroupBy, dataTotal)
 }

@@ -23,6 +23,12 @@ rga23_general <- inner_join(readCSV("rga23_general.csv"), rga23_champ |> select(
       age < 60 ~ "2 - De 40 à moins de 60 ans",
       age >= 60 ~ "3 - 60 ans et plus",
       TRUE ~ "Non réponse"
+    ),
+    TypeExploitation = case_when(
+      RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 0 ~ "Cultivateurs seuls",
+      RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & RaisonsRecensement__3 == 0 ~ "Eleveurs seuls",
+      RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
+      TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
     )
   )
 rga23_mainOeuvre <- inner_join(readCSV("rga23_mainOeuvre.csv"), rga23_champ |>
