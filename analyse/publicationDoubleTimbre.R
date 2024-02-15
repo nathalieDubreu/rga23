@@ -2,7 +2,7 @@ library(tidyr)
 
 ## Restriction au champ 23 du RGA
 rga23_champ <- readCSV("rga23_gestion.csv") |>
-  filter(indicRGA23 == 1) 
+  filter(indicRGA23 == 1)
 
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(readCSV("rga23_parcelles.csv"), rga23_champ |> select(interview__key))
@@ -14,7 +14,17 @@ rga23_coprahculteurs <- inner_join(readCSV("rga23_coprahculteurs.csv"), rga23_ch
 rga23_cocoteraies <- inner_join(readCSV("rga23_cocoteraies.csv"), rga23_champ |> select(interview__key))
 rga23_exploitations <- inner_join(readCSV("rga23_exploitations.csv"), rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2))
 rga23_general <- inner_join(readCSV("rga23_general.csv"), rga23_champ |> select(interview__key, Archipel_1)) |>
-  mutate(age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)))
+  mutate(
+    age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)),
+    homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1),
+    femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0),
+    `Chefs d'exploitation par classe d'âge` = case_when(
+      age < 40 ~ "1 - Moins de 40 ans",
+      age < 60 ~ "2 - De 40 à moins de 60 ans",
+      age >= 60 ~ "3 - 60 ans et plus",
+      TRUE ~ "Non réponse"
+    )
+  )
 rga23_mainOeuvre <- inner_join(readCSV("rga23_mainOeuvre.csv"), rga23_champ |>
   select(interview__key, Archipel_1)) |>
   mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
@@ -30,4 +40,3 @@ source("analyse/chefExplEtMainOeuvre.R")
 source("analyse/coprahculteurs.R")
 
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
-

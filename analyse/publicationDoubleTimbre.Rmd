@@ -64,7 +64,7 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 ## Profil des chefs d'exploitation (par archipel)
 
 - Genre et âge des chefs d'exploitation
-  - <font color="blue">`r round(genreChef$TauxFemmes*100,1)`</font>% des chefs d'exploitations sont des femmes
+  - <font color="blue">`r genreChef$TauxFemmes`</font>% des chefs d'exploitations sont des femmes
   - L'age moyen des chefs d'exploitation est de <font color="blue">`r round(rga23_general |> summarize(mean(age, na.rm = TRUE)),1)`</font> ans.
 
 - Niveau de formation

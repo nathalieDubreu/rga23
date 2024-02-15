@@ -1,25 +1,73 @@
 ## Chefs d'exploitations
 
-ageParArchipel <- rga23_general |> group_by(Archipel_1) |> summarize(round(mean(age, na.rm = TRUE),2))
+ageParArchipel <- rga23_general |>
+  group_by(Archipel_1) |>
+  summarize(round(mean(age, na.rm = TRUE), 2))
 writeCSV(ageParArchipel)
+
+chefsExploitClasseAge <- rga23_general |>
+  filter(!is.na(age)) |>
+  group_by(`Chefs d'exploitation par classe d'âge`) |>
+  calculPourcentage()
+writeCSV(chefsExploitClasseAge)
+
+chefsExploitClasseAgeArchipel <- rga23_general |>
+  filter(!is.na(age)) |>
+  groupByTotalEtPourcent(Archipel_1, `Chefs d'exploitation par classe d'âge`)
+writeCSV(chefsExploitClasseAgeArchipel)
 
 genreChef <- rga23_general |>
   mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
-    TauxFemmes = NbFemmes / (NbHommes + NbFemmes)
+    TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
   )
 
 genreChefArchipel <- rga23_general |>
-  mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
   group_by(Archipel_1) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
-    TauxFemmes = NbFemmes / (NbHommes + NbFemmes)
-  ) |> select(Archipel_1, TauxFemmes)
+    TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
+  ) |>
+  select(Archipel_1, TauxFemmes) |>
+  add_row(
+    Archipel_1 = "Total",
+    TauxFemmes = genreChef$TauxFemmes
+  )
 writeCSV(genreChefArchipel)
+
+genreTypeExploitation <- rga23_general |>
+  mutate(TypeExploitation = case_when(
+    RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 0 ~ "Cultivateurs seuls",
+    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & RaisonsRecensement__3 == 0 ~ "Eleveurs seuls",
+    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
+    TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
+  )) |>
+  group_by(TypeExploitation) |>
+  summarize(
+    NbHommes = sum(homme, na.rm = TRUE),
+    NbFemmes = sum(femme, na.rm = TRUE),
+    TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
+  ) |>
+  select(!NbHommes & !NbFemmes) |>
+  add_row(
+    TypeExploitation = "Total",
+    TauxFemmes = genreChef$TauxFemmes
+  )
+writeCSV(genreTypeExploitation)
+
+tauxFeminisationClasseAge <- rga23_general |>
+  filter(!is.na(age)) |>
+  group_by(`Chefs d'exploitation par classe d'âge`) |>
+  summarise(
+    NbHommes = sum(homme, na.rm = TRUE),
+    NbFemmes = sum(femme, na.rm = TRUE),
+    TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
+  ) |>
+  select(`Chefs d'exploitation par classe d'âge`, TauxFemmes)
+writeCSV(tauxFeminisationClasseAge)
 
 ### Temps de travail du chef d'exploitation
 
@@ -33,9 +81,7 @@ tempsTravailChef <- rga23_mainOeuvre |>
     (is.na(TpsTravailChefExpl)) ~ "Non réponse"
   )) |>
   group_by(`Temps de travail du chef d'exploitation`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(`Temps de travail du chef d'exploitation`, `En %`)
+  calculPourcentage()
 
 tempsTravailChefArchipel <- rga23_mainOeuvre |>
   filter(!is.na(TpsTravailChefExpl)) |>
@@ -46,12 +92,7 @@ tempsTravailChefArchipel <- rga23_mainOeuvre |>
     (TpsTravailChefExpl == 4) ~ "4 : Temps complet",
     (is.na(TpsTravailChefExpl)) ~ "Non réponse"
   )) |>
-  group_by(`Temps de travail du chef d'exploitation`, Archipel_1) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(-count) |>
-  ungroup() |>
-  pivot_wider(names_from = `Temps de travail du chef d'exploitation`, values_from = `En %`)
+  groupByTotalEtPourcent(Archipel_1, `Temps de travail du chef d'exploitation`)
 writeCSV(tempsTravailChefArchipel)
 
 formNAChefExpl <- rga23_general |>
@@ -65,9 +106,7 @@ formNAChefExpl <- rga23_general |>
     (is.na(FormNAChefExpl)) ~ "Non réponse"
   )) |>
   group_by(`Formation générale non agricole du chef d'exploitation`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(`Formation générale non agricole du chef d'exploitation`, `En %`)
+  calculPourcentage()
 
 formAgriChefExpl <- rga23_general |>
   filter(!is.na(FormNAChefExpl)) |>
@@ -81,9 +120,7 @@ formAgriChefExpl <- rga23_general |>
     (is.na(FormAgriChefExpl)) ~ "Non réponse"
   )) |>
   group_by(`Formation générale agricole du chef d'exploitation`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(`Formation générale agricole du chef d'exploitation`, `En %`)
+  calculPourcentage()
 
 ## Main d'oeuvre
 
@@ -107,9 +144,7 @@ partRevenusAgriculture <- rga23_tape |>
     (is.na(PartRevenusAgriExpl)) ~ "Non réponse"
   )) |>
   group_by(`Part de l'agriculture dans les revenus`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(`Part de l'agriculture dans les revenus`, `En %`)
+  calculPourcentage()
 
 ## Tape
 
@@ -120,13 +155,9 @@ besoinsNourritureArchipel <- rga23_tape |>
     BesoinsSatisf == 1 ~ "Oui",
     BesoinsSatisf == 2 ~ "Non"
   )) |>
-  group_by(Archipel_1, `Besoins satisfaits ?`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(-count) |>
-  spread(key = `Besoins satisfaits ?`, value = `En %`)
-writeCSV(besoinsNourritureArchipel)  
-  
+  groupByTotalEtPourcent(Archipel_1, `Besoins satisfaits ?`)
+writeCSV(besoinsNourritureArchipel)
+
 # Les revenus de votre production agricole vous permettent-ils de réaliser des économies ?
 # Economies
 # Oui, de façon régulière.......1
@@ -140,12 +171,8 @@ economiesRevenusArchipel <- rga23_tape |>
     Economies == 3 ~ "Non",
     BesoinsSatisf == 2 ~ "Non (besoins non satisfaits)"
   )) |>
-  group_by(Archipel_1, `Economies ?`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(-count) |>
-  spread(key = `Economies ?`, value = `En %`)
-writeCSV(economiesRevenusArchipel)  
+  groupByTotalEtPourcent(Archipel_1, `Economies ?`)
+writeCSV(economiesRevenusArchipel)
 
 # Les revenus de vos productions agricoles sont :
 # RevenusExpl
@@ -162,12 +189,8 @@ revenusProdAgricolesArchipel <- rga23_tape |>
     RevenusExpl == 3 ~ "En augmentation avec le temps",
     RevenusExpl == 4 ~ "Pas de revenu"
   )) |>
-  group_by(Archipel_1, `Les revenus de vos productions agricoles sont ?`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(-count) |>
-  spread(key = `Les revenus de vos productions agricoles sont ?`, value = `En %`)
-writeCSV(revenusProdAgricolesArchipel)  
+  groupByTotalEtPourcent(Archipel_1, `Les revenus de vos productions agricoles sont ?`)
+writeCSV(revenusProdAgricolesArchipel)
 
 # Quelle est votre capacité de rétablissement après les chocs / perturbations (ex : inondation, sécheresse, maladie, ...) ?
 # Pas de capacité...1
@@ -181,9 +204,5 @@ capaciteRetablissementArchipel <- rga23_tape |>
     CapaciteRecup == 2 ~ "Faible capacité",
     CapaciteRecup == 3 ~ "Bonne capacité"
   )) |>
-  group_by(Archipel_1, `Capacité de rétablissement après les chocs ?`) |>
-  summarise(count = n()) |>
-  mutate(`En %` = round(count / sum(count) * 100, 1)) |>
-  select(-count) |>
-  spread(key = `Capacité de rétablissement après les chocs ?`, value = `En %`)
-writeCSV(capaciteRetablissementArchipel)  
+  groupByTotalEtPourcent(Archipel_1, `Capacité de rétablissement après les chocs ?`)
+writeCSV(capaciteRetablissementArchipel)

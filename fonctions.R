@@ -63,3 +63,31 @@ writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
     col_names = TRUE
   )
 }
+
+########################"
+
+# Stats
+
+## Calcul des pourcentages pour la répartition dans la colonne en paramètre
+calculPourcentage <- function(data) {
+  data |>
+    summarise(count = n()) |>
+    mutate(`En %` = round(count / sum(count) * 100, 1)) |>
+    select(-count)
+}
+
+## Group by sur la colonne groupByColonne + ajout d'une ligne TOTAL et Calcul des pourcentages pour la répartition dans la colonne en paramètre
+groupByTotalEtPourcent <- function(data, groupByColonne, nomColonne) {
+  dataGroupBy <- data |>
+    group_by({{ groupByColonne }}, {{ nomColonne }}) |>
+    calculPourcentage() |>
+    spread(key = {{ nomColonne }}, value = `En %`)
+  
+  dataTotal <- data |>
+    mutate({{ groupByColonne }} := "Total") |>
+    group_by({{ groupByColonne }}, {{ nomColonne }}) |>
+    calculPourcentage() |>
+    spread(key = {{ nomColonne }}, value = `En %`)
+  
+  result <- rbind(dataGroupBy, dataTotal)
+}
