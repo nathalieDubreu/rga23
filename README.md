@@ -1,6 +1,8 @@
 # rga23
 
 ## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
+- `interviewKeysAExclure.R` : liste des interview__key à exclure (affectations en doublon dans SuSo - pb techniques)
+- `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
     - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en somme des surfaces déclarées dans le détail pour la SAU et en NA pour la surface de végétation naturelle
@@ -26,7 +28,6 @@
     - ajout des données récoltées par téléphone pour les X confrontés au bug dans la table rga23_moPermanenteFam
     - création de 2 fichiers CSV correspondant aux rosters RosterCoExploit.tab et RosterMOPermFam.tab (avec données X) -> **rga23_coexploitants** et **rga23_moPermanenteFam**
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
-- `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
 
 ## Champs - WIP
 - `champRGA.R` : Champ du RGA23
