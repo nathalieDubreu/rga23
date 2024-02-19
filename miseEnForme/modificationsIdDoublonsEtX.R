@@ -21,6 +21,7 @@ rga23 <- rga23 |> mutate(id_exploitation = case_when(
 xAPasserEnC <- rga23 |>
   filter(substring(id_exploitation, 0, 1) == "X") |>
   filter(eligibilite == 0 & eligibiliteCoprah == 1) |>
+  arrange(interview__key) |>
   mutate(nouvelId = 1750 + row_number(), id_exploitation_modif = paste("C", nouvelId, sep = "")) |>
   select(id_exploitation, id_exploitation_modif)
 ## 29 cas
