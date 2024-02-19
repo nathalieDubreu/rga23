@@ -7,18 +7,18 @@ writeCSV(ageParArchipel)
 
 chefsExploitClasseAge <- rga23_general |>
   filter(!is.na(age)) |>
-  group_by(`Chefs d'exploitation par classe d'âge`) |>
+  group_by(`Chefs d'exploitation par classe d'age`) |>
   calculPourcentage()
 writeCSV(chefsExploitClasseAge)
 
 chefsExploitClasseAgeArchipel <- rga23_general |>
   filter(!is.na(age)) |>
-  groupByTotalEtPourcent(Archipel_1, `Chefs d'exploitation par classe d'âge`)
+  groupByTotalEtPourcent(Archipel_1, `Chefs d'exploitation par classe d'age`)
 writeCSV(chefsExploitClasseAgeArchipel)
 
 chefsExploitClasseAgeTypeExploitation <- rga23_general |>
   filter(!is.na(age)) |>
-  groupByTotalEtPourcent(TypeExploitation, `Chefs d'exploitation par classe d'âge`)
+  groupByTotalEtPourcent(TypeExploitation, `Chefs d'exploitation par classe d'age`)
 writeCSV(chefsExploitClasseAgeTypeExploitation)
 
 genreChef <- rga23_general |>
@@ -59,13 +59,13 @@ writeCSV(genreTypeExploitation)
 
 tauxFeminisationClasseAge <- rga23_general |>
   filter(!is.na(age)) |>
-  group_by(`Chefs d'exploitation par classe d'âge`) |>
+  group_by(`Chefs d'exploitation par classe d'age`) |>
   summarise(
     NbHommes = sum(homme, na.rm = TRUE),
     NbFemmes = sum(femme, na.rm = TRUE),
     TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
   ) |>
-  select(`Chefs d'exploitation par classe d'âge`, TauxFemmes)
+  select(`Chefs d'exploitation par classe d'age`, TauxFemmes)
 writeCSV(tauxFeminisationClasseAge)
 
 ### Temps de travail du chef d'exploitation

@@ -18,7 +18,7 @@ rga23_general <- inner_join(readCSV("rga23_general.csv"), rga23_champ |> select(
     age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)),
     homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1),
     femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0),
-    `Chefs d'exploitation par classe d'âge` = case_when(
+    `Chefs d'exploitation par classe d'age` = case_when(
       age < 40 ~ "1 - Moins de 40 ans",
       age < 60 ~ "2 - De 40 à moins de 60 ans",
       age >= 60 ~ "3 - 60 ans et plus",

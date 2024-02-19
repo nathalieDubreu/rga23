@@ -193,3 +193,18 @@ detailsCheptels <- summary <- rga23_prodAnimales |>
   ) |>
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Somme")
 writeCSV(detailsCheptels)
+
+apicultures <- rga23_prodAnimales |>
+  filter(PresenceAnimaux__7 == 1) |>
+  select(interview__key, NbRuchesPourProduire, NbRuchettes) |>
+  mutate(CategorieNombreRuches = case_when(
+    NbRuchesPourProduire + NbRuchettes < 10 ~ "A - Nb ruches pour produire + Nb ruchettes < 10",
+    NbRuchesPourProduire + NbRuchettes < 20 ~ "B - Nb ruches pour produire + Nb ruchettes entre 10 et 19",
+    NbRuchesPourProduire + NbRuchettes < 30 ~ "C - Nb ruches pour produire + Nb ruchettes entre 20 et 29",
+    NbRuchesPourProduire + NbRuchettes >= 30 ~ "D - Nb ruches pour produire + Nb ruchettes >= 30",
+    TRUE ~ "?"
+  ))
+
+apicultures |> group_by(CategorieNombreRuches) |>
+  count()
+
