@@ -88,7 +88,12 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
       TRUE ~ CultPresentesJardins__70
     )
   ) |>
-  mutate(sommeSurfaces = as.numeric(as.character(round(sommeSurfaces, 0))))
+  mutate(sommeSurfaces = as.numeric(as.character(round(sommeSurfaces, 0)))) |>
+  mutate(ActivitePrincipaleChef = case_when(
+    (ActivitesChefExploit__1 == 1 & is.na(ActivitePrincipaleChef)) ~ 1,
+    (ActivitesChefExploit__9 == 1 & is.na(ActivitePrincipaleChef)) ~ 9,
+    TRUE ~ ActivitePrincipaleChef
+  ))
 
 ## Engrais organiques épandus
 
