@@ -15,12 +15,20 @@
 
 presenceEspecesAnimaux <- paste0("PresenceAnimaux__", 1:6)
 
-rga23_prodAnimales <- rga23_prodAnimales |>
+rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
   mutate(
+    nbEspecesRuminants = rowSums(across(
+      c(PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8),
+      ~ coalesce(., 0)
+    )),
     nbEspecesHorsAbeilles = rowSums(across(
       all_of(presenceEspecesAnimaux),
       ~ coalesce(., 0)
     )) + ifelse(is.na(PresenceAnimaux__8), 0, PresenceAnimaux__8),
+    uniquementRuminants = case_when(
+      nbEspecesRuminants == nbEspecesHorsAbeilles ~ 1,
+      TRUE ~ 0
+    ),
     nbAnimauxBasseCour = rowSums(across(
       c("NbOies", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
       ~ coalesce(., 0)
@@ -29,10 +37,28 @@ rga23_prodAnimales <- rga23_prodAnimales |>
       c("NombrePoules0", "NombrePoules1", "NombrePoules3"),
       ~ coalesce(., 0)
     )),
-    nbTotalAnimaux =rowSums(across(
+    nbTotalAnimaux = rowSums(across(
       c("nbAnimauxBasseCour", "nbPoulesPondeuses", "nbTotalBovins", "nbTotalOvins", "nbTotalPorcs", "nbTotalEquides", "nbTotalCaprins"),
       ~ coalesce(., 0)
-    ))
+    )),
+    poidsBovins = 0.9 * ifelse(is.na(nbTotalBovins), 0, nbTotalBovins),
+    poidsOvins = 0.15 * ifelse(is.na(nbTotalOvins), 0, nbTotalOvins),
+    poidsPoules = 0.003 * ifelse(is.na(nbPoulesPondeuses), 0, nbPoulesPondeuses),
+    poidsAnimauxBasseCour = 0.003 * ifelse(is.na(nbAnimauxBasseCour), 0, nbAnimauxBasseCour),
+    poidsCaprins = 0.15 * ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins),
+    poidsEquides = 0.8 * ifelse(is.na(nbTotalEquides), 0, nbTotalEquides),
+    poidsPorcins = 0.15 * ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs),
+    poidsTotalAnimaux = rowSums(across(
+      c("poidsBovins", "poidsOvins", "poidsPoules", "poidsAnimauxBasseCour", "poidsCaprins", "poidsEquides", "poidsPorcins"),
+      ~ coalesce(., 0)
+    )),
+    partPoidsBovins = poidsBovins / poidsTotalAnimaux,
+    partPoidsOvins = poidsOvins / poidsTotalAnimaux,
+    partPoidsPoules = poidsPoules / poidsTotalAnimaux,
+    partPoidsAnimauxBasseCour = poidsAnimauxBasseCour / poidsTotalAnimaux,
+    partPoidsCaprins = poidsCaprins / poidsTotalAnimaux,
+    partPoidsEquides = poidsEquides / poidsTotalAnimaux,
+    partPoidsPorcins = poidsPorcins / poidsTotalAnimaux
   )
 
 # AutAlimAnimauxBasseCour
@@ -51,59 +77,62 @@ rga23_prodAnimales <- rga23_prodAnimales |>
 # Aucune autonomie (tout est acheté)................6
 # Sans objet, ce type d'aliment n'est pas utilisé...7
 
-scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales, by = c("interview__key")) |>
+scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids, by = c("interview__key")) |>
   mutate(score = case_when(
     nbEspecesHorsAbeilles == 0 ~ 0,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 6 | nbAnimauxBasseCour / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 6 | nbTotalBovins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 6 | nbTotalCaprins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 6 | nbTotalEquides / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 6 | nbTotalOvins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPorcins) | AutAlimPorcins == 6 | nbTotalPorcs / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPoules) | AutAlimPoules == 6 | nbPoulesPondeuses / nbTotalAnimaux < 0.3)) &
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 6) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 6) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 6) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 6) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 6) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 6) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 6)) &
       PropRecyclEngraisOrga == 1 ~ 0,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 5 | AutAlimAnimauxBasseCour == 4 | nbAnimauxBasseCour / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 5 | AutAlimBovinsFourrage == 4 | nbTotalBovins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 5 | AutAlimCaprinsFourrage == 4 | nbTotalCaprins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 5 | AutAlimEquidesFourrages == 4 | nbTotalEquides / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 5 | AutAlimOvinsFourrage == 4 | nbTotalOvins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPorcins) | AutAlimPorcins == 5 | AutAlimPorcins == 4 | nbTotalPorcs / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPoules) | AutAlimPoules == 5 | AutAlimPoules == 4 | nbPoulesPondeuses / nbTotalAnimaux < 0.3)) &
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 5 | AutAlimAnimauxBasseCour == 4) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 5 | AutAlimBovinsFourrage == 4) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 5 | AutAlimCaprinsFourrage == 4) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 5 | AutAlimEquidesFourrages == 4) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 5 | AutAlimOvinsFourrage == 4) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 5 | AutAlimPorcins == 4) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 5 | AutAlimPoules == 4)) &
       (PropRecyclEngraisOrga == 1 | PropRecyclEngraisOrga == 2) ~ 1,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 3 | nbAnimauxBasseCour / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 3 | nbTotalBovins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 3 | nbTotalCaprins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 3 | nbTotalEquides / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 3 | nbTotalOvins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPorcins) | AutAlimPorcins == 3 | nbTotalPorcs / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPoules) | AutAlimPoules == 3 | nbPoulesPondeuses / nbTotalAnimaux < 0.3)) &
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 3) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 3) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 3) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 3) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 3) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 3) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 3)) &
       (PropRecyclEngraisOrga == 2 | PropRecyclEngraisOrga == 3) ~ 2,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 2 | nbAnimauxBasseCour / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 2 | nbTotalBovins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 2 | nbTotalCaprins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 2 | nbTotalEquides / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 2 | nbTotalOvins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPorcins) | AutAlimPorcins == 2 | nbTotalPorcs / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPoules) | AutAlimPoules == 2 | nbPoulesPondeuses / nbTotalAnimaux < 0.3)) &
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 2) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 2) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 2) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 2) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 2) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 2) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 2)) &
       (PropRecyclEngraisOrga == 3 | PropRecyclEngraisOrga == 4) ~ 3,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 1 | nbAnimauxBasseCour / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 1 | nbTotalBovins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 1 | nbTotalCaprins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 1 | nbTotalEquides / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 1 | nbTotalOvins / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPorcins) | AutAlimPorcins == 1 | nbTotalPorcs / nbTotalAnimaux < 0.3) &
-       (is.na(AutAlimPoules) | AutAlimPoules == 1 | nbPoulesPondeuses / nbTotalAnimaux < 0.3)) &
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 1) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 1) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 1) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 1) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 1) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 1) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 1)) &
       (PropRecyclEngraisOrga == 4) ~ 4,
+    (uniquementRuminants == 1 & PropRecyclEngraisOrga == 1) ~ 1,
+    (uniquementRuminants == 1 & PropRecyclEngraisOrga == 2) ~ 2,
+    (uniquementRuminants == 1 & PropRecyclEngraisOrga == 3) ~ 3,
+    (uniquementRuminants == 1 & PropRecyclEngraisOrga == 4) ~ 4,
     TRUE ~ 5
   ))
-
 
 scoreIntegration |>
   group_by(score) |>
   count()
 
 test <- scoreIntegration |>
-  filter(score == 4) |>
+  filter(score == 5) |>
   select(
     interview__key,
     AutAlimAnimauxBasseCour,
@@ -114,14 +143,14 @@ test <- scoreIntegration |>
     AutAlimPorcins,
     AutAlimPoules,
     PropRecyclEngraisOrga,
-    nbEspecesHorsAbeilles, 
-    nbAnimauxBasseCour, 
-    nbPoulesPondeuses, 
-    nbTotalBovins, 
-    nbTotalOvins, 
-    nbTotalPorcs, 
-    nbTotalEquides, 
-    nbTotalCaprins, 
+    nbEspecesHorsAbeilles,
+    nbAnimauxBasseCour,
+    nbPoulesPondeuses,
+    nbTotalBovins,
+    nbTotalOvins,
+    nbTotalPorcs,
+    nbTotalEquides,
+    nbTotalCaprins,
     nbTotalAnimaux
   )
 
