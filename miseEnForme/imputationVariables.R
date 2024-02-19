@@ -1,5 +1,3 @@
-interviewKeyAExclure <- c("59-36-31-34", "06-79-34-97", "26-72-53-00", "49-29-35-86")
-
 ## Variables diverses
 
 rga23Brut <- readTable("rga23.tab", dossier) |>
@@ -91,6 +89,23 @@ rga23Brut <- readTable("rga23.tab", dossier) |>
     )
   ) |>
   mutate(sommeSurfaces = as.numeric(as.character(round(sommeSurfaces, 0))))
+
+## Engrais organiques épandus
+
+engraisEpandus <- rga23_engraisOrganiques |>
+  filter(EpandageEngraisOrga == 1) |>
+  distinct(interview__key) |>
+  mutate(EngraisOrgaEpandu = 1)
+
+rga23Brut <- left_join(rga23Brut, engraisEpandus) |>
+  mutate(UtilisationEngrais = case_when(
+    EngraisOrgaEpandu == 1 ~ 1,
+    TRUE ~ UtilisationEngrais
+  ), TypeEngrais__2 = case_when(
+    EngraisOrgaEpandu == 1 ~ 1,
+    TRUE ~ TypeEngrais__2
+  )) |>
+  select(!EngraisOrgaEpandu)
 
 ## Localisation
 
@@ -210,12 +225,6 @@ rga23 <- rga23 |>
 rga23 <- sapply(rga23, function(x) {
   x <- gsub("-99999999", NA, x)
 }) |> as.data.frame()
-
-# rga23z <- rga23 %>%
-#   mutate_all(~ ifelse(. == "-99999999", NA, .))
-
-# class(rga23$ActivitesChefExploit__1)
-# class(rga23z$ActivitesChefExploit__1)
 
 rm(
   rga23Brut,
