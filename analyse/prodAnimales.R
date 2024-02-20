@@ -198,10 +198,10 @@ apicultures <- rga23_prodAnimales |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, NbRuchesPourProduire, NbRuchettes) |>
   mutate(CategorieNombreRuches = case_when(
-    NbRuchesPourProduire + NbRuchettes < 10 ~ "A - Nb ruches pour produire + Nb ruchettes < 10",
-    NbRuchesPourProduire + NbRuchettes < 20 ~ "B - Nb ruches pour produire + Nb ruchettes entre 10 et 19",
-    NbRuchesPourProduire + NbRuchettes < 30 ~ "C - Nb ruches pour produire + Nb ruchettes entre 20 et 29",
-    NbRuchesPourProduire + NbRuchettes >= 30 ~ "D - Nb ruches pour produire + Nb ruchettes >= 30",
+    NbRuchesPourProduire + NbRuchettes < 10 ~ "0 à 9 : ruches pour produire + ruchettes",
+    NbRuchesPourProduire + NbRuchettes < 20 ~ "10 à 29 : ruches pour produire + ruchettes",
+    NbRuchesPourProduire + NbRuchettes < 30 ~ "20 à 29 : ruches pour produire + ruchettes",
+    NbRuchesPourProduire + NbRuchettes >= 30 ~ "30 et plus : ruches pour produire + ruchettes",
     TRUE ~ "?"
   ))
 
