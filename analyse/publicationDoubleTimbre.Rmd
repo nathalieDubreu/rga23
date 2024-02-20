@@ -178,14 +178,3 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 Parmi les cultivateurs :
 <font color="blue">`r kable(engrais)`</font>
-
-- Valorisation des déjections animales
-
-## Annexes: tableaux détaillés par commune (sous réserve du respect du secret statistique)
-- Nombre d’exploitations 
-- SAU
-- Nombre d’animaux
-- Pourcentage de femmes chef d’exploitation
-- Effectifs de main d’oeuvre
-- Nb d’exploitations et SAU par type de culture
-- Nb d’animaux par type (bovins, caprins, …)
