@@ -103,13 +103,23 @@ engraisEpandus <- rga23_engraisOrganiques |>
   mutate(EngraisOrgaEpandu = 1)
 
 rga23Brut <- left_join(rga23Brut, engraisEpandus) |>
-  mutate(UtilisationEngrais = case_when(
-    EngraisOrgaEpandu == 1 ~ 1,
-    TRUE ~ UtilisationEngrais
-  ), TypeEngrais__2 = case_when(
-    EngraisOrgaEpandu == 1 ~ 1,
-    TRUE ~ TypeEngrais__2
-  )) |>
+  mutate(
+    UtilisationEngrais = case_when(
+      EngraisOrgaEpandu == 1 ~ 1,
+      TRUE ~ UtilisationEngrais
+    ), TypeEngrais__2 = case_when(
+      EngraisOrgaEpandu == 1 ~ 1,
+      TRUE ~ TypeEngrais__2
+    ),
+    TypeEngrais__1 = case_when(
+      EngraisOrgaEpandu == 1 & is.na(TypeEngrais__1) ~ 0,
+      TRUE ~ TypeEngrais__1
+    ),
+    TypeEngrais__3 = case_when(
+      EngraisOrgaEpandu == 1 & is.na(TypeEngrais__3) ~ 0,
+      TRUE ~ TypeEngrais__3
+    )
+  ) |>
   select(!EngraisOrgaEpandu)
 
 ## Localisation
