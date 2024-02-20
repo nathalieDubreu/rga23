@@ -120,10 +120,16 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
       (is.na(AutAlimPorcins) | AutAlimPorcins == 1) &
       (is.na(AutAlimPoules) | AutAlimPoules == 1)) &
       (PropRecyclEngraisOrga == 4) ~ 4,
+    ## Cas des élevages avec uniquement des ruminants (hors abeilles) 
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 1) ~ 1,
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 2) ~ 2,
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 3) ~ 3,
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 4) ~ 4,
+    ## Cas des élevages avec uniquement des poules pondeuses (hors abeilles)
+    (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 1) ~ 0,
+    (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 2) ~ 1,
+    (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 3) ~ 2,
+    (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 4) ~ 3,
     TRUE ~ 5
   ))
 
