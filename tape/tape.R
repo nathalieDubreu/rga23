@@ -1,4 +1,4 @@
-rga23_eligibles <- full_join(
+rga23_eligibles <- left_join(
  inner_join(readCSV("rga23_exploitations.csv"),
     readCSV("rga23_general.csv") |>
       select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
@@ -11,8 +11,7 @@ rga23_eligibles <- full_join(
   ),
   by = c("interview__key", "id_exploitation", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
 ) |>
-  filter((eligibilite == 1 & (substring(id_exploitation, 0, 1) != "C" | eligibiliteCoprah == 1)) |
-    (eligibiliteCoprah == 1 & (substring(id_exploitation, 0, 1) == "C" | eligibilite == 1))) |>
+  filter(eligibilite == 1 & substring(id_exploitation, 0, 1) != "C") |>
   mutate(TypeExploitation = substring(id_exploitation, 0, 1)) |>
   select(interview__key, TypeExploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 

@@ -5,8 +5,8 @@ library("knitr")
 source("fonctions.R")
 
 # TODO - mettre à jour les variables
-dossier <- "Export_02-19"
-date <- "19/02/2024"
+dossier <- "Export_02-20"
+date <- "20/02/2024"
 nbExploitations <- 7832
 
 # Mises en forme des données (à lancer dans l'ordre)
@@ -32,6 +32,9 @@ source("champs/indicatricesAppartenances.R")
 # Analyse
 source("analyse/stats.R")
 source("analyse/publicationDoubleTimbre.R")
+
+# Analyse supplémentaire
+source("tape/tape.R")
 
 # Suivi de la collecte
 
