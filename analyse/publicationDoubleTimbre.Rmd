@@ -38,6 +38,7 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Surface agricole utilisée (SAU - en Ha) : <font color="blue">`r surfaces$SAUTotale`</font>
 - Surface mesurée par parcelle (en Ha) : <font color="blue">`r round(surfacesParcelles,0)`</font>
+  - A laquelle il faut ajouter les surfaces déclarées par les coprahculteurs purs : <font color="blue">`r sommeSAU_C`</font> Ha
 - Surface déclarée par culture (en Ha) : <font color="blue">`r surfaces$SurfaceTotaleDeclaree`</font>
 
 - Par mode de faire valoir 

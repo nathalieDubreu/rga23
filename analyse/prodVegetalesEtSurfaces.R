@@ -28,6 +28,10 @@ surfacesParFaireValoir <- rga23_parcelles |>
 
 surfacesParcelles <- sum(surfacesParFaireValoir$`Surface (en Ha)`)
 
+sommeSAU_C <- left_join(rga23_prodVegetales, rga23_general |> select(interview__key, id_exploitation)) |>
+  filter(substring(id_exploitation, 0, 1) == "C") |>
+  summarize(SurfacesDesCoprahPurs = round(sum(SurfaceTotalProdAgri) / 10000))
+
 surfacesParFaireValoirPercent <- surfacesParFaireValoir |>
   mutate(Pourcentage = round(`Surface (en Ha)` / surfacesParcelles * 100, 1)) |>
   select(`Faire valoir`, `Surface (en Ha)`, Pourcentage)
