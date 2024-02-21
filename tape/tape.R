@@ -16,12 +16,17 @@ rga23_eligibles <- full_join(
   mutate(TypeExploitation = substring(id_exploitation, 0, 1)) |>
   select(interview__key, TypeExploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
+## Imports des fichiers utiles
 rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"))
 rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.csv"))
 rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"))
 rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"))
 rga23_surfacesCultures <- left_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"))
 rga23_gestion <- left_join(rga23_eligibles, readCSV("rga23_gestion.csv"))
+
+### arbres ou non
+arbres <- readInputCSV("arbres.csv") |>
+  select(culture_id, arbre)
 
 # Vente
 # Auto-consommation familiale.....................................1/1

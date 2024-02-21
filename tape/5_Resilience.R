@@ -1,5 +1,5 @@
 # 5. RÉSILIENCE
-# 
+#
 # STABILITÉ DE LA PRODUCTION ET CAPACITÉ À RÉSISTER AUX PERTURBATIONS
 # > 0 - Les revenus diminuent d’année en année, la production est très variable malgré un niveau d’intrants constant et il n’y a pas de capacité de récupération après chocs / perturbations.
 # > 1 - Les revenus sont sur une tendance à la baisse, la production est variable d’année en année (à intrants constants) et la capacité de récupération après chocs / perturbations est faible.
@@ -38,8 +38,14 @@ scoreStabiliteProduction <- rga23_tape |>
     RevenusExpl == 1 & CapaciteRecup == 3 & (EvolutionProduction == 1 | EvolutionProduction == 2) ~ 3,
     # > 4 - Le revenu et la production sont stables et augmentent avec le temps. Ils se rétablissent complètement et rapidement après des chocs / perturbations.
     RevenusExpl == 3 & CapaciteRecup == 3 & EvolutionProduction == 1 ~ 4,
+    ## Prise en compte des revenus et de l'évolution de la production uniquement
+    RevenusExpl == 2 & EvolutionProduction == 3 ~ 0,
+    RevenusExpl == 2 & EvolutionProduction == 2 ~ 1,
+    RevenusExpl == 1 & EvolutionProduction == 2 ~ 2,
+    RevenusExpl == 1 & (EvolutionProduction == 1 | EvolutionProduction == 2) ~ 3,
+    RevenusExpl == 3 & EvolutionProduction == 1 ~ 4,
     TRUE ~ 5
-))  
+  ))
 
 scoreStabiliteProduction |>
   group_by(score) |>
@@ -47,5 +53,5 @@ scoreStabiliteProduction |>
 
 test <- scoreStabiliteProduction |>
   filter(score == 5) |>
-  group_by(RevenusExpl, CapaciteRecup, EvolutionProduction) |>
+  group_by(RevenusExpl, EvolutionProduction, CapaciteRecup) |>
   count()

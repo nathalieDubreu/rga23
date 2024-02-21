@@ -68,17 +68,64 @@ scoreAnimaux |>
 # > 3 - Nombre important d’arbres (et / ou autres vivaces) d’espèces différentes.
 # > 4 - Nombre élevé d’arbres (et / ou autres plantes vivaces) de différentes espèces intégrées dans les terres agricoles.
 
-rga23_tape |>
+rga23_tapeAvecPresenceArbres <- rga23_tape |>
   mutate(PresenceArbre = case_when(
     PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 1 ~ "1 - Présents en bord de parcelle et dans la parcelle",
     PsceArbresHorsRente__1 == 1 ~ "2 - Présents en bord de parcelle",
     PsceArbresHorsRente__2 == 1 ~ "3 - Présents dans la parcelle",
     PsceArbresHorsRente__3 == 1 ~ "4 - Absents",
     TRUE ~ "Non concernés"
-  )) |>
-  group_by(PresenceArbre) |>
+  ))
+
+culturesArbres <- left_join(rga23_surfacesCultures, arbres) |>
+  filter(arbre == 1)
+
+aRejeter <- culturesArbres |>
+  mutate(surfaceParArbre = SurfaceCult / NbPieds) |>
+  filter(surfaceParArbre < 1)
+
+nbCulturesArbresDeclarees <- culturesArbres |>
+  group_by(interview__key) |>
+  summarize(
+    nbCulturesArbres = n(),
+    nombrePiedsConnu = all(!is.na(NbPieds)),
+    nbPiedsTotal = sum(NbPieds)
+  )
+
+jointuresArbres <- left_join(
+  left_join(
+    rga23_tapeAvecPresenceArbres |> select(interview__key, RaisonsRecensement__1, PsceArbresHorsRente__1, PsceArbresHorsRente__2, PsceArbresHorsRente__3),
+    nbCulturesArbresDeclarees,
+    by = "interview__key"
+  ),
+  rga23_prodVegetales |> select(interview__key, ModesProduction__4, SurfaceTotalProdAgri),
+  by = "interview__key"
+) |>
+  mutate(NbArbresHectares = 10000 / (SurfaceTotalProdAgri / nbPiedsTotal))
+  
+
+scoreArbres <- jointuresArbres |> mutate(score = case_when(
+  RaisonsRecensement__1 == 0 & (PsceArbresHorsRente__3 == 1 | is.na(PsceArbresHorsRente__3)) ~ 0,
+  (is.na(nbCulturesArbres) & PsceArbresHorsRente__3 == 1 & ModesProduction__4 == 0) ~ 0,
+  ((PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 0) | (PsceArbresHorsRente__1 == 0 & PsceArbresHorsRente__2 == 1)) & is.na(nbCulturesArbres) ~ 1,
+  PsceArbresHorsRente__3 == 1 & nbCulturesArbres == 1 & nombrePiedsConnu & (SurfaceTotalProdAgri / nbPiedsTotal > 3333) ~ 2,
+  TRUE ~ 5
+))
+
+scoreArbres |>
+  group_by(score) |>
   count()
 
+# mutate(score = case_when(
+#   RaisonsRecensement__1 == 0 ~ 9,
+#   (nbCultures > 3 & PratiquesCulturales__2 == 1) | ModesProduction__4 == 1 ~ 4,
+#   nbCultures == 1 ~ 0,
+#   partCulture > 80 ~ 1,
+#   nbCultures == 2 | nbCultures == 3 ~ 2,
+#   nbCultures > 3 ~ 3
+# )) |>
+#   group_by(interview__key, SurfaceTotalProdAgri, SurfaceJardins, nbCultures) |>
+#   summarize(score = min(score))
 
 # DIVERSITÉ DES ACTIVITÉS, PRODUITS ET SERVICES
 # > 0 - Une seule activité productive (par ex. vente d’une seule culture).

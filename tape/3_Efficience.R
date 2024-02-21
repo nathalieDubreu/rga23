@@ -94,3 +94,5 @@ scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
 scoreProductiviteBesoins |>
   group_by(score) |>
   count()
+
+  
