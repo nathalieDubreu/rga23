@@ -252,5 +252,6 @@ rm(
   rga23Localise,
   communes,
   iles,
-  ilesCommunesUniques
+  ilesCommunesUniques,
+  engraisEpandus
 )
