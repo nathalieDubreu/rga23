@@ -205,3 +205,32 @@ capaciteRetablissementArchipel <- rga23_tape |>
   )) |>
   groupByTotalEtPourcent(Archipel_1, `Capacité de rétablissement après les chocs ?`)
 writeCSV(capaciteRetablissementArchipel)
+
+## Activités du chef d'exploitation
+
+libelles <- c(
+  "Travail sur l'exploitation",
+  "Exploitant agricole (dans une autre exploitation)",
+  "Activité salariée",
+  "Commerçant, profession libérale",
+  "Pêche",
+  "Perliculture ou activité liée à la perle",
+  "Agro-tourisme",
+  "Artisan",
+  "Producteur de coprah / noix de coco",
+  "Retraité",
+  "Sans activité",
+  "Autre"
+)
+libellesOrdonnes <- factor(libelles, levels = libelles, ordered = TRUE)
+
+ActivitePrincipaleChefArchipel <- rga23_general |>
+  filter(!is.na(ActivitePrincipaleChef))  |>
+  mutate(ActivitePrincipaleChef = libellesOrdonnes[ActivitePrincipaleChef]) |>
+  groupByTotalEtPourcent(Archipel_1, ActivitePrincipaleChef)
+writeCSV(ActivitePrincipaleChefArchipel)
+
+variablesActivites <- paste0("ActivitesChefExploit__", 1:12)
+pourcentages <- sprintf("%.1f%%", colMeans(rga23_general[variablesActivites], na.rm = TRUE) * 100)
+pourcentagesActivites <- data.frame(Variable = libelles, Pourcentage = pourcentages)
+writeCSV(pourcentagesActivites)
