@@ -41,24 +41,25 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
       c("nbAnimauxBasseCour", "nbPoulesPondeuses", "nbTotalBovins", "nbTotalOvins", "nbTotalPorcs", "nbTotalEquides", "nbTotalCaprins"),
       ~ coalesce(., 0)
     )),
-    poidsBovins = 0.9 * ifelse(is.na(nbTotalBovins), 0, nbTotalBovins),
-    poidsOvins = 0.15 * ifelse(is.na(nbTotalOvins), 0, nbTotalOvins),
-    poidsPoules = 0.003 * ifelse(is.na(nbPoulesPondeuses), 0, nbPoulesPondeuses),
-    poidsAnimauxBasseCour = 0.003 * ifelse(is.na(nbAnimauxBasseCour), 0, nbAnimauxBasseCour),
-    poidsCaprins = 0.15 * ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins),
-    poidsEquides = 0.8 * ifelse(is.na(nbTotalEquides), 0, nbTotalEquides),
-    poidsPorcins = 0.15 * ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs),
-    poidsTotalAnimaux = rowSums(across(
-      c("poidsBovins", "poidsOvins", "poidsPoules", "poidsAnimauxBasseCour", "poidsCaprins", "poidsEquides", "poidsPorcins"),
-      ~ coalesce(., 0)
-    )),
-    partPoidsBovins = poidsBovins / poidsTotalAnimaux,
-    partPoidsOvins = poidsOvins / poidsTotalAnimaux,
-    partPoidsPoules = poidsPoules / poidsTotalAnimaux,
-    partPoidsAnimauxBasseCour = poidsAnimauxBasseCour / poidsTotalAnimaux,
-    partPoidsCaprins = poidsCaprins / poidsTotalAnimaux,
-    partPoidsEquides = poidsEquides / poidsTotalAnimaux,
-    partPoidsPorcins = poidsPorcins / poidsTotalAnimaux
+    poidsBovins = 900 * ifelse(is.na(nbTotalBovins), 0, nbTotalBovins),
+    poidsOvins = 150 * ifelse(is.na(nbTotalOvins), 0, nbTotalOvins),
+    poidsPoules = 3 * ifelse(is.na(nbPoulesPondeuses), 0, nbPoulesPondeuses),
+    poidsAnimauxBasseCour = 3 * ifelse(is.na(nbAnimauxBasseCour), 0, nbAnimauxBasseCour),
+    poidsCaprins = 150 * ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins),
+    poidsEquides = 800 * ifelse(is.na(nbTotalEquides), 0, nbTotalEquides),
+    poidsPorcins = 150 * ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs),
+    # poidsTotalAnimaux = rowSums(across(
+    #   c("poidsBovins", "poidsOvins", "poidsPoules", "poidsAnimauxBasseCour", "poidsCaprins", "poidsEquides", "poidsPorcins"),
+    #   ~ coalesce(., 0)
+    # )),
+    # partPoidsBovins = ifelse(poidsBovins == 0, 0, poidsBovins / poidsTotalAnimaux),
+    # partPoidsOvins = ifelse(poidsOvins == 0, 0, poidsOvins / poidsTotalAnimaux),
+    # partPoidsPoules = ifelse(poidsPoules == 0, 0, poidsPoules / poidsTotalAnimaux),
+    # partPoidsAnimauxBasseCour = ifelse(poidsAnimauxBasseCour == 0, 0, poidsAnimauxBasseCour / poidsTotalAnimaux),
+    # partPoidsCaprins = ifelse(poidsCaprins == 0, 0, poidsCaprins / poidsTotalAnimaux),
+    # partPoidsEquides = ifelse(poidsEquides == 0, 0, poidsEquides / poidsTotalAnimaux),
+    # partPoidsPorcins = ifelse(poidsPorcins == 0, 0, poidsPorcins / poidsTotalAnimaux),
+    poidsMax = pmax(poidsBovins, poidsOvins, poidsPoules, poidsAnimauxBasseCour, poidsCaprins, poidsEquides, poidsPorcins)
   )
 
 # AutAlimAnimauxBasseCour
@@ -120,7 +121,7 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
       (is.na(AutAlimPorcins) | AutAlimPorcins == 1) &
       (is.na(AutAlimPoules) | AutAlimPoules == 1)) &
       (PropRecyclEngraisOrga == 4) ~ 4,
-    ## Cas des élevages avec uniquement des ruminants (hors abeilles) 
+    ## Cas des élevages avec uniquement des ruminants (hors abeilles)
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 1) ~ 1,
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 2) ~ 2,
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 3) ~ 3,
@@ -130,6 +131,53 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
     (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 2) ~ 1,
     (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 3) ~ 2,
     (nbEspecesHorsAbeilles == 1 & nbPoulesPondeuses > 0 & PropRecyclEngraisOrga == 4) ~ 3,
+    ## Cas des élevages avec uniquement 5 porcins ou moins (hors abeilles)
+    (nbEspecesHorsAbeilles == 1 & nbTotalPorcs > 0 & nbTotalPorcs <= 5 & AutAlimPorcins == 6) ~ 0,
+    (nbEspecesHorsAbeilles == 1 & nbTotalPorcs > 0 & nbTotalPorcs <= 5 & (AutAlimPorcins == 4 | AutAlimPorcins == 5)) ~ 1,
+    (nbEspecesHorsAbeilles == 1 & nbTotalPorcs > 0 & nbTotalPorcs <= 5 & AutAlimPorcins == 3) ~ 2,
+    (nbEspecesHorsAbeilles == 1 & nbTotalPorcs > 0 & nbTotalPorcs <= 5 & AutAlimPorcins == 2) ~ 3,
+    (nbEspecesHorsAbeilles == 1 & nbTotalPorcs > 0 & nbTotalPorcs <= 5 & AutAlimPorcins == 1) ~ 4,
+    ## Prise en compte uniquement de l'espèce avec le poids UGB le plus élevé
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 6 | poidsAnimauxBasseCour < poidsMax) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 6 | poidsBovins < poidsMax) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 6 | poidsCaprins < poidsMax) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 6 | poidsEquides < poidsMax) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 6 | poidsOvins < poidsMax) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 6 | poidsPorcins < poidsMax) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 6 | poidsPoules < poidsMax)) &
+      PropRecyclEngraisOrga == 1 ~ 0,
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 5 | AutAlimAnimauxBasseCour == 4 | poidsAnimauxBasseCour < poidsMax) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 5 | AutAlimBovinsFourrage == 4 | poidsBovins < poidsMax) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 5 | AutAlimCaprinsFourrage == 4 | poidsCaprins < poidsMax) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 5 | AutAlimEquidesFourrages == 4 | poidsEquides < poidsMax) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 5 | AutAlimOvinsFourrage == 4 | poidsOvins < poidsMax) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 5 | AutAlimPorcins == 4 | poidsPorcins < poidsMax) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 5 | AutAlimPoules == 4 | poidsPoules < poidsMax)) &
+      (PropRecyclEngraisOrga == 1 | PropRecyclEngraisOrga == 2) ~ 1,
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 3 | poidsAnimauxBasseCour < poidsMax) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 3 | poidsBovins < poidsMax) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 3 | poidsCaprins < poidsMax) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 3 | poidsEquides < poidsMax) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 3 | poidsOvins < poidsMax) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 3 | poidsPorcins < poidsMax) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 3 | poidsPoules < poidsMax)) &
+      (PropRecyclEngraisOrga == 2 | PropRecyclEngraisOrga == 3) ~ 2,
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 2 | poidsAnimauxBasseCour < poidsMax) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 2 | poidsBovins < poidsMax) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 2 | poidsCaprins < poidsMax) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 2 | poidsEquides < poidsMax) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 2 | poidsOvins < poidsMax) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 2 | poidsPorcins < poidsMax) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 2 | poidsPoules < poidsMax)) &
+      (PropRecyclEngraisOrga == 3 | PropRecyclEngraisOrga == 4) ~ 3,
+    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 1 | poidsAnimauxBasseCour < poidsMax) &
+      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 1 | poidsBovins < poidsMax) &
+      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 1 | poidsCaprins < poidsMax) &
+      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 1 | poidsEquides < poidsMax) &
+      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 1 | poidsOvins < poidsMax) &
+      (is.na(AutAlimPorcins) | AutAlimPorcins == 1 | poidsPorcins < poidsMax) &
+      (is.na(AutAlimPoules) | AutAlimPoules == 1 | poidsPoules < poidsMax)) &
+      (PropRecyclEngraisOrga == 4) ~ 4,
     TRUE ~ 5
   ))
 
@@ -168,6 +216,38 @@ test <- scoreIntegration |>
 # > 2 - 50 pour cent du sol est recouvert de résidus ou de cultures de couverture. Certaines cultures sont tournées ou intercalées (ou un pâturage en rotation est effectué).
 # > 3 - Plus de 80 pour cent du sol est recouvert de résidus ou de cultures de couverture. Les cultures sont alternées régulièrement ou intercalées (ou le pâturage en rotation est systématique). La perturbation du sol est minimisée.
 # > 4 - Tout le sol est couvert de résidus ou de cultures de couverture. Les cultures sont tournées régulièrement et les cultures intercalaires sont courantes (ou le pâturage en rotation est systématique). Peu ou pas de perturbation du sol.
+
+jointuresSolPlantes <- left_join(
+  left_join(
+    full_join(
+      rga23_surfacesCultures |>
+        count(interview__key, name = "nbCultures"),
+      rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceFourrages, ModesProduction__4),
+      by = "interview__key"
+    ), rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__5, PratiquesCulturales__3),
+    by = "interview__key"
+  ), nbCulturesArbresDeclarees |> select(interview__key, nbCulturesArbres),
+  by = "interview__key"
+)
+
+scoreSolPlantes <- jointuresSolPlantes |>
+  mutate(score = case_when(
+    # Aucune culture
+    is.na(nbCultures) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
+    # Aucune des pratiques (1,2,5) + monoculture ou uniquement des arbres
+    PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0 & (nbCultures == 1 | nbCultures == nbCulturesArbres) ~ 1,
+    # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 0 et 50%)
+    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & totalSurfaceFourrages / SurfaceTotalProdAgri <= 0.5 & nbCultures > (nbCulturesArbres + 1) ~ 2,
+    # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
+    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & totalSurfaceFourrages / SurfaceTotalProdAgri <= 0.8 & nbCultures > (nbCulturesArbres + 1) & PratiquesCulturales__3 == 0 ~ 3,
+    # Au moins une des 2 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
+    TRUE ~ 5
+  )) |>
+  mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100)
+
+scoreSolPlantes |>
+  group_by(score) |>
+  count()
 
 # INTEGRATION AVEC LES ARBRES (AGROFORESTERIE, SILVOPASTORALISME, AGROSILVOPASTORALISME)
 # Considérez aussi les zones forestières communales.

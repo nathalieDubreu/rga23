@@ -79,22 +79,6 @@ rga23_tapeAvecPresenceArbres <- rga23_tape |>
     TRUE ~ "Non concernés"
   ))
 
-culturesArbres <- left_join(rga23_surfacesCultures, arbres, by = "culture_id") |>
-  filter(arbre == 1)
-
-aRejeter <- culturesArbres |>
-  mutate(surfaceParArbre = SurfaceCult / NbPieds) |>
-  filter(surfaceParArbre < 1)
-
-nbCulturesArbresDeclarees <- culturesArbres |>
-  group_by(interview__key) |>
-  summarize(
-    nbCulturesArbres = n(),
-    nombrePiedsConnu = all(!is.na(NbPieds)),
-    nbPiedsTotal = sum(NbPieds),
-    surfaceTotalArbres = sum(SurfaceCult)
-  )
-
 jointuresArbres <- left_join(
   left_join(
     rga23_tapeAvecPresenceArbres |> select(interview__key, RaisonsRecensement__1, PsceArbresHorsRente__1, PsceArbresHorsRente__2, PsceArbresHorsRente__3),

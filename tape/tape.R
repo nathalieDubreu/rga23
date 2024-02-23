@@ -22,6 +22,18 @@ rga23_general <- left_join(rga23_eligibles |> select(interview__key), readCSV("r
 arbres <- readInputCSV("arbres.csv") |>
   select(culture_id, arbre)
 
+culturesArbres <- left_join(rga23_surfacesCultures, arbres, by = "culture_id") |>
+  filter(arbre == 1)
+
+nbCulturesArbresDeclarees <- culturesArbres |>
+  group_by(interview__key) |>
+  summarize(
+    nbCulturesArbres = n(),
+    nombrePiedsConnu = all(!is.na(NbPieds)),
+    nbPiedsTotal = sum(NbPieds),
+    surfaceTotalArbres = sum(SurfaceCult)
+  )
+
 # Vente
 # Auto-consommation familiale.....................................1/1
 # Alimentation des animaux .......................................2/2
@@ -79,7 +91,7 @@ rga23_venteVegetales <- left_join(rga23_prodVegetales, nbCulturesParType, by = "
       ifelse(partVendueFlorale > 0, `40`, 0) +
       ifelse(partVenduePlantes > 0, `50`, 0) +
       ifelse(partVenduePepinieres > 0, `60`, 0) +
-      ifelse(partVendueFourrages > 0, `70`, 0),
+      ifelse(partVendueFourrages > 0, `70`, 0)
   ) |>
   select(interview__key, partVendueMaraic, partVendueVivri, partVendueFruit, partVenduePlantes, partVendueFlorale, partVenduePepinieres, partVendueFourrages, venteProduitsVegetaux, nbProduitsVegetauxVendus)
 
