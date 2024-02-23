@@ -1,27 +1,22 @@
-rga23_eligibles <- left_join(
- inner_join(readCSV("rga23_exploitations.csv"),
-    readCSV("rga23_general.csv") |>
-      select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
-    by = c("interview__key")
-  ),
-  inner_join(readCSV("rga23_coprahculteurs.csv"),
-    readCSV("rga23_general.csv") |>
-      select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
-    by = c("interview__key")
-  ),
-  by = c("interview__key", "id_exploitation", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
+library(tidyr)
+
+rga23_eligibles <- inner_join(readCSV("rga23_exploitations.csv"),
+  readCSV("rga23_general.csv") |>
+    select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
+  by = c("interview__key")
 ) |>
   filter(eligibilite == 1 & substring(id_exploitation, 0, 1) != "C") |>
   mutate(TypeExploitation = substring(id_exploitation, 0, 1)) |>
   select(interview__key, TypeExploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
 ## Imports des fichiers utiles
-rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"))
-rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.csv"))
-rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"))
-rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"))
-rga23_surfacesCultures <- left_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"))
-rga23_gestion <- left_join(rga23_eligibles, readCSV("rga23_gestion.csv"))
+rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"), by = "interview__key")
+rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.csv"), by = "interview__key")
+rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"), by = "interview__key")
+rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"), by = "interview__key")
+rga23_surfacesCultures <- inner_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"), by = "interview__key")
+rga23_gestion <- left_join(rga23_eligibles, readCSV("rga23_gestion.csv"), by = "interview__key")
+rga23_general <- left_join(rga23_eligibles |> select(interview__key), readCSV("rga23_general.csv"), by = "interview__key")
 
 ### arbres ou non
 arbres <- readInputCSV("arbres.csv") |>
@@ -42,7 +37,12 @@ arbres <- readInputCSV("arbres.csv") |>
 # Vente aux restaurants (hors collectifs) / hôtels................12/12
 # Sans objet (pas de production de ce type).......................13/13
 
-rga23_venteVegetales <- rga23_prodVegetales |>
+nbCulturesParType <- rga23_surfacesCultures |>
+  group_by(interview__key, TypeCulture) |>
+  summarize(nbCultures = n()) |>
+  pivot_wider(names_from = TypeCulture, values_from = nbCultures, values_fill = 0)
+
+rga23_venteVegetales <- left_join(rga23_prodVegetales, nbCulturesParType, by = "interview__key") |>
   mutate(
     partVendueMaraic = rowSums(across(
       all_of(paste0("PartComMaraic__", 5:12)),
@@ -69,12 +69,19 @@ rga23_venteVegetales <- rga23_prodVegetales |>
     venteProduitsVegetaux = ifelse(partVendueMaraic > 0, 1, 0) +
       ifelse(partVendueVivri > 0, 1, 0) +
       ifelse(partVendueFruit > 0, 1, 0) +
-      ifelse(partVenduePlantes > 0, 1, 0) +
       ifelse(partVendueFlorale > 0, 1, 0) +
+      ifelse(partVenduePlantes > 0, 1, 0) +
       ifelse(partVenduePepinieres > 0, 1, 0) +
-      ifelse(partVendueFourrages > 0, 1, 0)
+      ifelse(partVendueFourrages > 0, 1, 0),
+    nbProduitsVegetauxVendus = ifelse(partVendueMaraic > 0, `10`, 0) +
+      ifelse(partVendueVivri > 0, `20`, 0) +
+      ifelse(partVendueFruit > 0, `30`, 0) +
+      ifelse(partVendueFlorale > 0, `40`, 0) +
+      ifelse(partVenduePlantes > 0, `50`, 0) +
+      ifelse(partVenduePepinieres > 0, `60`, 0) +
+      ifelse(partVendueFourrages > 0, `70`, 0),
   ) |>
-  select(interview__key, partVendueMaraic, partVendueVivri, partVendueFruit, partVenduePlantes, partVendueFlorale, partVenduePepinieres, partVendueFourrages, venteProduitsVegetaux)
+  select(interview__key, partVendueMaraic, partVendueVivri, partVendueFruit, partVenduePlantes, partVendueFlorale, partVenduePepinieres, partVendueFourrages, venteProduitsVegetaux, nbProduitsVegetauxVendus)
 
 rga23_venteAnimales <- rga23_prodAnimales |>
   mutate(
@@ -94,8 +101,18 @@ rga23_venteAnimales <- rga23_prodAnimales |>
   ) |>
   select(interview__key, partVendueOeufs, partVendueMiel, partVendueViande, venteProduitsAnimaux)
 
-rga23_tapeAvecVentes <- left_join(left_join(rga23_tape, rga23_venteAnimales, by = c("interview__key")), rga23_venteVegetales, by = c("interview__key")) |>
-  mutate(venteProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(venteProduitsVegetaux), 0, venteProduitsVegetaux))
+rga23_tapeAvecVentes <- left_join(
+  left_join(rga23_tape,
+    rga23_venteAnimales,
+    by = c("interview__key")
+  ),
+  rga23_venteVegetales,
+  by = c("interview__key")
+) |>
+  mutate(
+    venteTypeProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(venteProduitsVegetaux), 0, venteProduitsVegetaux),
+    venteNbProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(nbProduitsVegetauxVendus), 0, nbProduitsVegetauxVendus)
+  )
 
 source("tape/1_Diversite.R")
 source("tape/2_Synergies.R")

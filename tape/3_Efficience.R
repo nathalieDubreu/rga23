@@ -84,7 +84,7 @@ scorePesticides |>
 scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
   mutate(score = case_when(
     BesoinsSatisf == 2 ~ 0,
-    (Economies == 3 & venteProduits == 0) ~ 1,
+    (Economies == 3 & venteTypeProduits == 0) ~ 1,
     Economies == 3 ~ 2,
     Economies == 2 ~ 3,
     Economies == 1 ~ 4,
