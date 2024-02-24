@@ -24,38 +24,58 @@
 ## 1 - Ruminants au moins en partie en plein air
 # => "Fourrage produit localement" (1) à cocher dans l'alimentation
 
-rga23_RuminantsPleinAir_NonCoches <- rga23 |>
+rga23 |>
   filter((nbTotalBovins > 0 & BovinsPleinAir != 2) |
     (nbTotalOvins > 0 & OvinsPleinAir != 2) |
     (nbTotalCaprins > 0 & CaprinsPleinAir != 2) |
     (nbTotalEquides > 0 & EquidesPleinAir != 2)) |>
-  filter(ComplAlimentation__1 == 0)
+  filter(ComplAlimentation__1 == 0) |>
+  count()
+
+rga23 <- rga23 |> mutate(ComplAlimentation__1 = case_when(
+  (nbTotalBovins > 0 & BovinsPleinAir != 2) |
+    (nbTotalOvins > 0 & OvinsPleinAir != 2) |
+    (nbTotalCaprins > 0 & CaprinsPleinAir != 2) |
+    (nbTotalEquides > 0 & EquidesPleinAir != 2) ~ "1",
+  TRUE ~ ComplAlimentation__1
+))
 
 ## 2 - Elevages de plus de 100 poules (non bio)
 # => "Aliments complets commercialisés importés" (3) à cocher dans l'alimentation
 
-rga23_Plus100Poules_NonCoches <- rga23 |>
-  filter(NombrePoules1 > 0 | NombrePoules3 > 0) |>
-  filter(ComplAlimentation__3 == 0)
+rga23 |>
+  filter(NombrePoules1 > 100 | NombrePoules3 > 100) |>
+  filter(ComplAlimentation__3 == 0) |>
+  count()
 
-## 3 - Elevages avec animaux qui ne consomment que
+plusDe100Poules <- (rga23$NombrePoules1 > 100 | rga23$NombrePoules3 > 100)
+
+rga23A <- rga23 |> mutate(ComplAlimentation__3 = case_when(
+  (plusDe100Poules) ~ "1",
+  TRUE ~ ComplAlimentation__3
+))
+
+## 3a - Elevages avec animaux qui ne consomment que
 # - Céréales (2)
 # - et/ou Aliments complets commercialisés importés (3)
 # - et/ou Aliments complets commercialisés locaux (4)
 # - et/ou Tourteau de coprah (5)
 # => Aucune autonomie, tout est acheté
 
+alimentsAchetesExclusivement <- (
+  (rga23$ComplAlimentation__2 == 1 |
+    rga23$ComplAlimentation__3 == 1 |
+    rga23$ComplAlimentation__4 == 1 |
+    rga23$ComplAlimentation__5 == 1) &
+    rga23$ComplAlimentation__1 == 0 &
+    rga23$ComplAlimentation__6 == 0 &
+    rga23$ComplAlimentation__7 == 0 &
+    rga23$ComplAlimentation__8 == 0 &
+    rga23$ComplAlimentation__9 == 0 &
+    rga23$ComplAlimentation__10 == 0)
+
 rga23_ElevagesNonAutonomes <- rga23 |>
-  filter((ComplAlimentation__2 == 1 |
-    ComplAlimentation__3 == 1 |
-    ComplAlimentation__4 == 1 |
-    ComplAlimentation__5 == 1) &
-    ComplAlimentation__1 == 0 &
-    ComplAlimentation__6 == 0 &
-    ComplAlimentation__7 == 0 &
-    ComplAlimentation__8 == 0 &
-    ComplAlimentation__9 == 0 &
-    ComplAlimentation__10 == 0) |>
+  filter(alimentsAchetesExclusivement) |>
   filter((!is.na(AutAlimAnimauxBasseCour) & AutAlimAnimauxBasseCour != 6) |
     (!is.na(AutAlimBovinsFourrage) & AutAlimBovinsFourrage != 6) |
     (!is.na(AutAlimCaprinsFourrage) & AutAlimCaprinsFourrage != 6) |
@@ -65,23 +85,26 @@ rga23_ElevagesNonAutonomes <- rga23 |>
     (!is.na(AutAlimPoules) & AutAlimPoules != 6)) |>
   select(interview__key, ComplAlimentation__2, ComplAlimentation__3, ComplAlimentation__4, ComplAlimentation__5, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules)
 
-## 4 - Elevages avec animaux qui ne consomment que
+## 3b - Elevages avec animaux qui ne consomment que
 # - Fourrage produit localement (1)
 # - et/ou Ecarts de tri / déchets de culture (7)
 # => Plus de 90% d'autonomie alimentaire
+
+alimentsPresentsExclusivement <- (
+  (rga23$ComplAlimentation__1 == 1 | rga23$ComplAlimentation__7 == 1) &
+    (rga23$ComplAlimentation__2 == 0 &
+      rga23$ComplAlimentation__3 == 0 &
+      rga23$ComplAlimentation__4 == 0 &
+      rga23$ComplAlimentation__5 == 0 &
+      rga23$ComplAlimentation__6 == 0 &
+      rga23$ComplAlimentation__8 == 0 &
+      rga23$ComplAlimentation__9 == 0 &
+      rga23$ComplAlimentation__10 == 0
+    )
+)
+
 rga23_ElevagesAutonomes <- rga23 |>
-  filter(
-    (ComplAlimentation__1 == 1 | ComplAlimentation__7 == 1) &
-      (ComplAlimentation__2 == 0 &
-        ComplAlimentation__3 == 0 &
-        ComplAlimentation__4 == 0 &
-        ComplAlimentation__5 == 0 &
-        ComplAlimentation__6 == 0 &
-        ComplAlimentation__8 == 0 &
-        ComplAlimentation__9 == 0 &
-        ComplAlimentation__10 == 0
-      )
-  ) |>
+  filter(alimentsPresentsExclusivement) |>
   filter((!is.na(AutAlimAnimauxBasseCour) & AutAlimAnimauxBasseCour != 1) |
     (!is.na(AutAlimBovinsFourrage) & AutAlimBovinsFourrage != 1) |
     (!is.na(AutAlimCaprinsFourrage) & AutAlimCaprinsFourrage != 1) |
@@ -90,3 +113,50 @@ rga23_ElevagesAutonomes <- rga23 |>
     (!is.na(AutAlimPorcins) & AutAlimPorcins != 1) |
     (!is.na(AutAlimPoules) & AutAlimPoules != 1)) |>
   select(interview__key, ComplAlimentation__1, ComplAlimentation__7, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules)
+
+# AutAlimAnimauxBasseCour
+# AutAlimBovinsFourrage
+# AutAlimCaprinsFourrage
+# AutAlimEquidesFourrages
+# AutAlimOvinsFourrage
+# AutAlimPorcins
+# AutAlimPoules
+
+rga23 <- rga23 |> mutate(
+  AutAlimAnimauxBasseCour = case_when(
+    !is.na(AutAlimAnimauxBasseCour) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimAnimauxBasseCour) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimAnimauxBasseCour
+  ),
+  AutAlimBovinsFourrage = case_when(
+    !is.na(AutAlimBovinsFourrage) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimBovinsFourrage) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimBovinsFourrage
+  ),
+  AutAlimCaprinsFourrage = case_when(
+    !is.na(AutAlimCaprinsFourrage) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimCaprinsFourrage) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimCaprinsFourrage
+  ),
+  AutAlimEquidesFourrages = case_when(
+    !is.na(AutAlimEquidesFourrages) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimEquidesFourrages) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimEquidesFourrages
+  ),
+  AutAlimOvinsFourrage = case_when(
+    !is.na(AutAlimOvinsFourrage) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimOvinsFourrage) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimOvinsFourrage
+  ),
+  AutAlimPorcins = case_when(
+    !is.na(AutAlimPorcins) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimPorcins) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimPorcins
+  ),
+  AutAlimPoules = case_when(
+    !is.na(AutAlimPoules) & alimentsPresentsExclusivement ~ "1",
+    !is.na(AutAlimPoules) & alimentsAchetesExclusivement ~ "6",
+    TRUE ~ AutAlimPoules
+  )
+)
+

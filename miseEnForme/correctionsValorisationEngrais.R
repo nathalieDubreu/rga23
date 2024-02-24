@@ -5,10 +5,9 @@ engraisUtilise <- rga23_engraisOrganiques |>
     aucuneValorisation = ifelse(nbEngraisValorises == 0,1,0)
   )
 
-left_join(rga23, engraisUtilise) |>
-  filter(aucuneValorisation == 1 & PropRecyclEngraisOrga != 1) |>
-  group_by(PropRecyclEngraisOrga) |>
-  count()
-# 2    74
-# 3    25
-# 4    26
+rga23B <- left_join(rga23, engraisUtilise) |>
+  mutate(PropRecyclEngraisOrga = case_when(
+    aucuneValorisation == 1 ~ "1",
+    TRUE ~ PropRecyclEngraisOrga
+  ))
+
