@@ -6,7 +6,7 @@ rga23_champ <- readCSV("rga23_gestion.csv") |>
 
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(readCSV("rga23_parcelles.csv"), rga23_champ |> select(interview__key))
-rga23_prodVegetales <- inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ |> select(interview__key))
+rga23_prodVegetales <- inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah))
 rga23_prodAnimales <- inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ |> select(interview__key, Archipel_1))
 rga23_surfacesCultures <- inner_join(readCSV("rga23_surfacesCultures.csv"), rga23_champ |> select(interview__key))
 rga23_tape <- inner_join(readCSV("rga23_tape.csv"), rga23_champ |> select(interview__key, Archipel_1))
@@ -32,7 +32,7 @@ rga23_general <- inner_join(readCSV("rga23_general.csv"), rga23_champ |> select(
     )
   )
 rga23_mainOeuvre <- inner_join(readCSV("rga23_mainOeuvre.csv"), rga23_champ |>
-  select(interview__key, Archipel_1)) |>
+  select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah)) |>
   mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
     ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
     ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +

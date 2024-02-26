@@ -1,5 +1,5 @@
 rga23_coprahculteurs <- rga23 |>
-  filter(RaisonsRecensement__3 == 1) |>
+  filter(eligibiliteCoprah == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -93,7 +93,7 @@ rga23_coprahculteurs <- rga23 |>
   rename(ProportionExploit3 = ProportionExploit23)
 
 rga23_exploitations <- rga23 |>
-  filter(RaisonsRecensement__1 == 1 | RaisonsRecensement__2 == 1) |>
+  filter(eligibilite == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -1185,8 +1185,10 @@ rga23_prodVegetales <- rga23 |>
   ))
 
 rga23_tape <- rga23 |>
+  filter(eligibilite == 1 | eligibiliteCoprah == 1) |>
   as_tibble() |>
   select(c(
+    "id_exploitation",
     "interview__key",
     "PropTravailPenibleExpl",
     "AvenirAgri",
@@ -1285,6 +1287,7 @@ rga23_tape <- rga23 |>
   ))
 
 rga23_mainOeuvre <- rga23 |>
+  filter(eligibilite == 1 | eligibiliteCoprah == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -1333,7 +1336,7 @@ rga23_gestion <- rga23 |>
   ))
 
 rga23_peche <- rga23 |>
-  filter(ActivitesChefExploit__5 == 1)  |>
+  filter(ActivitesChefExploit__5 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
