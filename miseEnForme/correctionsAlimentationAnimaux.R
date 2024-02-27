@@ -44,10 +44,8 @@ rga23 |>
   filter(ComplAlimentation__3 == 0) |>
   count()
 
-plusDe100Poules <- (rga23$NombrePoules1 > 100 | rga23$NombrePoules3 > 100)
-
-rga23A <- rga23 |> mutate(ComplAlimentation__3 = case_when(
-  (plusDe100Poules) ~ "1",
+rga23 <- rga23 |> mutate(ComplAlimentation__3 = case_when(
+  (NombrePoules1 > 100 | NombrePoules3 > 100) ~ "1",
   TRUE ~ ComplAlimentation__3
 ))
 
