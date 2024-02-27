@@ -5,8 +5,8 @@ library("knitr")
 source("fonctions.R")
 
 # TODO - mettre à jour les variables
-dossier <- "Export_02-23"
-date <- "23/02/2024"
+dossier <- "Export_02-26"
+date <- "26/02/2024"
 nbExploitations <- 7832
 
 # Mises en forme des données (à lancer dans l'ordre)
@@ -25,6 +25,7 @@ source("miseEnForme/rostersCommercialisation.R")
 source("miseEnForme/rosterCocoteraies.R")
 source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
+# source("miseEnForme/anonymisation.R")
 
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")

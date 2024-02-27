@@ -21,22 +21,18 @@
 # Aucune autonomie (tout est acheté)................6
 # Sans objet, ce type d'aliment n'est pas utilisé...7
 
-## 1 - Ruminants au moins en partie en plein air
+## 1 - Bovins et/ou caprins au moins en partie en plein air
 # => "Fourrage produit localement" (1) à cocher dans l'alimentation
 
 rga23 |>
   filter((nbTotalBovins > 0 & BovinsPleinAir != 2) |
-    (nbTotalOvins > 0 & OvinsPleinAir != 2) |
-    (nbTotalCaprins > 0 & CaprinsPleinAir != 2) |
-    (nbTotalEquides > 0 & EquidesPleinAir != 2)) |>
+    (nbTotalCaprins > 0 & CaprinsPleinAir != 2)) |>
   filter(ComplAlimentation__1 == 0) |>
   count()
 
 rga23 <- rga23 |> mutate(ComplAlimentation__1 = case_when(
   (nbTotalBovins > 0 & BovinsPleinAir != 2) |
-    (nbTotalOvins > 0 & OvinsPleinAir != 2) |
-    (nbTotalCaprins > 0 & CaprinsPleinAir != 2) |
-    (nbTotalEquides > 0 & EquidesPleinAir != 2) ~ "1",
+    (nbTotalCaprins > 0 & CaprinsPleinAir != 2) ~ "1",
   TRUE ~ ComplAlimentation__1
 ))
 
@@ -159,4 +155,3 @@ rga23 <- rga23 |> mutate(
     TRUE ~ AutAlimPoules
   )
 )
-
