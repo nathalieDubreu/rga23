@@ -168,14 +168,19 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 ## Fertilisation et protection des cultures
 
-- Part d’exploitants qui utilisent des produits phytosanitaires (par type et par archipel)
-
+- Part d’exploitants qui utilisent des produits phytosanitaires et SAU associée :
 <font color="blue">`r kable(produitsPhyto)`</font>
+
+- Part des exploitants par archipel :
+<font color="blue">`r kable(produitsPhytoArchipel)`</font>
 
 - Type de produits utilisés :
 <font color="blue">`r kable(typeProduitsPhyto)`</font>
 
-- Part d’exploitants qui utilisent des engrais (par type d’engrais et par archipel)
+- Part d’exploitants qui utilisent des engrais par archipel :
 
 Parmi les cultivateurs :
 <font color="blue">`r kable(engrais)`</font>
+
+- Type d'engrais utilisés :
+<font color="blue">`r kable(typeEngrais)`</font>

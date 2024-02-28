@@ -38,7 +38,7 @@ rga23_cocoteraies <- inner_join(
 )
 rga23_exploitations <- inner_join(
   readCSV("rga23_exploitations.csv"),
-  rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2)
+  rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2, Archipel_1)
 )
 rga23_coexploitants <- inner_join(
   readCSV("rga23_coexploitants.csv"),
