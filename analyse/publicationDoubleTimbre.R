@@ -40,6 +40,14 @@ rga23_exploitations <- inner_join(
   readCSV("rga23_exploitations.csv"),
   rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2)
 )
+rga23_coexploitants <- inner_join(
+  readCSV("rga23_coexploitants.csv"),
+  rga23_champ |> select(interview__key, Archipel_1)
+)
+rga23_moPermanenteFam <- inner_join(
+  readCSV("rga23_moPermanenteFam.csv"),
+  rga23_champ |> select(interview__key, Archipel_1)
+)
 rga23_general <- inner_join(
   readCSV("rga23_general.csv"),
   rga23_champ |> select(interview__key, Archipel_1, TypeExploitation)
