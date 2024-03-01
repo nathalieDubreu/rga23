@@ -83,3 +83,4 @@ writeCSVTraites(rga23_mainOeuvre)
 
 # Suppression du rga23_gestion
 removeCSVTraites(rga23_gestion)
+rm(rga23_gestion)
