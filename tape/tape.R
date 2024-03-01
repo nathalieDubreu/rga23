@@ -2,12 +2,11 @@ library(tidyr)
 
 rga23_eligibles <- inner_join(readCSV("rga23_exploitations.csv"),
   readCSV("rga23_general.csv") |>
-    select(interview__key, id_exploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
+    select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
   by = c("interview__key")
 ) |>
-  filter(eligibilite == 1 & substring(id_exploitation, 0, 1) != "C") |>
-  mutate(TypeExploitation = substring(id_exploitation, 0, 1)) |>
-  select(interview__key, TypeExploitation, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
+  filter(eligibilite == 1 & lettre_unite != "C") |>
+  select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
 ## Imports des fichiers utiles
 rga23_tape <- left_join(rga23_eligibles, readCSV("rga23_tape.csv"), by = "interview__key")
