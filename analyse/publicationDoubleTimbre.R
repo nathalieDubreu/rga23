@@ -17,7 +17,7 @@ rga23_parcelles <- inner_join(
 )
 rga23_prodVegetales <- inner_join(
   readCSV("rga23_prodVegetales.csv"),
-  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation)
+  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation, lettre_unite)
 )
 rga23_prodAnimales <- inner_join(
   readCSV("rga23_prodAnimales.csv"),

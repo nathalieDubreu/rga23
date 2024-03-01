@@ -5,13 +5,12 @@ date: '2024-02-01'
 output: md_document
 ---
 
-## [RGA23] Publication sous double timbre - Avril 2024 - Données en cours d'apurement au `r date`
+## [RGA23] Publication sous double timbre - Avril 2024
 
-### <font color = "red">WARNING</font>
+### <font color = "red">WARNING - NE PAS DIFFUSER</font>
 
-- Les données sont en cours d'apurement
-- Le mode de prise en compte des seuils n'est pas encore définitif (quelques ajustements à faire notamment sur les jardins océaniens et la permaculture)
-- <font color = "orange">Ces premières statistiques ont pour seule vocation de donner un ordre d'idées.</font>
+- Tous ces comptages sont encore provisoires - en cours de validation
+- Les règles de secret statistique n’ont pas été encore été contrôlées - i.e. tout ne pourra peut-être pas être diffusé (notamment par Archipel - ex : éleveurs d'ovins ?)
 
 ## Profil des exploitations agricoles polynésiennes (par archipel)
 
@@ -30,9 +29,9 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ? [Comparaison seuils 2012 et 2023](https://hackmd.io/@hXnaxghhS0iCd1Ro92vvbA/BkfujWh7a)
 
-- Nombre d'exploitations bio :
+<!-- - Nombre d'exploitations bio : -->
 
-<font color="blue">`r kable(exploitationsBio)`</font>
+<!-- <font color="blue">`r kable(exploitationsBio)`</font> -->
 
 ## Surface agricole 
 
@@ -116,11 +115,11 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 <font color="blue">`r kable(irrigation)`</font>
 
-## Elevage (par archipel, bio/non)
+## Elevage (par archipel)
 
-<font color="blue">`r kable(eleveursBio)`</font>
+<!-- <font color="blue">`r kable(eleveursBio)`</font> -->
 
-- Cheptels d’animaux
+- Cheptels d’animaux par archipel
   - Bovins
   - Ovins
   - Caprins
@@ -130,8 +129,6 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
   - Lapins élevés pour la chair
   - Abeilles
   
-<font color="blue">`r kable(cheptels)`</font>
-
 - Identification des principaux canaux de distribution et de vente des produits animaux (type de circuit) 
 
 ## Coprahculture
