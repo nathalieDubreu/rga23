@@ -94,7 +94,7 @@ tempsTravailChefArchipel <- rga23_mainOeuvre |>
   groupByTotalEtPourcent(Archipel_1, `Temps de travail du chef d'exploitation`)
 writeCSV(tempsTravailChefArchipel)
 
-formNAChefExpl <- rga23_general |>
+formNAChefExpl <- rga23_mainOeuvre |>
   filter(!is.na(FormNAChefExpl)) |>
   mutate(`Formation générale non agricole du chef d'exploitation` = case_when(
     (FormNAChefExpl == 1) ~ "1 : Aucune",
@@ -224,14 +224,14 @@ libelles <- c(
 )
 libellesOrdonnes <- factor(libelles, levels = libelles, ordered = TRUE)
 
-ActivitePrincipaleChefArchipel <- rga23_general |>
+ActivitePrincipaleChefArchipel <- rga23_mainOeuvre |>
   filter(!is.na(ActivitePrincipaleChef)) |>
   mutate(ActivitePrincipaleChef = libellesOrdonnes[ActivitePrincipaleChef]) |>
   groupByTotalEtPourcent(Archipel_1, ActivitePrincipaleChef)
 writeCSV(ActivitePrincipaleChefArchipel)
 
 variablesActivites <- paste0("ActivitesChefExploit__", 1:12)
-pourcentages <- sprintf("%.1f%%", colMeans(rga23_general[variablesActivites], na.rm = TRUE) * 100)
+pourcentages <- sprintf("%.1f%%", colMeans(rga23_mainOeuvre[variablesActivites], na.rm = TRUE) * 100)
 pourcentagesActivites <- data.frame(Variable = libelles, Pourcentage = pourcentages)
 writeCSV(pourcentagesActivites)
 
