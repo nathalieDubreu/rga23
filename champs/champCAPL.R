@@ -67,4 +67,4 @@ idExploitantsPointsCAPL <- full_join(
 # idExploitantsPointsCAPL |> filter(nombrePointsCultures >= 300) |> count()
 idExploitantsPointsCAPL |> filter(PointsCAPL >= 300) |> count()
 
-rm(eleveursPointsCAPL, cultivateursPointsCAPL, culturesChampCAPL, rga23_surfacesCultures)
+rm(eleveursPointsCAPL, cultivateursPointsCAPL, culturesChampCAPL)
