@@ -35,7 +35,14 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
     - création de 2 fichiers CSV correspondant aux rosters RosterCoExploit.tab et RosterMOPermFam.tab (avec données X) -> **rga23_coexploitants** et **rga23_moPermanenteFam**
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
 ### Au choix avant mise à disposition
+#### A - Constitution de la base stat :
+source("miseEnForme/anonymisation.R")
+source("miseEnForme/modificationsFichiersBaseStat.R")
 - `anonymisation.R` : suppression des variables d'identification des répondants et enquêteurs avant mise à disposition des fichiers pour la base de statistiques (debutCoprahculture, finCoprahculture debutLocalisation, gpsExploitation__Timestamp, AdressePhysiqueExploitation, finLocalisation AncienNom, AnciensPrenoms, AnciensTelephones, Nom, Prenoms, Telephone, Surnom, Email, AdressePhysique debutProdAnimales, finProdAnimales debutProdVegetales, finProdVegetales debutMainOeuvre, finMainOeuvre interview__id, id_enqueteur_ech, enqueteur, autre_enqueteur, sssys_irnd, has__errors, interview__status, assignment__id adresseSurfaceNonDelimitee, gps__Accuracy, gps__Altitude, gps__Latitude, gps__Longitude, gps__Timestamp)
+- `anonymisation.R` : 
+    - Récupération des variables de rga23_gestion dans le rga23_general (suppression du fichier **rga23_gestion**)
+    - Nouvelle répartition des variables entre **rga23_general** et **rga23_mainOeuvre**
+#### B - En vue de l'intégration dans le SIA
 - `integrationSIA.R` : suppression des variables relatives à la situation conjugale de l'exploitant avant mise à disposition pour intégration dans le SIA
 
 ## Champs - WIP
@@ -48,6 +55,9 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
 ## Analyse
 - `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
 - `publicationDoubleTimbre.R` : contours de la première publi(avec Rmd associé)
+
+# Analyse supplémentaire
+- `tape.R`
 
 ## Collecte
 ### Mise à jour du fichier Rmd
