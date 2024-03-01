@@ -1,4 +1,4 @@
-source("analyse/eligibles.R")
+source("suiviCollecte/eligibles.R")
 
 ## Coprahculteurs éligibles
 eligiblesCoprahculteurs <- eligiblesRGA |>

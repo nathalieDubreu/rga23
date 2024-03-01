@@ -108,3 +108,4 @@ supprimer <- producteursProprietairePlein |>
     `Producteurs en tant que Propriétaire en indivision - En %`,
     `Producteurs en tant que Exploitant - En %`
   )
+

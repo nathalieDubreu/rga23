@@ -15,8 +15,8 @@ rga23_prodVegetales <- left_join(rga23_eligibles, readCSV("rga23_prodVegetales.c
 rga23_prodAnimales <- left_join(rga23_eligibles, readCSV("rga23_prodAnimales.csv"), by = "interview__key")
 rga23_exploitations <- left_join(rga23_eligibles, readCSV("rga23_exploitations.csv"), by = "interview__key")
 rga23_surfacesCultures <- inner_join(rga23_eligibles, readCSV("rga23_surfacesCultures.csv"), by = "interview__key")
-rga23_gestion <- left_join(rga23_eligibles, readCSV("rga23_gestion.csv"), by = "interview__key")
 rga23_general <- left_join(rga23_eligibles |> select(interview__key), readCSV("rga23_general.csv"), by = "interview__key")
+rga23_mainOeuvre <- left_join(rga23_eligibles, readCSV("rga23_mainOeuvre.csv"), by = "interview__key")
 
 ### arbres ou non
 arbres <- readInputCSV("arbres.csv") |>

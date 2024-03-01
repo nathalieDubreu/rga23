@@ -1,27 +1,27 @@
 ## Chefs d'exploitations
 
-ageParArchipel <- rga23_general |>
+ageParArchipel <- rga23_mainOeuvre |>
   group_by(Archipel_1) |>
   summarize(round(mean(age, na.rm = TRUE), 2))
 writeCSV(ageParArchipel)
 
-chefsExploitClasseAge <- rga23_general |>
+chefsExploitClasseAge <- rga23_mainOeuvre |>
   filter(!is.na(age)) |>
   group_by(`Chefs d'exploitation par classe d'age`) |>
   calculPourcentage()
 writeCSV(chefsExploitClasseAge)
 
-chefsExploitClasseAgeArchipel <- rga23_general |>
+chefsExploitClasseAgeArchipel <- rga23_mainOeuvre |>
   filter(!is.na(age)) |>
   groupByTotalEtPourcent(Archipel_1, `Chefs d'exploitation par classe d'age`)
 writeCSV(chefsExploitClasseAgeArchipel)
 
-chefsExploitClasseAgeTypeExploitation <- rga23_general |>
+chefsExploitClasseAgeTypeExploitation <- rga23_mainOeuvre |>
   filter(!is.na(age)) |>
   groupByTotalEtPourcent(TypeExploitation, `Chefs d'exploitation par classe d'age`)
 writeCSV(chefsExploitClasseAgeTypeExploitation)
 
-genreChef <- rga23_general |>
+genreChef <- rga23_mainOeuvre |>
   mutate(homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1), femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
@@ -29,7 +29,7 @@ genreChef <- rga23_general |>
     TauxFemmes = round(NbFemmes / (NbHommes + NbFemmes) * 100, 1)
   )
 
-genreChefArchipel <- rga23_general |>
+genreChefArchipel <- rga23_mainOeuvre |>
   group_by(Archipel_1) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
@@ -43,7 +43,7 @@ genreChefArchipel <- rga23_general |>
   )
 writeCSV(genreChefArchipel)
 
-genreTypeExploitation <- rga23_general |>
+genreTypeExploitation <- rga23_mainOeuvre |>
   group_by(TypeExploitation) |>
   summarize(
     NbHommes = sum(homme, na.rm = TRUE),
@@ -57,7 +57,7 @@ genreTypeExploitation <- rga23_general |>
   )
 writeCSV(genreTypeExploitation)
 
-tauxFeminisationClasseAge <- rga23_general |>
+tauxFeminisationClasseAge <- rga23_mainOeuvre |>
   filter(!is.na(age)) |>
   group_by(`Chefs d'exploitation par classe d'age`) |>
   summarise(
@@ -107,7 +107,7 @@ formNAChefExpl <- rga23_general |>
   group_by(`Formation générale non agricole du chef d'exploitation`) |>
   calculPourcentage()
 
-formAgriChefExpl <- rga23_general |>
+formAgriChefExpl <- rga23_mainOeuvre |>
   filter(!is.na(FormNAChefExpl)) |>
   mutate(`Formation générale agricole du chef d'exploitation` = case_when(
     (FormAgriChefExpl == 1) ~ "1 : Aucune / Formation sur le tas",

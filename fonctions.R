@@ -1,4 +1,4 @@
-# GESTION DE FICHIERS 
+# GESTION DE FICHIERS
 
 ## Lecture
 
@@ -8,11 +8,23 @@ readCSV <- function(nomFichier, chemin = Sys.getenv("cheminAcces")) {
 }
 ### Lecture des CSV d'inputs dans le projet
 readInputCSV <- function(nomFichier) {
-  readr::read_csv2(file.path("input", nomFichier),show_col_types = FALSE)
+  readr::read_csv2(file.path("input", nomFichier), show_col_types = FALSE)
 }
 ### Lecture du fichier en paramètre (en général les .tab du dossier de données)
 readTable <- function(nomFichier, dossier, chemin = Sys.getenv("cheminAcces")) {
   readr::read_delim(file.path(chemin, dossier, nomFichier), delim = "\t", col_types = "c", guess_max = 7832)
+}
+
+## Suppression
+removeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
+  file.remove(file.path(
+    chemin,
+    paste(
+      deparse(substitute(table)),
+      ".csv",
+      sep = ""
+    )
+  ))
 }
 
 ## Ecriture
@@ -51,18 +63,18 @@ writeCSVTraites <- function(table, chemin = Sys.getenv("cheminAcces")) {
   )
 }
 
-########################"
+######################## "
 
 # STATISTIQUES
 
-## Calcul des pourcentages 
+## Calcul des pourcentages
 calculPourcentage <- function(data) {
   data |>
     summarise(count = n()) |>
     mutate(`En %` = round(count / sum(count) * 100, 1)) |>
     select(-count)
 }
-## Group by sur la colonne groupByColonne + ajout d'une ligne TOTAL et calcul des pourcentages 
+## Group by sur la colonne groupByColonne + ajout d'une ligne TOTAL et calcul des pourcentages
 groupByTotalEtPourcent <- function(data, groupByColonne, nomColonne) {
   dataGroupBy <- data |>
     group_by({{ groupByColonne }}, {{ nomColonne }}) |>

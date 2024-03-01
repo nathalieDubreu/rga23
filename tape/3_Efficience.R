@@ -42,30 +42,34 @@ alimentsPresentsExclusivement <- (
 )
 
 autonomieAlimentaire_2niveaux <- function(niveau1, niveau2) {
-  variables <- c("AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
-                 "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules")
-  
+  variables <- c(
+    "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
+    "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
+  )
+
   conditions <- lapply(variables, function(col) {
-    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep=""), ") | ", paste("rga23_prodAnimales$", col, sep=""), " == ", niveau1, " | ", paste("rga23_prodAnimales$", col, sep=""), " == ", niveau2, ")")
+    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep = ""), ") | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau1, " | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau2, ")")
   })
-  
+
   condition <- paste0("(", paste(conditions, collapse = " & "), ")")
-  
+
   return(condition)
 }
 
-autonomie_5_6_bis <- autonomieAlimentaire_2niveaux(5,6)
+autonomie_5_6_ <- autonomieAlimentaire_2niveaux(5, 6)
 
 autonomieAlimentaire <- function(niveau) {
-  variables <- c("AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
-                 "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules")
-  
+  variables <- c(
+    "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
+    "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
+  )
+
   conditions <- lapply(variables, function(col) {
-    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep=""), ") | ", paste("rga23_prodAnimales$", col, sep=""), " == ", niveau, ")")
+    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep = ""), ") | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau, ")")
   })
-  
+
   condition <- paste0("(", paste(conditions, collapse = " & "), ")")
-  
+
   return(condition)
 }
 
@@ -102,10 +106,7 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
       TRUE ~ as.numeric(NA)
     )
   ) |>
-  select(interview__key, alimentsAchetesExclusivement, alimentsPresentsExclusivement, autonomie_5_6_, autonomie_5_6_Bis, autonomie_4_, autonomie_3_)
-
-rga23_prodAnimales_intrants |> group_by(autonomie_5_6_Bis) |> count()
-
+  select(interview__key, alimentsAchetesExclusivement, alimentsPresentsExclusivement, autonomie_5_6_, autonomie_4_, autonomie_3_)
 
 ## ProvenancePlants -> autoproduits = 1 (avec PartPlantsAutoP)
 # 0 à 10% du volume utilisé.......1

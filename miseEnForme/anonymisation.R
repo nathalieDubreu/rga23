@@ -65,6 +65,9 @@ rga23_parcelles <- rga23_parcelles |>
     -gps__Timestamp
   )
 
+## Regroupement du rga23_general et du rga23_gestion
+rga23_general <- left_join(rga23_general, rga23_gestion)
+
 writeCSVTraites(rga23_coprahculteurs)
 writeCSVTraites(rga23_exploitations)
 writeCSVTraites(rga23_general)

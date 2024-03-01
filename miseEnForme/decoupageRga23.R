@@ -1,5 +1,5 @@
 rga23_coprahculteurs <- rga23 |>
-  filter(eligibiliteCoprah == 1) |>
+  filter(RaisonsRecensement__3 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -93,7 +93,7 @@ rga23_coprahculteurs <- rga23 |>
   rename(ProportionExploit3 = ProportionExploit23)
 
 rga23_exploitations <- rga23 |>
-  filter(eligibilite == 1) |>
+  filter(RaisonsRecensement__1 == 1 | RaisonsRecensement__2 == 1) |>
   as_tibble() |>
   select(c(
     "interview__key",
@@ -108,6 +108,7 @@ rga23_exploitations <- rga23 |>
     "RaisonNonProduction",
     "eligibilite",
     "AgriBio",
+    "AgriBio_DAG",
     "debutLocalisation",
     "gpsExploitation__Latitude",
     "gpsExploitation__Longitude",
@@ -116,7 +117,6 @@ rga23_exploitations <- rga23 |>
     "gpsExploitation__Timestamp",
     "NombreSites",
     "SitesCommuneAssociee",
-    "sommeSurfaces",
     "finLocalisation",
     "ArchipelExploitation",
     "IleExploitation",
@@ -400,7 +400,6 @@ rga23_prodAnimales <- rga23 |>
     "SurfacePaturageBovins",
     "PaturagePartageBovins",
     "NbBovinsLiberte",
-    "bovinsManquants",
     "AccesBatimentBovins",
     "TypeBatimentBovins__1",
     "TypeBatimentBovins__2",
@@ -555,19 +554,16 @@ rga23_prodAnimales <- rga23 |>
     "EtalonsSportsLoisirs",
     "HongresSportsLoisirs",
     "EquidesJeunesSportsLoisirs",
-    "nbEquidesSportsRepartis",
     "TotalEquidesBat",
     "JumentsPonettesBat",
     "EtalonsBat",
     "HongresBat",
     "EquidesJeunesBat",
-    "nbEquidesBatRepartis",
     "TotalAnes",
     "Anesses",
     "EtalonsAnes",
     "MalesCastresAnes",
     "EquidesJeunesAnes",
-    "nbAnesRepartis",
     "nbTotalEquides",
     "NbNaissEquides",
     "EquidesPleinAir",
@@ -679,7 +675,8 @@ rga23_prodAnimales <- rga23 |>
     "LieuVenteParti__5",
     "LieuVenteParti__6",
     "finProdAnimales"
-  ))
+  )) |>
+  select(-contains("totalComm"))
 
 rga23_prodVegetales <- rga23 |>
   filter(RaisonsRecensement__1 == 1 & eligibilite == 1) |>
@@ -688,6 +685,7 @@ rga23_prodVegetales <- rga23 |>
     "interview__key",
     "SurfaceTotalProdAgri",
     "SurfaceVegeNatur",
+    "sommeSurfaces",
     "debutProdVegetales",
     "Irrigation",
     "ModesProduction__1",
@@ -1182,13 +1180,13 @@ rga23_prodVegetales <- rga23 |>
     "ModeIrrigation__4",
     "ModeIrrigation__5",
     "finProdVegetales"
-  ))
+  )) |>
+  select(-contains("totalComm"))
 
 rga23_tape <- rga23 |>
   filter(eligibilite == 1 | eligibiliteCoprah == 1) |>
   as_tibble() |>
   select(c(
-    "id_exploitation",
     "interview__key",
     "PropTravailPenibleExpl",
     "AvenirAgri",
@@ -1318,16 +1316,9 @@ rga23_gestion <- rga23 |>
   select(c(
     "interview__key",
     "interview__id",
-    "id_exploitation",
     "id_enqueteur_ech",
     "enqueteur",
     "autre_enqueteur",
-    "statut_collecte",
-    "RaisonsRecensement__1",
-    "RaisonsRecensement__2",
-    "RaisonsRecensement__3",
-    "RaisonsRecensement__4",
-    "ActiviteEnquete",
     "sssys_irnd",
     "has__errors",
     "interview__status",

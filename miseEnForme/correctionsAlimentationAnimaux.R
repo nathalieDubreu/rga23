@@ -68,7 +68,7 @@ alimentsAchetesExclusivement <- (
     rga23$ComplAlimentation__9 == 0 &
     rga23$ComplAlimentation__10 == 0)
 
-rga23_ElevagesNonAutonomes <- rga23 |>
+rga23 |>
   filter(alimentsAchetesExclusivement) |>
   filter((!is.na(AutAlimAnimauxBasseCour) & AutAlimAnimauxBasseCour != 6) |
     (!is.na(AutAlimBovinsFourrage) & AutAlimBovinsFourrage != 6) |
@@ -77,7 +77,8 @@ rga23_ElevagesNonAutonomes <- rga23 |>
     (!is.na(AutAlimOvinsFourrage) & AutAlimOvinsFourrage != 6) |
     (!is.na(AutAlimPorcins) & AutAlimPorcins != 6) |
     (!is.na(AutAlimPoules) & AutAlimPoules != 6)) |>
-  select(interview__key, ComplAlimentation__2, ComplAlimentation__3, ComplAlimentation__4, ComplAlimentation__5, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules)
+  select(interview__key, ComplAlimentation__2, ComplAlimentation__3, ComplAlimentation__4, ComplAlimentation__5, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules)  |>
+  count()
 
 ## 3b - Elevages avec animaux qui ne consomment que
 # - Fourrage produit localement (1)
@@ -97,7 +98,7 @@ alimentsPresentsExclusivement <- (
     )
 )
 
-rga23_ElevagesAutonomes <- rga23 |>
+rga23 |>
   filter(alimentsPresentsExclusivement) |>
   filter((!is.na(AutAlimAnimauxBasseCour) & AutAlimAnimauxBasseCour != 1) |
     (!is.na(AutAlimBovinsFourrage) & AutAlimBovinsFourrage != 1) |
@@ -106,7 +107,8 @@ rga23_ElevagesAutonomes <- rga23 |>
     (!is.na(AutAlimOvinsFourrage) & AutAlimOvinsFourrage != 1) |
     (!is.na(AutAlimPorcins) & AutAlimPorcins != 1) |
     (!is.na(AutAlimPoules) & AutAlimPoules != 1)) |>
-  select(interview__key, ComplAlimentation__1, ComplAlimentation__7, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules)
+  select(interview__key, ComplAlimentation__1, ComplAlimentation__7, AutAlimAnimauxBasseCour, AutAlimBovinsFourrage, AutAlimCaprinsFourrage, AutAlimEquidesFourrages, AutAlimOvinsFourrage, AutAlimPorcins, AutAlimPoules) |>
+  count()
 
 # AutAlimAnimauxBasseCour
 # AutAlimBovinsFourrage

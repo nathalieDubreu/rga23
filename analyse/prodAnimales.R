@@ -77,7 +77,7 @@ nombreAnimauxArchipel <- rga23_prodAnimales |>
   pivot_wider(names_from = Archipel_1, values_from = "Nombre d'animaux")
 writeCSV(nombreAnimauxArchipel)
 
-nombreEleveursGenre <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, SexeChefExpl)) |>
+nombreEleveursGenre <- left_join(rga23_prodAnimales, rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
   group_by(SexeChefExpl) |>
   summarise(
     EleveursBovins = sum(PresenceAnimaux__1, na.rm = TRUE),
@@ -94,7 +94,7 @@ nombreEleveursGenre <- left_join(rga23_prodAnimales, rga23_general |> select(int
   pivot_wider(names_from = SexeChefExpl, values_from = "Nombre d'éleveurs")
 writeCSV(nombreEleveursGenre)
 
-nombreAnimauxGenre <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, SexeChefExpl)) |>
+nombreAnimauxGenre <- left_join(rga23_prodAnimales, rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
   group_by(SexeChefExpl) |>
   summarise(
     NombreBovins = sum(nbTotalBovins, na.rm = TRUE),

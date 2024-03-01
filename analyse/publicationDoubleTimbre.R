@@ -1,7 +1,7 @@
 library(tidyr)
 
 ## Restriction au champ 23 du RGA
-rga23_champ <- readCSV("rga23_gestion.csv") |>
+rga23_champ <- readCSV("rga23_general.csv") |>
   filter(indicRGA23 == 1) |>
   mutate(TypeExploitation = case_when(
     RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 0 ~ "Cultivateurs seuls",
@@ -27,7 +27,10 @@ rga23_surfacesCultures <- inner_join(
   readCSV("rga23_surfacesCultures.csv"),
   rga23_champ |> select(interview__key)
 )
-rga23_tape <- inner_join(readCSV("rga23_tape.csv"), rga23_champ |> select(interview__key, Archipel_1))
+rga23_tape <- inner_join(
+  readCSV("rga23_tape.csv"),
+  rga23_champ |> select(interview__key, Archipel_1)
+)
 rga23_coprahculteurs <- inner_join(
   readCSV("rga23_coprahculteurs.csv"),
   rga23_champ |> select(interview__key, indicRGA23_Coprah)
@@ -48,10 +51,14 @@ rga23_moPermanenteFam <- inner_join(
   readCSV("rga23_moPermanenteFam.csv"),
   rga23_champ |> select(interview__key, Archipel_1)
 )
-rga23_general <- inner_join(
-  readCSV("rga23_general.csv"),
-  rga23_champ |> select(interview__key, Archipel_1, TypeExploitation)
+rga23_mainOeuvre <- inner_join(
+  readCSV("rga23_mainOeuvre.csv"),
+  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation)
 ) |>
+  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
+    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
+    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
+    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
   mutate(
     age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)),
     homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1),
@@ -63,15 +70,6 @@ rga23_general <- inner_join(
       TRUE ~ "Non réponse"
     )
   )
-rga23_mainOeuvre <- inner_join(
-  readCSV("rga23_mainOeuvre.csv"),
-  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation)
-) |>
-  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien))
-
 
 source("analyse/exploitations.R")
 source("analyse/prodVegetalesEtSurfaces.R")

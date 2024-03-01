@@ -3,7 +3,7 @@ source("champs/champ2012.R")
 source("champs/champCAPL.R")
 
 ## Ajout d'une indicatrice dans la table RGA pour les coprahculteurs de plus de 2,7 tonnes (identifiants C et X éligibles)
-rga23_gestion <- left_join(rga23_gestion, rga23 |> select(interview__key, eligibiliteCoprah)) |>
+rga23_gestion <- left_join(rga23_gestion, rga23 |> select(interview__key, eligibiliteCoprah, id_exploitation)) |>
   mutate(indicRGA23_Coprah = case_when(
     (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") ~ 1,
     (eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X") ~ 1,
@@ -46,7 +46,7 @@ rga23_gestion <- left_join(rga23_gestion, idExploitantsDansLeChamp2012, by = c("
       TRUE ~ 0
     )
   ) |>
-  select(!ElevageValide2012  & !CultureValide2012)
+  select(!ElevageValide2012  & !CultureValide2012 & !id_exploitation)
 
 ## TODO... indicCAPL
 

@@ -50,7 +50,7 @@ rga23_prodAnimales <- rga23_prodAnimales %>%
     ~ coalesce(., 0)
   )))
 
-scoreAnimaux <- left_join(rga23_prodAnimales, rga23_gestion |> select(interview__key, indicRGA23_Elevage), by = "interview__key") |>
+scoreAnimaux <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, indicRGA23_Elevage), by = "interview__key") |>
   mutate(score = case_when(
     nbEspeces == 0 ~ 0,
     nbEspeces == 1 ~ 1,
@@ -136,7 +136,7 @@ transformationsPossibles <- paste0("TransformationPA__", 1:16)
 
 scoreActivites <- left_join(
   left_join(rga23_tapeAvecVentes,
-    rga23_general |> mutate(
+    rga23_mainOeuvre |> mutate(
       nbTransformations = rowSums(across(
         all_of(transformationsPossibles),
         ~ coalesce(., 0)

@@ -54,7 +54,9 @@ rga23 <- left_join(rga23, doublonsAPasserEnX, by=c("id_exploitation")) |>
 #   group_by(substring(id_exploitation, 0, 1)) |>
 #   count()
 
-rm(xAPasserEnC, xAPasserEnP, doublonsAPasserEnX)
+rm(xAPasserEnC, 
+   # xAPasserEnP, 
+   doublonsAPasserEnX)
 
 writeCSVTraites(rga23)
 

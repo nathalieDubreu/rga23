@@ -20,5 +20,3 @@ rm(
   donneesMO,
   rga23AvecDonneesX
 )
-
-writeCSVTraites(rga23)

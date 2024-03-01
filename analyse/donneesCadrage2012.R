@@ -1,5 +1,5 @@
 ## Restriction au champ 12 et 23 du RGA
-rga23_champ <- readCSV("rga23_gestion.csv") |>
+rga23_champ <- readCSV("rga23_general.csv") |>
   filter(indicRGA23 == 1 | indicRGA12 == 1)
 
 surfaces <- inner_join(readCSV("rga23_prodVegetales.csv"), rga23_champ, by = c("interview__key")) |>
@@ -111,12 +111,11 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
     Animaux2023 = sum(ifelse(indicRGA23 == 1, nbTotalBovins, 0), na.rm = TRUE)
   )
 
-bovinsMarquises <- inner_join(inner_join(
+bovinsMarquises <- inner_join(
   inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
     filter(PresenceAnimaux__1 == 1 & Archipel_1 == "Marquises") |>
     select(interview__key, nbTotalBovins, NbBovinsLiberte, SurfacePaturageBovins),
-  readCSV("rga23_general.csv") |> select(interview__key, Nom, Prenoms)),
-  readCSV("rga23_exploitations.csv") |> select(interview__key, RaisonSociale, IleExploitation)
+  readCSV("rga23_exploitations.csv") |> select(interview__key, IleExploitation)
 )
 
 ## Partie en divagation
@@ -141,11 +140,10 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
     Animaux2023 = sum(ifelse(indicRGA23 == 1, nbTotalCaprins, 0), na.rm = TRUE)
   )
 
-caprinsMarquises <- inner_join(inner_join(
+caprinsMarquises <- inner_join(
   inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
     filter(PresenceAnimaux__8 == 1 & Archipel_1 == "Marquises") |>
     select(interview__key, nbTotalCaprins, NbCaprinsLiberte, SurfacePaturageCaprins),
-  readCSV("rga23_general.csv") |> select(interview__key, Nom, Prenoms)),
   readCSV("rga23_exploitations.csv") |> select(interview__key, RaisonSociale, IleExploitation)
 )
 

@@ -6,7 +6,13 @@
 - `imputationVariables.R` :
     - impute les valeurs pour certaines variables *(AbeillesBio, PartPlantsAutoP, PartRevenusAgriExpl, PartSemencesAutoP, ...)* en fonction des valeurs d'autres variables
     - traitement des noms, prénoms et téléphones corrigés + passage des NSP (valeur par défaut = 1) en somme des surfaces déclarées dans le détail pour la SAU et en NA pour la surface de végétation naturelle
+- `correctionsAlimentationAnimaux.R` : Certaines questions, notamment issues de TAPE, n’ont pas été comprises par tous les exploitants et ont nécessité quelques redressements a posteriori : 
+        - Ajout de la modalité "Fourrages produit localement" dans le listing des aliments pour les animaux pour les éleveurs qui ont des caprins et/ou des bovins élevés au moins partiellement en plein air ;
+        - Ajout de la modalité "Aliments complets commercialisés importés" pour les éleveurs qui ont plus de 100 poules pondeuses de catégorie 1, 2 ou 3.
+Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée dès lors que tous les aliments sont achetés à l'extérieur de l'exploitation et a contrario la case "Plus de 90% d'autonomie" si au contraire, les seuls aliments consommés par les animaux présents sont fourrages et écarts de tris.
+- `correctionsValorisationEngrais.R` : La variable relative à la valorisation des engrais organiques  a été redressée à moins de 25% dès lors que les engrais ne sont ni donnés, ni vendus ni épandus sur les exploitations.
 - `ajoutDonneesX.R` : Récupération des données relatives aux X obtenues par téléphone (hors variables spécifiques au roster MO permanente familiale - cf. rostersMainOeuvre.R)
+- `ajoutVariableBio.R` : Ajout d'une variable reprenant les valeurs de AgriBio sauf pour les exploitants identifiés par la DAG
 - `modificationsIdDoublonsEtX.R` :
     - Passage des identifiants X en P s'ils ne font plus de coprah
     - Passage des identifiants X en C s'ils ne font que du coprah
@@ -28,6 +34,9 @@
     - ajout des données récoltées par téléphone pour les X confrontés au bug dans la table rga23_moPermanenteFam
     - création de 2 fichiers CSV correspondant aux rosters RosterCoExploit.tab et RosterMOPermFam.tab (avec données X) -> **rga23_coexploitants** et **rga23_moPermanenteFam**
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
+### Au choix avant mise à disposition
+- `anonymisation.R` : suppression des variables d'identification des répondants et enquêteurs avant mise à disposition des fichiers pour la base de statistiques (debutCoprahculture, finCoprahculture debutLocalisation, gpsExploitation__Timestamp, AdressePhysiqueExploitation, finLocalisation AncienNom, AnciensPrenoms, AnciensTelephones, Nom, Prenoms, Telephone, Surnom, Email, AdressePhysique debutProdAnimales, finProdAnimales debutProdVegetales, finProdVegetales debutMainOeuvre, finMainOeuvre interview__id, id_enqueteur_ech, enqueteur, autre_enqueteur, sssys_irnd, has__errors, interview__status, assignment__id adresseSurfaceNonDelimitee, gps__Accuracy, gps__Altitude, gps__Latitude, gps__Longitude, gps__Timestamp)
+- `integrationSIA.R` : suppression des variables relatives à la situation conjugale de l'exploitant avant mise à disposition pour intégration dans le SIA
 
 ## Champs - WIP
 - `champRGA.R` : Champ du RGA23

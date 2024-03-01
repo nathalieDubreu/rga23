@@ -1,6 +1,6 @@
 rga23_sites <- readTable("roster_accesSite.tab", dossier) |>
   filter(!(interview__key %in% interviewKeyAExclure)) |>
-  select(!interview__id) |>
+  select(-interview__id, -erreurDomicile) |>
   mutate(
     sommeSurfacesSite = as.numeric(as.character(round(sommeSurfacesSite, 0))),
     sommeSurfacesMesureesSite = as.numeric(as.character(round(sommeSurfacesMesureesSite, 0)))
