@@ -18,14 +18,13 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
     - Passage des identifiants X en C s'ils ne font que du coprah
     - Passage des identifiants C ou P en X en cas de doublons
 - `decoupageRga23.R` : découpage du fichier rga23 global en 9 sous fichiers (**rga23_coprahculteurs**, **rga23_exploitations**, **rga23_general**, rga23_mainOeuvre, rga23_prodAnimales, rga23_prodVegetales, rga23_gestion, **rga23_peche** et **rga23_tape**)
-- `ajoutIndicatrices.R` : ajout des indicatrices d'appartenance aux différents champs (inclus le lancement des programmes `champ....R`) dans **rga23_gestion**
-- `rostersCommercialisation.R` :
-    - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
-    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
 - `rostersSurfaces.R` : 
     - récupération des 7 rosters de surfaces et regroupement en 1 seul fichier
     - imputation de valeurs pour SurfaceBio et SurfaceIrriguee (en fonction de AgriBio et Irrigation)
     - création du fichier csv correspondant -> **rga23_surfacesCultures**
+- `rostersCommercialisation.R` :
+    - imputation de la valeur 100 aux variables de part si une seule modalité est sélectionnée
+    - récupération des valeurs présentes dans les rosters de commercialisation dans **rga23_prodAnimales** et **rga23_prodVegetales**
 - `rosterCocoteraies.R` :
     - imputation de la valeur 100 à PartCoco si tout le revenu est conservé
     - création du fichier CSV correspondant au roster : roster_coco_loc.tab -> **rga23_cocoteraies**
@@ -34,12 +33,11 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
     - ajout des données récoltées par téléphone pour les X confrontés au bug dans la table rga23_moPermanenteFam
     - création de 2 fichiers CSV correspondant aux rosters RosterCoExploit.tab et RosterMOPermFam.tab (avec données X) -> **rga23_coexploitants** et **rga23_moPermanenteFam**
 - `rostersParcellesEtSites.R` : création de 2 fichiers CSV correspondant aux rosters roster_accesSite.tab et roster_parcelles.tab -> **rga23_sites** et **rga23_parcelles**
+- `ajoutIndicatrices.R` : ajout des indicatrices d'appartenance aux différents champs (inclus le lancement des programmes `champ....R`) dans **rga23_gestion**
 ### Au choix avant mise à disposition
 #### A - Constitution de la base stat :
-source("miseEnForme/anonymisation.R")
-source("miseEnForme/modificationsFichiersBaseStat.R")
 - `anonymisation.R` : suppression des variables d'identification des répondants et enquêteurs avant mise à disposition des fichiers pour la base de statistiques (debutCoprahculture, finCoprahculture debutLocalisation, gpsExploitation__Timestamp, AdressePhysiqueExploitation, finLocalisation AncienNom, AnciensPrenoms, AnciensTelephones, Nom, Prenoms, Telephone, Surnom, Email, AdressePhysique debutProdAnimales, finProdAnimales debutProdVegetales, finProdVegetales debutMainOeuvre, finMainOeuvre interview__id, id_enqueteur_ech, enqueteur, autre_enqueteur, sssys_irnd, has__errors, interview__status, assignment__id adresseSurfaceNonDelimitee, gps__Accuracy, gps__Altitude, gps__Latitude, gps__Longitude, gps__Timestamp)
-- `anonymisation.R` : 
+- `modificationsFichiersBaseStat.R` : 
     - Récupération des variables de rga23_gestion dans le rga23_general (suppression du fichier **rga23_gestion**)
     - Nouvelle répartition des variables entre **rga23_general** et **rga23_mainOeuvre**
 #### B - En vue de l'intégration dans le SIA
@@ -47,14 +45,13 @@ source("miseEnForme/modificationsFichiersBaseStat.R")
 
 ## Champs - WIP
 - `champRGA.R` : Champ du RGA23
-    - TODO : traiter les jardins océaniens avec une seule culture notamment
 - `champ2012.R` : Approximation des seuils de 2012
 - `indicatricesAppartenances.R` : Ajout des indicatrices d'appartenance aux champs dans le fichier rga23.csv
-- `champCAPL.R` : Calcul des points CAPL
+- `champCAPL.R` : Calcul des points CAPL - WIP - en attente de l'arrêté
   
 ## Analyse
 - `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
-- `publicationDoubleTimbre.R` : contours de la première publi(avec Rmd associé)
+- `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
 
 # Analyse supplémentaire
 - `tape.R`

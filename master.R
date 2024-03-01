@@ -19,12 +19,12 @@ source("miseEnForme/ajoutsDonneesX.R")
 source("miseEnForme/ajoutVariableBio.R")
 source("miseEnForme/modificationsIdDoublonsEtX.R")
 source("miseEnForme/decoupageRga23.R")
-source("miseEnForme/ajoutIndicatrices.R")
 source("miseEnForme/rostersSurfaces.R")
 source("miseEnForme/rostersCommercialisation.R")
 source("miseEnForme/rosterCocoteraies.R")
 source("miseEnForme/rostersMainOeuvre.R")
 source("miseEnForme/rostersParcellesEtSites.R")
+source("miseEnForme/ajoutIndicatrices.R")
 ## Selon la destination :
 #### Pour mise à dispo générale de la base de données :
 source("miseEnForme/anonymisation.R")
