@@ -1,6 +1,6 @@
 source("champs/champRGA.R")
 source("champs/champ2012.R")
-source("champs/champCAPL.R")
+# source("champs/champCAPL.R")
 
 ## Ajout d'une indicatrice dans la table RGA pour les coprahculteurs de plus de 2,7 tonnes (identifiants C et X éligibles)
 rga23_gestion <- left_join(rga23_gestion, rga23 |> select(interview__key, eligibiliteCoprah, id_exploitation)) |>
