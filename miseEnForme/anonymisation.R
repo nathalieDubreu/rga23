@@ -12,8 +12,10 @@ rga23_exploitations <- rga23_exploitations |>
     -finLocalisation
   )
 
-rga23_general <- rga23_general |>
+rga23_general <- rga23_general |> 
+  mutate(lettre_unite = substring(id_exploitation,0,1)) |>
   select(
+    -id_exploitation,
     -AncienNom,
     -AnciensPrenoms,
     -AnciensTelephones,
@@ -65,12 +67,8 @@ rga23_parcelles <- rga23_parcelles |>
     -gps__Timestamp
   )
 
-## Regroupement du rga23_general et du rga23_gestion
-rga23_general <- left_join(rga23_general, rga23_gestion)
-
 writeCSVTraites(rga23_coprahculteurs)
 writeCSVTraites(rga23_exploitations)
-writeCSVTraites(rga23_general)
 writeCSVTraites(rga23_prodAnimales)
 writeCSVTraites(rga23_prodVegetales)
 writeCSVTraites(rga23_mainOeuvre)
