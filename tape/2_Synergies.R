@@ -185,7 +185,7 @@ scoreIntegration |>
   group_by(score) |>
   count()
 
-test <- scoreIntegration |>
+restentAClasser <- scoreIntegration |>
   filter(score == 5) |>
   select(
     interview__key,

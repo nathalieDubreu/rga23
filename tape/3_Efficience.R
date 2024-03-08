@@ -127,7 +127,11 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
 
 # TypePhytosanit -> bio = 2 avec le cas échéant : AutoProdPhytoBio (oui/non/partie)
 
-scoreIntrants <- left_join(left_join(rga23_tape, rga23_prodAnimales_intrants, by = "interview__key"),
+scoreIntrants <- left_join(
+  left_join(rga23_tape,
+    rga23_prodAnimales_intrants,
+    by = "interview__key"
+  ),
   rga23_exploitations |> select(interview__key, ProvenancePlants__1, PartPlantsAutoP, ProvenanceSemences__1, ProvenanceSemences__2, ProvenanceSemences__3, ProvenanceSemences__4, PartSemencesAutoP),
   by = "interview__key"
 ) |>
