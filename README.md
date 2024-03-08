@@ -1,6 +1,6 @@
 # rga23
 
-## Mises en forme des données (à lancer dans l'ordre) => création des 16 fichiers de données
+## Mises en forme des données (à lancer dans l'ordre) => création des fichiers de données sous format CSV
 - `interviewKeysAExclure.R` : liste des interview__key à exclure (affectations en doublon dans SuSo - pb techniques)
 - `rosterEngraisOrganiques.R` : création du fichier CSV correspondant au roster : roster_engrais_orga.tab -> **rga23_engraisOrga**
 - `imputationVariables.R` :
