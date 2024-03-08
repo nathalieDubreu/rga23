@@ -6,7 +6,7 @@
 # > 4 - Plus de 3 cultures de variétés différentes adaptées aux conditions locales et ferme spatialement diversifiée avec multi, poly- ou interculture.
 
 rga23_surfacesCultures_avecPratiques <- inner_join(
-  inner_join(
+  full_join(
     rga23_surfacesCultures,
     rga23_prodVegetales |> select(interview__key, ModesProduction__4, SurfaceTotalProdAgri, SurfaceJardins),
     by = "interview__key"

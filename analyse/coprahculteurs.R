@@ -1,6 +1,11 @@
 ## Coprahculteurs
+
+## Conservation des coprahculteurs eligibles
+
+rga23_coprahculteurs <- rga23_coprahculteurs |>
+  filter(eligibiliteCoprah == 1)
+
 coprahculteursSommes <- rga23_coprahculteurs |>
-  filter(eligibiliteCoprah == 1) |>
   summarize(
     NbCocoExploitees = sum(NbCocoteraies, na.rm = TRUE),
     NbCocoExploiteesPP = sum(nbCocoStatut1, na.rm = TRUE),
@@ -15,7 +20,6 @@ coprahculteursSommes <- rga23_coprahculteurs |>
   )
 
 partRevenusCoprah <- rga23_coprahculteurs |>
-  filter(eligibiliteCoprah == 1) |>
   mutate(`Part de la production de coprah dans les revenus annuels` = case_when(
     (PartRevenusCoprahExpl == 1) ~ "1 : 0 à 25%",
     (PartRevenusCoprahExpl == 2) ~ "2 : 25 à 50%",
@@ -108,4 +112,71 @@ supprimer <- producteursProprietairePlein |>
     `Producteurs en tant que Propriétaire en indivision - En %`,
     `Producteurs en tant que Exploitant - En %`
   )
+
+# Séchoir solaire....................................1
+rga23_coprahculteurs |>
+  group_by(SechoirCoprah__1) |>
+  calculPourcentage()
+# Séchoir thermique..................................2
+rga23_coprahculteurs |>
+  group_by(SechoirCoprah__2) |>
+  calculPourcentage()
+# Aucun séchoir (séchage sur bâche au soleil, ...)...3
+rga23_coprahculteurs |>
+  group_by(SechoirCoprah__3) |>
+  calculPourcentage()
+
+rga23_coprahculteurs |> summarize(
+  nbCocoEntretenues1 = sum(EntretienCoco1, na.rm = TRUE),
+  nbCoco1 = sum(nbCocoStatut1, na.rm = TRUE),
+  proportion1 = nbCocoEntretenues1 / nbCoco1 * 100,
+  nbCocoEntretenues2 = sum(EntretienCoco2, na.rm = TRUE),
+  nbCoco2 = sum(nbCocoStatut2, na.rm = TRUE),
+  proportion2 = nbCocoEntretenues2 / nbCoco2 * 100,
+  nbCocoEntretenues3 = sum(EntretienCoco3, na.rm = TRUE),
+  nbCoco3 = sum(nbCocoStatut3, na.rm = TRUE),
+  proportion3 = nbCocoEntretenues3 / nbCoco3 * 100,
+)
+
+# modeEntretienCocoteraieSelonStatut <- function(nbCocoEntretenues, nbCocoStatut, modeEntretien) {
+#   rga23_coprahculteurs |>
+#     filter({{ nbCocoStatut }} > 0) |>
+#     group_by({{ modeEntretien }}) |>
+#     summarize(
+#       sommeCocoEntretenues = sum({{ nbCocoEntretenues }}),
+#       sommeCocoStatut = sum({{ nbCocoStatut }})
+#     )
+# }
+# 
+# modeEntretienCocoteraieSelonStatut(EntretienCoco1, nbCocoStatut1, ModeEntretCoco1__1)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco2, nbCocoStatut2, ModeEntretCoco2__1)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco3, nbCocoStatut3, ModeEntretCoco3__1)
+# 
+# modeEntretienCocoteraieSelonStatut(EntretienCoco1, nbCocoStatut1, ModeEntretCoco1__2)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco2, nbCocoStatut2, ModeEntretCoco2__2)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco3, nbCocoStatut3, ModeEntretCoco3__2)
+# 
+# modeEntretienCocoteraieSelonStatut(EntretienCoco1, nbCocoStatut1, ModeEntretCoco1__3)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco2, nbCocoStatut2, ModeEntretCoco2__3)
+# modeEntretienCocoteraieSelonStatut(EntretienCoco3, nbCocoStatut3, ModeEntretCoco3__3)
+
+rga23_coprahculteurs |> summarize(
+  sommeCocoEntretenues_1 = sum(ifelse((!is.na(ModeEntretCoco1__1) & ModeEntretCoco1__1 == 1), EntretienCoco1, 0)+
+                                 ifelse((!is.na(ModeEntretCoco2__1) & ModeEntretCoco2__1 == 1), EntretienCoco2, 0) + 
+                                ifelse((!is.na(ModeEntretCoco3__1) & ModeEntretCoco3__1 == 1), EntretienCoco3, 0)),
+  sommeCocoEntretenues_2 = sum(ifelse((!is.na(ModeEntretCoco1__2) & ModeEntretCoco1__2 == 1), EntretienCoco1, 0)+
+                                 ifelse((!is.na(ModeEntretCoco2__2) & ModeEntretCoco2__2 == 1), EntretienCoco2, 0) + 
+                                 ifelse((!is.na(ModeEntretCoco3__2) & ModeEntretCoco3__2 == 1), EntretienCoco3, 0)),
+  sommeCocoEntretenues_3 = sum(ifelse((!is.na(ModeEntretCoco1__3) & ModeEntretCoco1__3 == 1), EntretienCoco1, 0)+
+                                 ifelse((!is.na(ModeEntretCoco2__3) & ModeEntretCoco2__3 == 1), EntretienCoco2, 0) + 
+                                 ifelse((!is.na(ModeEntretCoco3__3) & ModeEntretCoco3__3 == 1), EntretienCoco3, 0)),
+  sommeCocoEntretenues = sum(ifelse(!is.na(EntretienCoco1), EntretienCoco1, 0)+
+                               ifelse(!is.na(EntretienCoco2), EntretienCoco2, 0) + 
+                               ifelse(!is.na(EntretienCoco3), EntretienCoco3, 0)),
+  prop1 = sommeCocoEntretenues_1 / sommeCocoEntretenues * 100,
+  prop2 = sommeCocoEntretenues_2 / sommeCocoEntretenues * 100,
+  prop3 = sommeCocoEntretenues_3 / sommeCocoEntretenues * 100
+)
+
+rga23_cocoteraies |> group_by(cocoteraieBaguee) |> calculPourcentage()
 
