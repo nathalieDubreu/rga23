@@ -44,6 +44,12 @@ scoreStabiliteProduction <- rga23_tape |>
     RevenusExpl == 1 & EvolutionProduction == 2 ~ 2,
     RevenusExpl == 1 & (EvolutionProduction == 1 | EvolutionProduction == 2) ~ 3,
     RevenusExpl == 3 & EvolutionProduction == 1 ~ 4,
+    ## Si revenus en augmentation (3) et bonne capacité (3) -> 4 (indépendament de la production - prix ajustés)
+    RevenusExpl == 3 & CapaciteRecup == 3 ~ 4,
+    ## Pas de revenus -> non concernés
+    RevenusExpl == 4 ~ 9,
+    ## Pas de production -> non concernés (cas des interruptions temporaires d'activités)
+    is.na(EvolutionProduction) ~ 9,
     TRUE ~ 5
   ))
 
