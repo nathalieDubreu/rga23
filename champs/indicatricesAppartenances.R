@@ -23,3 +23,17 @@ rga23B |> group_by(CultureValideRGA,CultureValide2012) |> count()
 rmarkdown::render("champs/appartenances.Rmd",encoding="UTF-8")
 
 rm(rga23A, rga23B)
+
+# Fusion par archipel selon les différents seuils
+
+result_2023 <- inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) %>%
+  group_by(ArchipelExploitation) %>%
+  summarise(`En 2023 avec les seuils de 2023` = n())
+
+result_2012 <- inner_join(rga23, idExploitantsDansLeChamp2012, by = c("interview__key")) %>%
+  group_by(ArchipelExploitation) %>%
+  summarise(`En 2023 avec les seuils de 2012` = n())
+
+seuilsArchipel <- full_join(result_2012, result_2023, by = "ArchipelExploitation")
+
+# writeCSV(seuilsArchipel)

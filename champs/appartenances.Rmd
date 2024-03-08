@@ -11,14 +11,14 @@ output: md_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-## Rappel seuils choisis pour les exploitaitons agricoles en 2023 (DOM)
+## Seuils choisis pour le Recensement Général de l’Agriculture en 2023 (// DOM)
 
 - Superficie agricole utilisée - 1 ha
 - Terres arables - 1 ha
 - Pomme de terre et ensemble des racines et tubercules - 3000 m²
 - Canne à sucre – 3000 m²
 - Cultures fruitières (y compris bananes et ananas) - 3000 m²
-- Jardins océnaniens - 3000 m²
+- Jardins océaniens - 3000 m²
 - Ensemble PPAM, cultures ornementales et pépinières - 3000 m²
 - Légumes frais et fraises - 1000 m²
 - Serres et abris hauts - 100 m²
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 - <font color = "orange">Présence d'atelier d'engraissement (jeunes bovins, agneaux, chevreaux, porcins, lapins)</font>
 - <font color = "orange">Production hors sol - 1 tonne de champignons ou 1 tonne d'endives</font>
 
-## Rappel seuils du RGA 2012
+## Rappel seuils choisis lors du RGA de 2012
 
 - Superficie agricole utilisée - 1000 m²
 - Vanille sous abri - 500 m²
@@ -52,10 +52,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ### Seuils 2023
 
-<font color = "green">`r rga23B |> filter(ValideRGA == 1) |> count()`</font> exploitations agricoles au sens du RGA2023
+<font color = "green">`r rga23B |> filter(ValideRGA == 1) |> count()`</font> exploitations agricoles en Polynésie française au sens du RGA 2023
 
-- Eleveurs : `r rga23B |> filter(ElevageValideRGA == 1) |> count()` 
-- Cultivateurs : `r rga23B |> filter(CultureValideRGA == 1) |> count()` 
+- Eleveurs : `r rga23B |> filter(ElevageValideRGA == 1) |> count()` exploitations respectent au moins un de ces seuils
+- Cultivateurs : `r rga23B |> filter(CultureValideRGA == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
 kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
@@ -67,10 +67,10 @@ kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
 
 ### Seuils 2012
 
-<font color = "orange">`r rga23B |> filter(Valide2012 == 1) |> count()`</font> unités avec les seuils du RGA2012
+<font color = "orange">`r rga23B |> filter(Valide2012 == 1) |> count()`</font> exploitations agricoles en Polynésie française en utilisant les seuils du RGA de 2012
 
-- Eleveurs : `r rga23B |> filter(ElevageValide2012 == 1) |> count()` 
-- Cultivateurs : `r rga23B |> filter(CultureValide2012 == 1) |> count()` 
+- Eleveurs : `r rga23B |> filter(ElevageValide2012 == 1) |> count()` exploitations respectent au moins un de ces seuils
+- Cultivateurs : `r rga23B |> filter(CultureValide2012 == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
 kable(inner_join(rga23, idExploitantsDansLeChamp2012, by = c("interview__key")) |>
