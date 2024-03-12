@@ -219,11 +219,11 @@ restentAClasser <- scoreIntegration |>
 
 jointuresSolPlantes <- left_join(
   left_join(
-    full_join(
+    left_join(
+      rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceFourrages, ModesProduction__4),
       rga23_surfacesCultures |>
         count(interview__key, name = "nbCultures"),
-      rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceFourrages, ModesProduction__4),
-      by = "interview__key"
+            by = "interview__key"
     ), rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__5, PratiquesCulturales__3),
     by = "interview__key"
   ), nbCulturesArbresDeclarees |> select(interview__key, nbCulturesArbres),
