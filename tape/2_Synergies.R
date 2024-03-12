@@ -232,10 +232,10 @@ jointuresSolPlantes <- left_join(
 
 scoreSolPlantes <- jointuresSolPlantes |>
   mutate(score = case_when(
-    # Aucune culture
-    is.na(nbCultures) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
-    # Aucune des pratiques (1,2,5) + monoculture ou uniquement des arbres
-    PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0 & (nbCultures == 1 | nbCultures == nbCulturesArbres) ~ 1,
+    # Aucune culture ou monoculture
+    (is.na(nbCultures) | nbCultures == 1) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
+    # Aucune des pratiques (1,2,5) 
+    PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0  ~ 1,
     # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 0 et 50%)
     (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & totalSurfaceFourrages / SurfaceTotalProdAgri <= 0.5 & nbCultures > (nbCulturesArbres + 1) ~ 2,
     # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
