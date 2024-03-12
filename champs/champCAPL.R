@@ -57,7 +57,7 @@ cultivateursPointsCAPL <- left_join(rga23_surfacesCultures, culturesChampCAPL, b
 full_join(cultivateursPointsCAPL, cultivateursPointsCAPL, by = c("interview__key")) |> filter(nombrePointsCultures.x != nombrePointsCultures.y)
 
 # Ensemble des exploitants avec les points elevages et cultures
-idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(interview__key, lettre_unite, Archipel_1),
+idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(interview__key, indicRGA23_Coprah, Archipel_1),
   full_join(
     eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
     cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),
@@ -66,15 +66,10 @@ idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(inte
   by = c("interview__key")
 ) |>
   mutate(
-    PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) + ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures),
-    CoprahSuffisant = case_when(
-      lettre_unite == "C" ~ 1,
-      lettre_unite == "X" ~ 1,
-      TRUE ~ 0
-    )
+    PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) + ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures)
   ) |>
-  filter(CoprahSuffisant == 1 | (Archipel_1 == "Tuamotu-Gambier" & PointsCAPL >= 300) | PointsCAPL >= 400) |>
-  select(interview__key, Archipel_1, PointsCAPL, CoprahSuffisant)
+  filter(indicRGA23_Coprah == 1 | (Archipel_1 == "Tuamotu-Gambier" & PointsCAPL >= 300) | PointsCAPL >= 400) |>
+  select(interview__key, Archipel_1, PointsCAPL, indicRGA23_Coprah)
 
 writeCSV(idExploitantsPointsCAPL)
 
