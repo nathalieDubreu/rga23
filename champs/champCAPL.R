@@ -1,7 +1,5 @@
-rga23 <- readCSV("rga23.csv")
-
 # Points coté élevages
-eleveursPointsCAPL <- rga23 |>
+eleveursPointsCAPL <- readCSV("rga23_prodAnimales.csv") |>
   mutate(
     nombrePointsElevages = 20 * ifelse(is.na(NbRuchesPourProduire), 0, NbRuchesPourProduire) +
       20 * ifelse(is.na(NbRuchettes), 0, NbRuchettes) +
@@ -48,23 +46,36 @@ culturesChampCAPL <- readInputCSV("culturesChampCAPL.csv") |>
 rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 
 cultivateursPointsCAPL <- left_join(rga23_surfacesCultures, culturesChampCAPL, by = c("culture_id")) |>
-  mutate(PointsCaplBase = SurfaceCult * ifelse(is.na(PointsParUnite), 0,PointsParUnite),
-         PointsCaplSuppIrrigation = ifelse((AutreConditionNecessaire == "Irrigue*2" & !is.na(SurfaceIrrig)), SurfaceIrrig * PointsParUnite, 0),
-         PointsCapl = PointsCaplBase + ifelse(is.na(PointsCaplSuppIrrigation), 0, PointsCaplSuppIrrigation)) |>
+  mutate(
+    PointsCaplBase = SurfaceCult * ifelse(is.na(PointsParUnite), 0, PointsParUnite),
+    PointsCaplSuppIrrigation = ifelse((AutreConditionNecessaire == "Irrigue*2" & !is.na(SurfaceIrrig)), SurfaceIrrig * PointsParUnite, 0),
+    PointsCapl = PointsCaplBase + ifelse(is.na(PointsCaplSuppIrrigation), 0, PointsCaplSuppIrrigation)
+  ) |>
   group_by(interview__key) |>
   summarize(nombrePointsCultures = sum(PointsCapl, na.rm = TRUE))
 
 full_join(cultivateursPointsCAPL, cultivateursPointsCAPL, by = c("interview__key")) |> filter(nombrePointsCultures.x != nombrePointsCultures.y)
 
 # Ensemble des exploitants avec les points elevages et cultures
-idExploitantsPointsCAPL <- full_join(
-  eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
-  cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),
+idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(interview__key, lettre_unite, Archipel_1),
+  full_join(
+    eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
+    cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),
+    by = c("interview__key")
+  ),
   by = c("interview__key")
-) |> mutate(PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) + ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures))
+) |>
+  mutate(
+    PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) + ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures),
+    CoprahSuffisant = case_when(
+      lettre_unite == "C" ~ 1,
+      lettre_unite == "X" ~ 1,
+      TRUE ~ 0
+    )
+  ) |>
+  filter(CoprahSuffisant == 1 | (Archipel_1 == "Tuamotu-Gambier" & PointsCAPL >= 300) | PointsCAPL >= 400) |>
+  select(interview__key, Archipel_1, PointsCAPL, CoprahSuffisant)
 
-# idExploitantsPointsCAPL |> filter(nombrePointsElevages >= 300) |> count()
-# idExploitantsPointsCAPL |> filter(nombrePointsCultures >= 300) |> count()
-idExploitantsPointsCAPL |> filter(PointsCAPL >= 300) |> count()
+writeCSV(idExploitantsPointsCAPL)
 
 rm(eleveursPointsCAPL, cultivateursPointsCAPL, culturesChampCAPL)
