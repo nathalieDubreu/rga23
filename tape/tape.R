@@ -1,11 +1,14 @@
 library(tidyr)
 
-rga23_eligibles <- inner_join(readCSV("rga23_exploitations.csv"),
+# Restriction aux exploitations respectant les critères
+source("champs/champCAPL.R")
+
+rga23_eligibles <- inner_join(idExploitantsPointsCAPL,
   readCSV("rga23_general.csv") |>
     select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
   by = c("interview__key")
 ) |>
-  filter(eligibilite == 1 & lettre_unite != "C") |>
+  filter(lettre_unite != "C") |>
   select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
 ## Imports des fichiers utiles
