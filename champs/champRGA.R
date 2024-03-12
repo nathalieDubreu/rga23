@@ -1,7 +1,5 @@
-rga23 <- readCSV("rga23.csv")
-
 # Critères éleveurs
-eleveursChampRGA <- rga23 |>
+eleveursChampRGA <- readCSV("rga23_prodAnimales.csv") |>
   filter(
     (
       # 10	• 2 bovins de plus de 2 ans (y compris vaches)
@@ -43,13 +41,12 @@ eleveursChampRGA <- rga23 |>
 
 # Critères cultivateurs + cas des jardins océaniens au sens de permaculture avec plus de 1000m² de maraichage
 
-cultivateursChampRGA1 <- rga23 |>
+cultivateursChampRGA1 <- readCSV("rga23_prodVegetales.csv") |>
   mutate(nbTypesCultures = CultPresentesJardins__10 +
            CultPresentesJardins__20 +
            CultPresentesJardins__30 +
            CultPresentesJardins__40 +
            CultPresentesJardins__50 +
-           CultPresentesJardins__60 +
            CultPresentesJardins__70 +
            CultPresentesJardins__80) |>
   filter(

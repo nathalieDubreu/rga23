@@ -1,7 +1,5 @@
-rga23 <- readCSV("rga23.csv")
-
 # Critères éleveurs
-eleveursChamp2012 <- rga23 |>
+eleveursChamp2012 <-  readCSV("rga23_prodAnimales.csv") |>
   filter(
     (
       #  • Autres volailles : plus de 50 animaux de plus de 30 jours.
@@ -66,7 +64,7 @@ eleveursChamp2012 <- rga23 |>
 
 # Critères cultivateurs
 
-cultivateursChamp2012_1 <- rga23 |>
+cultivateursChamp2012_1 <-  readCSV("rga23_prodVegetales.csv")  |>
   filter(
     # Superficie agricole utilisée > 0,1 ha
     SurfaceTotalProdAgri >= 1000 |

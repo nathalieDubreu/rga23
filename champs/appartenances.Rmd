@@ -46,7 +46,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 - Ruches : plus de 20 ruches.
 - Lapins : plus de 20 lapins <font color = "orange">de plus de 30 jours</font>
 
-## `r rga23B |> filter((eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") |    (eligibilite == 1 & (substring(id_exploitation, 0, 1) == "P" | substring(id_exploitation, 0, 1) == "M")) |    ((eligibilite == 1 | eligibiliteCoprah == 1) & substring(id_exploitation, 0, 1) == "X")) |> count()` questionnaires complets
+## `r rga23B |> filter((eligibiliteCoprah == 1 & lettre_unite == "C") |    (eligibilite == 1 & (lettre_unite == "P" | lettre_unite == "M")) |    ((eligibilite == 1 | eligibiliteCoprah == 1) & lettre_unite == "X")) |> count()` questionnaires complets
 
 <font color = "red">**Données brutes - collecte encore en cours**</font>
 
@@ -58,12 +58,12 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 - Cultivateurs : `r rga23B |> filter(CultureValideRGA == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
-kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
+kable(inner_join(rga23B, idExploitantsDansLeChamp, by = c("interview__key")) |>
   group_by(ArchipelExploitation) |>
   count())
 ```
 
-[+ `r rga23B |> filter((is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "C") | (is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & substring(id_exploitation, 0, 1) == "X")) |> count()` unités qui respectent **uniquement** le seuil de 2,7 tonnes de coprah]
+[+ `r rga23B |> filter((is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & lettre_unite == "C") | (is.na(ElevageValideRGA) & is.na(CultureValideRGA) & eligibiliteCoprah == 1 & lettre_unite == "X")) |> count()` unités qui respectent **uniquement** le seuil de 2,7 tonnes de coprah]
 
 ### Seuils 2012
 
@@ -73,7 +73,7 @@ kable(inner_join(rga23, idExploitantsDansLeChamp, by = c("interview__key")) |>
 - Cultivateurs : `r rga23B |> filter(CultureValide2012 == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
-kable(inner_join(rga23, idExploitantsDansLeChamp2012, by = c("interview__key")) |>
+kable(inner_join(rga23B, idExploitantsDansLeChamp2012, by = c("interview__key")) |>
   group_by(ArchipelExploitation) |>
   count())
 ```
