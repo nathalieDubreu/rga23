@@ -163,3 +163,28 @@ scoreActivites <- left_join(
 scoreActivites |>
   group_by(score) |>
   count()
+
+
+## Bilan des classements 
+
+scoresDiversite <- full_join(
+  scoreCultures |>
+    group_by(score) |>
+    summarize(Diversite_1_Culture = n()),
+  scoreAnimaux |>
+    group_by(score) |>
+    summarize(Diversite_2_Animaux = n()),
+  by = c("score")
+) |>
+  full_join(
+    scoreArbres |>
+      group_by(score) |>
+      summarize(Diversite_3_Arbres = n()),
+    by = c("score")
+  ) |>
+  full_join(
+    scoreActivites |>
+      group_by(score) |>
+      summarize(Diversite_4_Activite = n()),
+    by = c("score")
+  )
