@@ -1,42 +1,43 @@
 # Points coté élevages
 eleveursPointsCAPL <- readCSV("rga23_prodAnimales.csv") |>
   mutate(
-    nombrePointsElevages = 20 * ifelse(is.na(NbRuchesPourProduire), 0, NbRuchesPourProduire) +
-      20 * ifelse(is.na(NbRuchettes), 0, NbRuchettes) +
-      35 * ifelse(is.na(NbJeunesEngrLait), 0, NbJeunesEngrLait) +
-      35 * ifelse(is.na(NbJeunesEngrViande), 0, NbJeunesEngrViande) +
-      35 * ifelse(is.na(NbTaureauxLait), 0, NbTaureauxLait) +
-      35 * ifelse(is.na(NbTaureauxViande), 0, NbTaureauxViande) +
-      100 * ifelse(is.na(NbVachesLait), 0, NbVachesLait) +
-      40 * ifelse(is.na(NbVachesViande), 0, NbVachesViande) +
-      35 * ifelse(is.na(NbBoucs), 0, NbBoucs) +
-      ifelse(ChevresLait == 1, 50 * NbChevres, 10 * NbChevres) +
-      35 * ifelse(is.na(EquidesJeunesBat), 0, EquidesJeunesBat) +
-      35 * ifelse(is.na(EquidesJeunesSportsLoisirs), 0, EquidesJeunesSportsLoisirs) +
-      100 * ifelse(is.na(EtalonsBat), 0, EtalonsBat) +
-      100 * ifelse(is.na(EtalonsSportsLoisirs), 0, EtalonsSportsLoisirs) +
-      50 * ifelse(is.na(HongresBat), 0, HongresBat) +
-      50 * ifelse(is.na(HongresSportsLoisirs), 0, HongresSportsLoisirs) +
-      100 * ifelse(is.na(JumentsPonettesBat), 0, JumentsPonettesBat) +
-      100 * ifelse(is.na(JumentsPonettesSportsLoisirs), 0, JumentsPonettesSportsLoisirs) +
-      20 * ifelse(is.na(NbLapinesMeres), 0, NbLapinesMeres) +
-      5 * ifelse(is.na(NbLapinsSevresEngrais), 0, NbLapinsSevresEngrais) +
-      35 * ifelse(is.na(NbBeliers), 0, NbBeliers) +
-      10 * ifelse(is.na(NbBrebis), 0, NbBrebis) +
-      35 * ifelse(is.na(NbPorcsEngraissement), 0, NbPorcsEngraissement) +
-      100 * ifelse(is.na(NbTruiesGestVides), 0, NbTruiesGestVides) +
-      100 * ifelse(is.na(NbTruiesMaternite), 0, NbTruiesMaternite) +
-      35 * ifelse(is.na(NbVerrats), 0, NbVerrats) +
-      1 * ifelse(is.na(NbAutresVolailles), 0, NbAutresVolailles) +
-      1 * ifelse(is.na(NbCailles), 0, NbCailles) +
-      3 * ifelse(is.na(NbCanards), 0, NbCanards) +
-      1 * ifelse(is.na(NbDindesDindons), 0, NbDindesDindons) +
-      1 * ifelse(is.na(NbOies), 0, NbOies) +
-      1 * ifelse(is.na(NbPintades), 0, NbPintades) +
-      3 * ifelse(is.na(NbPouletsChairCoqs), 0, NbPouletsChairCoqs) +
-      2 * ifelse(is.na(NombrePoules0), 0, NombrePoules0) +
-      2 * ifelse(is.na(NombrePoules1), 0, NombrePoules1) +
-      2 * ifelse(is.na(NombrePoules3), 0, NombrePoules3)
+    nombrePointsElevages =
+      20 * replace_na(NbRuchesPourProduire, 0) +
+        20 * replace_na(NbRuchettes, 0) +
+        35 * replace_na(NbJeunesEngrLait, 0) +
+        35 * replace_na(NbJeunesEngrViande, 0) +
+        35 * replace_na(NbTaureauxLait, 0) +
+        35 * replace_na(NbTaureauxViande, 0) +
+        100 * replace_na(NbVachesLait, 0) +
+        40 * replace_na(NbVachesViande, 0) +
+        35 * replace_na(NbBoucs, 0) +
+        ifelse(is.na(ChevresLait), 0, ifelse(ChevresLait == 1, 50 * NbChevres, 10 * NbChevres)) +
+        35 * replace_na(EquidesJeunesBat, 0) +
+        35 * replace_na(EquidesJeunesSportsLoisirs, 0) +
+        100 * replace_na(EtalonsBat, 0) +
+        100 * replace_na(EtalonsSportsLoisirs, 0) +
+        50 * replace_na(HongresBat, 0) +
+        50 * replace_na(HongresSportsLoisirs, 0) +
+        100 * replace_na(JumentsPonettesBat, 0) +
+        100 * replace_na(JumentsPonettesSportsLoisirs, 0) +
+        20 * replace_na(NbLapinesMeres, 0) +
+        5 * replace_na(NbLapinsSevresEngrais, 0) +
+        35 * replace_na(NbBeliers, 0) +
+        10 * replace_na(NbBrebis, 0) +
+        35 * replace_na(NbPorcsEngraissement, 0) +
+        100 * replace_na(NbTruiesGestVides, 0) +
+        100 * replace_na(NbTruiesMaternite, 0) +
+        35 * replace_na(NbVerrats, 0) +
+        1 * replace_na(NbAutresVolailles, 0) +
+        1 * replace_na(NbCailles, 0) +
+        3 * replace_na(NbCanards, 0) +
+        1 * replace_na(NbDindesDindons, 0) +
+        1 * replace_na(NbOies, 0) +
+        1 * replace_na(NbPintades, 0) +
+        3 * replace_na(NbPouletsChairCoqs, 0) +
+        2 * replace_na(NombrePoules0, 0) +
+        2 * replace_na(NombrePoules1, 0) +
+        2 * replace_na(NombrePoules3, 0)
   )
 
 # Points coté cultures
@@ -54,21 +55,30 @@ cultivateursPointsCAPL <- left_join(rga23_surfacesCultures, culturesChampCAPL, b
   group_by(interview__key) |>
   summarize(nombrePointsCultures = sum(PointsCapl, na.rm = TRUE))
 
-full_join(cultivateursPointsCAPL, cultivateursPointsCAPL, by = c("interview__key")) |> filter(nombrePointsCultures.x != nombrePointsCultures.y)
+# Points jardins océaniens
+## Comme les vergers i.e. 0.1 point par m² si non irrigué et 0.2 si irrigué
+cultivateursPointsCAPLJardins <- readCSV("rga23_prodVegetales.csv") |>
+  mutate(nombrePointsJardinsOceaniens = 0.1 * ifelse(is.na(SurfaceJardins), 0, SurfaceJardins)
+    + 0.1 * ifelse(is.na(SurfaceIrrigJardins), 0, SurfaceIrrigJardins))
+
+tousTypesPoints <- full_join(
+  eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
+  cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),
+  by = c("interview__key")
+) |> full_join(cultivateursPointsCAPLJardins, by = c("interview__key"))
 
 # Ensemble des exploitants avec les points elevages et cultures
 idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(interview__key, indicRGA23_Coprah, Archipel_1),
-  full_join(
-    eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
-    cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),
-    by = c("interview__key")
-  ),
+  tousTypesPoints,
   by = c("interview__key")
 ) |>
   mutate(
-    PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) + ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures)
+    PointsCAPL = ifelse(is.na(nombrePointsElevages), 0, nombrePointsElevages) +
+      ifelse(is.na(nombrePointsCultures), 0, nombrePointsCultures) +
+      ifelse(is.na(nombrePointsJardinsOceaniens), 0, nombrePointsJardinsOceaniens)
   ) |>
-  filter(indicRGA23_Coprah == 1 | (Archipel_1 == "Tuamotu-Gambier" & PointsCAPL >= 300) | PointsCAPL >= 400) |>
+  filter(indicRGA23_Coprah == 1 |
+    PointsCAPL >= 400) |>
   select(interview__key, Archipel_1, PointsCAPL, indicRGA23_Coprah)
 
 writeCSV(idExploitantsPointsCAPL)
