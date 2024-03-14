@@ -3,40 +3,40 @@ eleveursChampRGA <- readCSV("rga23_prodAnimales.csv") |>
   filter(
     (
       # 10	• 2 bovins de plus de 2 ans (y compris vaches)
-      ifelse(is.na(NbAutresBovinsLait), 0, NbAutresBovinsLait) +
-        ifelse(is.na(NbAutresBovinsViande), 0, NbAutresBovinsViande) +
-        ifelse(is.na(NbGenissesLait), 0, NbGenissesLait) +
-        ifelse(is.na(NbGenissesViande), 0, NbGenissesViande) +
-        ifelse(is.na(NbTaureauxLait), 0, NbTaureauxLait) +
-        ifelse(is.na(NbTaureauxViande), 0, NbTaureauxViande) +
-        ifelse(is.na(NbVachesLait), 0, NbVachesLait) +
-        ifelse(is.na(NbVachesViande), 0, NbVachesViande) >= 2) |
+      replace_na(NbAutresBovinsLait, 0) +
+        replace_na(NbAutresBovinsViande, 0) +
+        replace_na(NbGenissesLait, 0) +
+        replace_na(NbGenissesViande, 0) +
+        replace_na(NbTaureauxLait, 0) +
+        replace_na(NbTaureauxViande, 0) +
+        replace_na(NbVachesLait, 0) +
+        replace_na(NbVachesViande, 0) >= 2) |
       (
         # 11	• 6 brebis ou chèvres
-        ifelse(is.na(NbBrebis), 0, NbBrebis) +
-          ifelse(is.na(NbChevres), 0, NbChevres) >= 6) |
+        replace_na(NbBrebis, 0) +
+          replace_na(NbChevres, 0) >= 6) |
       (
         # 12	• 1 truie mère
-        ifelse(is.na(NbTruiesMaternite), 0, NbTruiesMaternite) +
-          ifelse(is.na(NbTruiesGestVides), 0, NbTruiesGestVides) >= 1) |
+        replace_na(NbTruiesMaternite, 0) +
+          replace_na(NbTruiesGestVides, 0) >= 1) |
       (
         # 13	• 10 lapines mères
-        ifelse(is.na(NbLapinesMeres), 0, NbLapinesMeres) >= 10) |
+        replace_na(NbLapinesMeres, 0) >= 10) |
       (
         # 14	• 200 poulets
-        ifelse(is.na(NbPouletsChairCoqs), 0, NbPouletsChairCoqs) >= 200) |
+        replace_na(NbPouletsChairCoqs, 0) >= 200) |
       (
         # 15	• 100 poules pondeuses
-        ifelse(is.na(NombrePoules0), 0, NombrePoules0) +
-          ifelse(is.na(NombrePoules1), 0, NombrePoules1) +
-          ifelse(is.na(NombrePoules3), 0, NombrePoules3) >= 100) |
+        replace_na(NombrePoules0, 0) +
+          replace_na(NombrePoules1, 0) +
+          replace_na(NombrePoules3, 0) >= 100) |
       (
         # 16	• 30 ruches
-        ifelse(is.na(NbRuchesPourProduire), 0, NbRuchesPourProduire) +
-          ifelse(is.na(NbRuchettes), 0, NbRuchettes) >= 30) |
+        replace_na(NbRuchesPourProduire, 0) +
+          replace_na(NbRuchettes, 0) >= 30) |
       (
         # 17	• 4 naissances d'équidés
-        ifelse(is.na(NbNaissEquides), 0, NbNaissEquides) >= 4)
+        replace_na(NbNaissEquides, 0) >= 4)
   )
 
 # Critères cultivateurs + cas des jardins océaniens au sens de permaculture avec plus de 1000m² de maraichage
@@ -98,4 +98,3 @@ idExploitantsDansLeChamp <- full_join(
 )
 
 rm(cultivateursChampRGA1, cultivateursChampRGA2, culturesChampRGA, idCultivateursChampRGA, eleveursChampRGA)
-

@@ -1,70 +1,71 @@
 # Critères éleveurs
-eleveursChamp2012 <-  readCSV("rga23_prodAnimales.csv") |>
+eleveursChamp2012 <- readCSV("rga23_prodAnimales.csv") |>
   filter(
     (
       #  • Autres volailles : plus de 50 animaux de plus de 30 jours.
-      ifelse(is.na(NbAutresVolailles), 0, NbAutresVolailles) +
-        ifelse(is.na(NbCailles), 0, NbCailles) +
-        ifelse(is.na(NbCanards), 0, NbCanards) +
-        ifelse(is.na(NbDindesDindons), 0, NbDindesDindons) +
-        ifelse(is.na(NbOies), 0, NbOies) +
-        ifelse(is.na(NbPintades), 0, NbPintades) +
-        ifelse(is.na(NbPoulettes), 0, NbPoulettes) > 10) |
+      replace_na(NbAutresVolailles, 0) +
+        replace_na(NbCailles, 0) +
+        replace_na(NbCanards, 0) +
+        replace_na(NbDindesDindons, 0) +
+        replace_na(NbOies, 0) +
+        replace_na(NbPintades, 0) +
+        replace_na(NbPoulettes, 0) > 10) |
       (
         # • Bovins : plus de 10 animaux de plus de 30 jours.
-        ifelse(is.na(NbAutresBovinsLait), 0, NbAutresBovinsLait) +
-          ifelse(is.na(NbAutresBovinsViande), 0, NbAutresBovinsViande) +
-          ifelse(is.na(NbGenissesLait), 0, NbGenissesLait) +
-          ifelse(is.na(NbGenissesViande), 0, NbGenissesViande) +
-          ifelse(is.na(NbTaureauxLait), 0, NbTaureauxLait) +
-          ifelse(is.na(NbTaureauxViande), 0, NbTaureauxViande) +
-          ifelse(is.na(NbVachesLait), 0, NbVachesLait) +
-          ifelse(is.na(NbVachesViande), 0, NbVachesViande) +
-          ifelse(is.na(NbJeunesEngrLait), 0, NbJeunesEngrLait) +
-          ifelse(is.na(NbJeunesEngrViande), 0, NbJeunesEngrViande) > 10) |
+        replace_na(NbAutresBovinsLait, 0) +
+          replace_na(NbAutresBovinsViande, 0) +
+          replace_na(NbGenissesLait, 0) +
+          replace_na(NbGenissesViande, 0) +
+          replace_na(NbTaureauxLait, 0) +
+          replace_na(NbTaureauxViande, 0) +
+          replace_na(NbVachesLait, 0) +
+          replace_na(NbVachesViande, 0) +
+          replace_na(NbJeunesEngrLait, 0) +
+          replace_na(NbJeunesEngrViande, 0) > 10) |
       (
         # • Caprins : plus de 10 animaux de plus de 30 jours.
-        ifelse(is.na(NbChevres), 0, NbChevres) +
-          ifelse(is.na(NbChevrettes), 0, NbChevrettes) +
-          ifelse(is.na(NbCabris), 0, NbCabris) +
-          ifelse(is.na(NbBoucs), 0, NbBoucs) >= 10) |
+        replace_na(NbChevres, 0) +
+          replace_na(NbChevrettes, 0) +
+          replace_na(NbCabris, 0) +
+          replace_na(NbBoucs, 0) >= 10) |
       (
         # • Porcins : plus de 10 animaux de plus de 30Kg.
-        ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs) -
-          ifelse(is.na(NbPorceletsNonSevres), 0, NbPorceletsNonSevres) > 10) |
+        replace_na(nbTotalPorcs, 0) -
+          replace_na(NbPorceletsNonSevres, 0) > 10) |
       (
         # • Ovins : plus de 10 animaux de plus de 30 jours.
-        ifelse(is.na(NbBrebis), 0, NbBrebis) +
-          ifelse(is.na(NbBeliers), 0, NbBeliers) +
-          ifelse(is.na(NbAgnelles), 0, NbAgnelles) > 10) |
+        replace_na(NbBrebis, 0) +
+          replace_na(NbBeliers, 0) +
+          replace_na(NbAgnelles, 0) > 10) |
       (
         # • Lapins : plus de 20 lapins de plus de 30 jours.
-        ifelse(is.na(NbLapinesFutures), 0, NbLapinesFutures) +
-          ifelse(is.na(NbLapinesMeres), 0, NbLapinesMeres) +
-          ifelse(is.na(NbLapinsReprod), 0, NbLapinsReprod) +
-          ifelse(is.na(NbLapinsSevresEngrais), 0, NbLapinsSevresEngrais) > 20) |
+        replace_na(NbLapinesFutures, 0) +
+          replace_na(NbLapinesMeres, 0) +
+          replace_na(NbLapinsReprod, 0) +
+          replace_na(NbLapinsSevresEngrais, 0) > 20) |
       (
         # • Poulets de chair : plus de 100 animaux de plus de 30 jours.
-        ifelse(is.na(NbPouletsChairCoqs), 0, NbPouletsChairCoqs) > 100) |
+        replace_na(NbPouletsChairCoqs, 0) > 100) |
       (
         # • Poules pondeuses : plus de 100 animaux de plus de 30 jours.
-        ifelse(is.na(NombrePoules0), 0, NombrePoules0) +
-          ifelse(is.na(NombrePoules1), 0, NombrePoules1) +
-          ifelse(is.na(NombrePoules3), 0, NombrePoules3) > 100) |
+        replace_na(NombrePoules0, 0) +
+          replace_na(NombrePoules1, 0) +
+          replace_na(NombrePoules3, 0) > 100) |
       (
         # • Ruches : plus de 20 ruches.
-        ifelse(is.na(NbRuchesPourProduire), 0, NbRuchesPourProduire) +
-          ifelse(is.na(NbRuchettes), 0, NbRuchettes) > 20) |
+        replace_na(NbRuchesPourProduire, 0) +
+          replace_na(NbRuchettes, 0) > 20) |
       (
         # Equins : plus de 10 animaux de plus de 30 jours.
-        ifelse(is.na(TotalEquidesSportLoisirs), 0, TotalEquidesSportLoisirs) +
-          ifelse(is.na(TotalEquidesBat), 0, TotalEquidesBat) +
-          ifelse(is.na(TotalAnes), 0, TotalAnes) > 10)
+        replace_na(TotalEquidesSportLoisirs, 0) +
+          replace_na(TotalEquidesBat, 0) +
+          replace_na(TotalAnes, 0) > 10)
   )
+
 
 # Critères cultivateurs
 
-cultivateursChamp2012_1 <-  readCSV("rga23_prodVegetales.csv")  |>
+cultivateursChamp2012_1 <- readCSV("rga23_prodVegetales.csv") |>
   filter(
     # Superficie agricole utilisée > 0,1 ha
     SurfaceTotalProdAgri >= 1000 |
