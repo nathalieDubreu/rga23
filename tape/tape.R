@@ -8,7 +8,7 @@ rga23_eligibles <- inner_join(idExploitantsPointsCAPL,
     select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
   by = c("interview__key")
 ) |>
-  filter(lettre_unite != "C") |>
+  filter(PointsCAPL >= 400) |>
   select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
 ## Imports des fichiers utiles

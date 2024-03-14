@@ -231,19 +231,19 @@ jointuresSolPlantes <- left_join(
 )
 
 scoreSolPlantes <- jointuresSolPlantes |>
+  mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100) |>
   mutate(score = case_when(
     # Aucune culture ou monoculture
     (is.na(nbCultures) | nbCultures == 1) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
     # Aucune des pratiques (1,2,5) 
     PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0  ~ 1,
     # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 0 et 50%)
-    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & totalSurfaceFourrages / SurfaceTotalProdAgri <= 0.5 & nbCultures > (nbCulturesArbres + 1) ~ 2,
+    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & (is.na(totalSurfaceFourrages) | partPaturage <= 50) & nbCultures > (nbCulturesArbres + 1) ~ 2,
     # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
-    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & totalSurfaceFourrages / SurfaceTotalProdAgri <= 0.8 & nbCultures > (nbCulturesArbres + 1) & PratiquesCulturales__3 == 0 ~ 3,
+    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & partPaturage <= 80 & nbCultures > (nbCulturesArbres + 1) & PratiquesCulturales__3 == 0 ~ 3,
     # Au moins une des 2 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
     TRUE ~ 5
-  )) |>
-  mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100)
+  )) 
 
 scoreSolPlantes |>
   group_by(score) |>
