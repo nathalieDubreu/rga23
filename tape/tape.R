@@ -1,5 +1,3 @@
-library(tidyr)
-
 # Restriction aux exploitations respectant les critères
 source("champs/champCAPL.R")
 
