@@ -9,7 +9,7 @@ eleveursChamp2012 <- readCSV("rga23_prodAnimales.csv") |>
         replace_na(NbDindesDindons, 0) +
         replace_na(NbOies, 0) +
         replace_na(NbPintades, 0) +
-        replace_na(NbPoulettes, 0) > 10) |
+        replace_na(NbPoulettes, 0) > 50) |
       (
         # • Bovins : plus de 10 animaux de plus de 30 jours.
         replace_na(NbAutresBovinsLait, 0) +

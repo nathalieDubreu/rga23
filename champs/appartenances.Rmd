@@ -58,8 +58,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 - Cultivateurs : `r rga23B |> filter(CultureValideRGA == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
-kable(inner_join(rga23B, idExploitantsDansLeChamp, by = c("interview__key")) |>
-  group_by(ArchipelExploitation) |>
+kable(rga23B |>
+  filter(ValideRGA == 1) |>
+  group_by(Archipel_1) |>
   count())
 ```
 
@@ -73,8 +74,9 @@ kable(inner_join(rga23B, idExploitantsDansLeChamp, by = c("interview__key")) |>
 - Cultivateurs : `r rga23B |> filter(CultureValide2012 == 1) |> count()` exploitations respectent au moins un de ces seuils
 
 ```{r, echo=FALSE}
-kable(inner_join(rga23B, idExploitantsDansLeChamp2012, by = c("interview__key")) |>
-  group_by(ArchipelExploitation) |>
+kable(rga23B |>
+  filter(Valide2012 == 1) |>
+  group_by(Archipel_1) |>
   count())
 ```
 ### Comparaison 
