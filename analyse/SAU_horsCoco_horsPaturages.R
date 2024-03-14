@@ -7,7 +7,7 @@ surfacesParTypeHorsCocoFourragEtArchipel <- left_join(rga23_surfacesCultures_hor
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE),
-    `Surface moyenne (m2)` = round(`Surface (m2)`/`Nb Exploitants`*100)
+    `Surface moyenne (m2)` = round(`Surface (m2)`/`Nb Exploitants`)
   )
 
 surfacesParTypeHorsCocoFourrag <- rga23_surfacesCultures_horsCocoEtFourrag |>
@@ -17,7 +17,7 @@ surfacesParTypeHorsCocoFourrag <- rga23_surfacesCultures_horsCocoEtFourrag |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE), 
-    `Surface moyenne (m2)` = round(`Surface (m2)`/`Nb Exploitants`*100)
+    `Surface moyenne (m2)` = round(`Surface (m2)`/`Nb Exploitants`)
   )
 
 surfacesParTypeCultureArchipelEtTotalSexe <- rbind(surfacesParTypeHorsCocoFourragEtArchipel, surfacesParTypeHorsCocoFourrag) |>
