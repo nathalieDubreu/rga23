@@ -73,7 +73,6 @@ calculPointsCAPLJardinsOceaniens <- function(data) {
 
 cultivateursPointsCAPLJardins <- calculPointsCAPLJardinsOceaniens(readCSV("rga23_prodVegetales.csv"))
 
-
 tousTypesPoints <- full_join(
   eleveursPointsCAPL |> select(interview__key, nombrePointsElevages),
   cultivateursPointsCAPL |> select(interview__key, nombrePointsCultures),

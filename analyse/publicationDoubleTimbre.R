@@ -55,10 +55,10 @@ rga23_mainOeuvre <- inner_join(
   readCSV("rga23_mainOeuvre.csv"),
   rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation)
 ) |>
-  mutate(totalMAOccas = ifelse(is.na(NbFemOccasAvecLien), 0, NbFemOccasAvecLien) +
-    ifelse(is.na(NbFemOccasSansLien), 0, NbFemOccasSansLien) +
-    ifelse(is.na(NbHomOccasAvecLien), 0, NbHomOccasAvecLien) +
-    ifelse(is.na(NbHomOccasSansLien), 0, NbHomOccasSansLien)) |>
+  mutate(totalMAOccas = replace_na(NbFemOccasAvecLien, 0) +
+    replace_na(NbFemOccasSansLien, 0) +
+    replace_na(NbHomOccasAvecLien, 0) +
+    replace_na(NbHomOccasSansLien, 0)) |>
   mutate(
     age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)),
     homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1),
