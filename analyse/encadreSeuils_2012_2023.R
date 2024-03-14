@@ -23,12 +23,12 @@ ecartRuchers <- elevage12Valide |>
 ## 1 porcin
 ## 1 poulet de chair
 
-## 724 observations coté cultures
+## 727 observations coté cultures
 culture12Valide <- inner_join(
   rga23B |> filter(is.na(ValideRGA) & CultureValide2012 == 1),
   readCSV("rga23_prodVegetales.csv")
 )
-## dont 698 à cause de la SAU : 1000m² en 2012
+## dont 701 à cause de la SAU : 1000m² en 2012
 ecartSAU <- culture12Valide |>
   filter(SurfaceTotalProdAgri >= 1000)
 ## 26 à cause de la surface des pépinières : 500m² en 2012
@@ -54,7 +54,7 @@ elevage23Valide <- inner_join(
 
 ## 89 observations coté cultures -> en raison des 100m² de serres
 culture23Valide <- inner_join(
-  rga23B |> filter(is.na(Valide2012) & CultureValideRGA == 1 & is.na(ElevageValideRGA)),
+  rga23B |> filter(is.na(Valide2012) & CultureValideRGA == 1),
   readCSV("rga23_prodVegetales.csv")
 )
 validiteSerresRGA <- left_join(readCSV("rga23_surfacesCultures.csv"), readInputCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA), by = c("culture_id")) |>
