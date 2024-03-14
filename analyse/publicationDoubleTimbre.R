@@ -1,5 +1,3 @@
-library(tidyr)
-
 ## Restriction au champ 23 du RGA
 rga23_champ <- readCSV("rga23_general.csv") |>
   filter(indicRGA23 == 1) |>
