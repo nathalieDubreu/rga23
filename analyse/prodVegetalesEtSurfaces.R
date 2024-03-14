@@ -64,7 +64,7 @@ surfacesCulturesTab <- rga23_surfacesCultures |>
 surfaceTotaleClassiques <- as.numeric(sum(surfacesCulturesTab$`Surface (Ha)`, na.rm = TRUE))
 nbExploitantsTotalClassiques <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1) |> count())
 
-surfacesCulturesArchipelEtTotal <- surfacesCulturesTab |>
+surfacesTypeCulturesEtTotal <- surfacesCulturesTab |>
   add_row(
     TypeCulture = "Total cultures classiques",
     `Nb Exploitants` = nbExploitantsTotalClassiques,
@@ -87,7 +87,7 @@ surfacesJardinsOceaniensTab <- rga23_prodVegetales |>
 surfaceTotale <- surfaceTotaleClassiques + surfacesJardinsOceaniensTab$`Surface (Ha)`
 nbExploitantsTotal <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1 | ModesProduction__4 == 1) |> count())
 
-surfacesCulturesClassEtOceaniens <- surfacesCulturesArchipelEtTotal |>
+surfacesCulturesClassEtOceaniens <- surfacesTypeCulturesEtTotal |>
   add_row(
     TypeCulture = "Jardins Oceaniens",
     `Nb Exploitants` = surfacesJardinsOceaniensTab$`Nb Exploitants`,
@@ -140,3 +140,26 @@ autoConsoFruit <- calculPartsDestination(PartComFruit__1, Fruitier, "AutoConsomm
 autoConsoPlantes <- calculPartsDestination(PartComPlantes__1, PPAM, "AutoConsommation")
 autoConsoFlorales <- calculPartsDestination(PartComFlorale__1, Florales, "AutoConsommation")
 autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, "AutoConsommation")
+
+
+#############
+
+surfacesParCultureEtArchipel <- left_join(rga23_surfacesCultures, rga23_champ |> select(interview__key, Archipel_1)) |>
+  group_by(Archipel_1, culture_id) |>
+  summarize(
+    `Nb Exploitants` = n_distinct(interview__key),
+    `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
+  )
+
+surfacesParCulture <- rga23_surfacesCultures |>
+  mutate(Archipel_1 = "Total") |>
+  group_by(Archipel_1, culture_id) |>
+  summarize(
+    `Nb Exploitants` = n_distinct(interview__key),
+    `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
+  )
+
+surfacesParCultureArchipelEtTotal <- rbind(surfacesParCultureEtArchipel, surfacesParCulture) |>
+  pivot_wider(names_from = Archipel_1, values_from = c(`Nb Exploitants`, `Surface (m2)`), values_fill = 0)
+
+writeCSV(surfacesParCultureArchipelEtTotal)
