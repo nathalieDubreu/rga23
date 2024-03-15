@@ -58,7 +58,7 @@ surfacesCulturesTab <- rga23_surfacesCultures |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
-    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 0)
+    `Surface moyenne (m²)` = round(sum(SurfaceCult, na.rm = TRUE) / `Nb Exploitants`)
   )
 
 surfaceTotaleClassiques <- as.numeric(sum(surfacesCulturesTab$`Surface (Ha)`, na.rm = TRUE))
@@ -143,6 +143,8 @@ autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, 
 
 
 #############
+
+## Détail des surfaces par culture et archipel
 
 surfacesParCultureEtArchipel <- left_join(rga23_surfacesCultures, rga23_champ |> select(interview__key, Archipel_1)) |>
   group_by(Archipel_1, culture_id) |>
