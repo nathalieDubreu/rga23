@@ -235,3 +235,41 @@ pourcentages <- sprintf("%.1f%%", colMeans(rga23_mainOeuvre[variablesActivites],
 pourcentagesActivites <- data.frame(Variable = libelles, Pourcentage = pourcentages)
 writeCSV(pourcentagesActivites)
 
+# Nombre de coexploitants par type d'exploitations et par archipel
+
+nbCoexploitantsTypeExpl <- rga23_mainOeuvre |>
+  mutate(Archipel_1 = "Total Polynésie") |>
+  group_by(Archipel_1, TypeExploitation) |>
+  summarize(
+    nbUnites = n(),
+    nbCoexploitants = sum(NbCoExploitants, na.rm = TRUE),
+    moyenneCoexploitants = mean(coalesce(NbCoExploitants, 0))
+  ) |>
+  pivot_wider(names_from = TypeExploitation, values_from = c(nbCoexploitants, nbUnites, moyenneCoexploitants)) |>
+  select(
+    Archipel_1,
+    contains("Cultivateurs"),
+    contains("Eleveurs"),
+    contains("Producteurs"),
+    contains("Pluriactifs")
+  )
+
+nbCoexploitantsArchipelTypeExpl <- rga23_mainOeuvre |>
+  group_by(Archipel_1, TypeExploitation) |>
+  summarize(
+    nbUnites = n(),
+    nbCoexploitants = sum(NbCoExploitants, na.rm = TRUE),
+    moyenneCoexploitants = mean(coalesce(NbCoExploitants, 0))
+  ) |>
+  pivot_wider(names_from = TypeExploitation, values_from = c(nbCoexploitants, nbUnites, moyenneCoexploitants)) |>
+  select(
+    Archipel_1,
+    contains("Cultivateurs"),
+    contains("Eleveurs"),
+    contains("Producteurs"),
+    contains("Pluriactifs")
+  )
+
+nbCoexploitantsArchipelSeuils <- rbind(nbCoexploitantsArchipelTypeExpl, nbCoexploitantsTypeExpl)
+
+writeCSV(nbCoexploitantsArchipelTypeExpl)

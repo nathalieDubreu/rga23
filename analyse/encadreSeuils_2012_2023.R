@@ -1,4 +1,4 @@
-source("champs/indicatricesAppartenances.R")
+source("champs/comparatifsAppartenances.R")
 
 # 2750 unités en commun (validité au titre de la culture ou de l'élevage pour le RGA 23 et non pas du coprah)
 rga23B |>

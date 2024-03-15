@@ -165,3 +165,43 @@ surfacesParCultureArchipelEtTotal <- rbind(surfacesParCultureEtArchipel, surface
   pivot_wider(names_from = Archipel_1, values_from = c(`Nb Exploitants`, `Surface (m2)`), values_fill = 0)
 
 writeCSV(surfacesParCultureArchipelEtTotal)
+
+
+## SAU moyenne par type d'exploitations
+
+sauMoyenneTypeExpl <- rga23_prodVegetales |>
+  group_by(Archipel_1, TypeExploitation) |>
+  summarize(
+    nbUnites = n(),
+    sauMoyenne = round(mean(coalesce(SurfaceTotalProdAgri, 0)))
+  ) |>
+  pivot_wider(names_from = TypeExploitation, values_from = c(nbUnites, sauMoyenne)) |>
+  select(
+    Archipel_1,
+    contains("Cultivateurs"),
+    contains("Eleveurs"),
+    contains("Producteurs"),
+    contains("Pluriactifs")
+  )
+
+sauMoyenneTypeExpl <- rbind(
+  sauMoyenneTypeExpl,
+  rga23_prodVegetales |>
+    mutate(Archipel_1 = "Total Polynésie") |>
+    group_by(Archipel_1, TypeExploitation) |>
+    summarize(
+      nbUnites = n(),
+      sauMoyenne = round(mean(coalesce(SurfaceTotalProdAgri, 0)))
+    ) |>
+    pivot_wider(names_from = TypeExploitation, values_from = c(nbUnites, sauMoyenne)) |>
+    select(
+      Archipel_1,
+      contains("Cultivateurs"),
+      contains("Eleveurs"),
+      contains("Producteurs"),
+      contains("Pluriactifs")
+    )
+)
+writeCSV(sauMoyenneTypeExpl)
+
+

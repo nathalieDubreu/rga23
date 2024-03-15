@@ -1,4 +1,20 @@
-# rga23
+# Analyse des données du rga23
+
+## Champs
+- `champRGA.R` : Champ du RGA23
+- `champ2012.R` : Approximation des seuils de 2012
+- `champCAPL.R` : Calcul des points CAPL
+- `comparatifsAppartenances.R` : Comparatifs d'appartenance aux champs
+- `champCAPL_tests.R` : Quelques tests unitaires
+  
+## Analyse
+- `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
+
+## Analyse supplémentaire : TAPE
+- `tape.R`
+
+
+# Programmes des étapes préalables à l'analyse
 
 ## Mises en forme des données (à lancer dans l'ordre) => création des fichiers de données sous format CSV
 - `interviewKeysAExclure.R` : liste des interview__key à exclure (affectations en doublon dans SuSo - pb techniques)
@@ -43,22 +59,10 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
 #### B - En vue de l'intégration dans le SIA
 - `integrationSIA.R` : suppression des variables relatives à la situation conjugale de l'exploitant avant mise à disposition pour intégration dans le SIA
 
-## Champs - WIP
-- `champRGA.R` : Champ du RGA23
-- `champ2012.R` : Approximation des seuils de 2012
-- `indicatricesAppartenances.R` : Ajout des indicatrices d'appartenance aux champs dans le fichier rga23.csv
-- `champCAPL.R` : Calcul des points CAPL - WIP - en attente de l'arrêté
-  
-## Analyse
-- `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
-- `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
-
-# Analyse supplémentaire
-- `tape.R`
-
 ## Collecte
-### Mise à jour du fichier Rmd
+### Mise à jour des fichiers Rmd en cours de collecte
 - `comptages.R` : création d'un fichier md à destination de la Dag (comptages par statut de la collecte, par éligibilité, par île, ...)
+- `stats.R` : génération d'un .md contenant qq stats descriptives sur données brutes
 ### Contrôles en cours de collecte
 - Eligibilité (questionnaires complets or not)
 	- `nonEligibles.R`
