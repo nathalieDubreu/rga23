@@ -135,11 +135,30 @@ calculPartsDestination <- function(partComVar, destinationVar, libelleDestinatio
 }
 
 autoConsoMaraicha <- calculPartsDestination(PartComMaraic__1, Maraichage, "AutoConsommation")
+writeCSV(autoConsoMaraicha)
 autoConsoVivrier <- calculPartsDestination(PartComVivri__1, Vivrier, "AutoConsommation")
+writeCSV(autoConsoVivrier)
 autoConsoFruit <- calculPartsDestination(PartComFruit__1, Fruitier, "AutoConsommation")
+writeCSV(autoConsoFruit)
 autoConsoPlantes <- calculPartsDestination(PartComPlantes__1, PPAM, "AutoConsommation")
+writeCSV(autoConsoPlantes)
 autoConsoFlorales <- calculPartsDestination(PartComFlorale__1, Florales, "AutoConsommation")
+writeCSV(autoConsoFlorales)
 autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, "AutoConsommation")
+writeCSV(autoConsoPepinieres)
+
+venteDirecteParticulierMaraicha <- calculPartsDestination(PartComMaraic__5, Maraichage, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierMaraicha)
+venteDirecteParticulierVivrier <- calculPartsDestination(PartComVivri__5, Vivrier, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierVivrier)
+venteDirecteParticulierFruit <- calculPartsDestination(PartComFruit__5, Fruitier, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierFruit)
+venteDirecteParticulierPlantes <- calculPartsDestination(PartComPlantes__5, PPAM, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierPlantes)
+venteDirecteParticulierFlorales <- calculPartsDestination(PartComFlorale__5, Florales, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierFlorales)
+venteDirecteParticulierPepinieres <- calculPartsDestination(PartComPepinieres__5, Pepinieres, "Vente directe au particulier")
+writeCSV(venteDirecteParticulierPepinieres)
 
 
 #############
