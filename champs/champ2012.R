@@ -74,9 +74,8 @@ cultivateursChamp2012_1 <- readCSV("rga23_prodVegetales.csv") |>
   )
 
 culturesChamp2012 <- readInputCSV("culturesChamp2012.csv") |> select(culture_id, idSeuilRGA)
-rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 
-cultivateursChamp2012_2 <- left_join(rga23_surfacesCultures, culturesChamp2012, by = c("culture_id")) |>
+cultivateursChamp2012_2 <- left_join(readCSV("rga23_surfacesCultures.csv"), culturesChamp2012, by = c("culture_id")) |>
   group_by(interview__key, idSeuilRGA) |>
   summarize(SurfaceCulturesSeuil = sum(SurfaceCult)) |>
   filter(

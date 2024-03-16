@@ -50,9 +50,8 @@ eleveursPointsCAPL <- calculPointsCAPLElevage(readCSV("rga23_prodAnimales.csv"))
 culturesChampCAPL <- readInputCSV("culturesChampCAPL.csv") |>
   rename(culture_id = idProdRGA) |>
   select(culture_id, AutreConditionNecessaire, PointsParUnite)
-rga23_surfacesCultures <- readCSV("rga23_surfacesCultures.csv")
 
-cultivateursPointsCAPL <- left_join(rga23_surfacesCultures, culturesChampCAPL, by = c("culture_id")) |>
+cultivateursPointsCAPL <- left_join(readCSV("rga23_surfacesCultures.csv"), culturesChampCAPL, by = c("culture_id")) |>
   mutate(
     PointsCaplBase = SurfaceCult * replace_na(PointsParUnite, 0),
     PointsCaplSuppIrrigation = ifelse((AutreConditionNecessaire == "Irrigue*2" & !is.na(SurfaceIrrig)), SurfaceIrrig * PointsParUnite, 0),
