@@ -218,32 +218,45 @@ restentAClasser <- scoreIntegration |>
 # > 4 - Tout le sol est couvert de résidus ou de cultures de couverture. Les cultures sont tournées régulièrement et les cultures intercalaires sont courantes (ou le pâturage en rotation est systématique). Peu ou pas de perturbation du sol.
 
 jointuresSolPlantes <- left_join(
-  left_join(
-    left_join(
-      rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceFourrages, ModesProduction__4),
-      rga23_surfacesCultures |>
-        count(interview__key, name = "nbCultures"),
-            by = "interview__key"
-    ), rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__5, PratiquesCulturales__3),
-    by = "interview__key"
-  ), nbCulturesArbresDeclarees |> select(interview__key, nbCulturesArbres),
+  rga23_prodVegetales |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceFourrages, ModesProduction__4),
+  rga23_surfacesCultures |>
+    count(interview__key, name = "nbCultures"),
   by = "interview__key"
-)
+) |>
+  left_join(rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__5, PratiquesCulturales__3),
+    by = "interview__key"
+  ) |>
+  left_join(nbCulturesArbresDeclarees |> select(interview__key, nbCulturesArbres),
+    by = "interview__key"
+  ) |>
+  left_join(
+    # Pour traiter le cas où la seule culture est "Divers fruitiers"
+    rga23_surfacesCultures |>
+      filter(culture_id == 331) |>
+      mutate(DiversFruitiers = 1) |>
+      select(interview__key, DiversFruitiers),
+    by = "interview__key"
+  )
 
 scoreSolPlantes <- jointuresSolPlantes |>
+  left_join(rga23_general |> select(interview__key, RaisonsRecensement__1)) |>
   mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100) |>
   mutate(score = case_when(
-    # Aucune culture ou monoculture
-    (is.na(nbCultures) | nbCultures == 1) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
-    # Aucune des pratiques (1,2,5) 
-    PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0  ~ 1,
-    # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 0 et 50%)
-    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & (is.na(totalSurfaceFourrages) | partPaturage <= 50) & nbCultures > (nbCulturesArbres + 1) ~ 2,
-    # Au moins une des 3 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
-    (PratiquesCulturales__1 == 1 | PratiquesCulturales__2 == 1 | PratiquesCulturales__5 == 1) & partPaturage <= 80 & nbCultures > (nbCulturesArbres + 1) & PratiquesCulturales__3 == 0 ~ 3,
-    # Au moins une des 2 pratiques + plusieurs cultures basses + surface de paturage (entre 50 et 80%). Pas de labour
+    # Pas de cultures -> non concerné
+    RaisonsRecensement__1 == 0 ~ 9,
+    # Aucune des pratiques (1,2,5) et plusieurs cultures (ou jardin océanien ou uniquement divers fruitiers) OU Au moins une pratique et 0 ou 1 culture basse
+    (PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0 & (nbCultures > 1 | ModesProduction__4 == 1 | (nbCultures == 1 & DiversFruitiers == 1))) |
+      (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 >= 1 & (nbCultures - (replace_na(nbCulturesArbres, 0)) <= 1)) ~ 1,
+    # Une seule des 3 pratiques + plusieurs cultures basses (ou jardin océanien)
+    (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 == 1) & (nbCultures > (replace_na(nbCulturesArbres, 0) + 1) | ModesProduction__4 == 1) ~ 2,
+    # Les 3 pratiques + plusieurs cultures basses (ou jardin océanien) . Pas de labour
+    (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 == 3) & (nbCultures > (replace_na(nbCulturesArbres, 0) + 1) | ModesProduction__4 == 1) & PratiquesCulturales__3 == 0 ~ 4,
+    # Au moins 2 des 3 pratiques + plusieurs cultures basses (ou jardin océanien)
+    (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 >= 2) & (nbCultures > (replace_na(nbCulturesArbres, 0) + 1) | ModesProduction__4 == 1) ~ 3,
+    # Monoculture (Hors cas où la seule culture est "Divers Fruitiers") - pas de jardin océanien
+    (nbCultures == 1 & is.na(DiversFruitiers)) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
     TRUE ~ 5
-  )) 
+  ))
 
 scoreSolPlantes |>
   group_by(score) |>

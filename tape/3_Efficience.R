@@ -16,6 +16,14 @@
 
 # ComplAlimentation -> distinction entre autonomes ou pas du tout
 
+# Plus de 90%.......................................1
+# 75% à moins de 90%................................2
+# 50% à moins de 75%................................3
+# 25% à moins de 50%................................4
+# Moins de 25%......................................5
+# Aucune autonomie (tout est acheté)................6
+# Sans objet, ce type d'aliment n'est pas utilisé...7
+
 alimentsAchetesExclusivement <- (
   (rga23_prodAnimales$ComplAlimentation__2 == 1 |
     rga23_prodAnimales$ComplAlimentation__3 == 1 |
@@ -73,6 +81,7 @@ autonomieAlimentaire <- function(niveau) {
   return(condition)
 }
 
+autonomie_5_ <- autonomieAlimentaire(5)
 autonomie_4_ <- autonomieAlimentaire(4)
 autonomie_3_ <- autonomieAlimentaire(3)
 autonomie_2_ <- autonomieAlimentaire(2)
@@ -100,13 +109,18 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
       RaisonsRecensement__2 == 1 ~ 0,
       TRUE ~ as.numeric(NA)
     ),
+    autonomie_5_ = case_when(
+      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_)) ~ 1,
+      RaisonsRecensement__2 == 1 ~ 0,
+      TRUE ~ as.numeric(NA)
+    ),
     autonomie_5_6_ = case_when(
       RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_6_)) ~ 1,
       RaisonsRecensement__2 == 1 ~ 0,
       TRUE ~ as.numeric(NA)
     )
   ) |>
-  select(interview__key, alimentsAchetesExclusivement, alimentsPresentsExclusivement, autonomie_5_6_, autonomie_4_, autonomie_3_)
+  select(interview__key, alimentsAchetesExclusivement, alimentsPresentsExclusivement, autonomie_5_6_, autonomie_5_, autonomie_4_, autonomie_3_)
 
 ## ProvenancePlants -> autoproduits = 1 (avec PartPlantsAutoP)
 # 0 à 10% du volume utilisé.......1
@@ -166,6 +180,11 @@ scoreIntrants <- left_join(
 
 scoreIntrants |>
   group_by(score) |>
+  count()
+
+restent <- scoreIntrants |>
+  filter(score == 5) |>
+  group_by(NivAutoEnergiesR, alimentsPresentsExclusivement, PartPlantsAutoP, PartSemencesAutoP) |>
   count()
 
 # GESTION DE LA FERTILITÉ DU SOL
