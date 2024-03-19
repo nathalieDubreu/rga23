@@ -189,6 +189,28 @@ surfacePaturagesArchipel <- left_join(
   filter(culture_id == 701 | culture_id == 702 | culture_id == 705) |>
   group_by(Archipel_1) |>
   summarize(
-    `Surface de pâturages (Ha)` = round(sum(SurfaceCult, na.rm = TRUE)/10000)
+    `Surface de pâturages (Ha)` = round(sum(SurfaceCult, na.rm = TRUE) / 10000)
   )
 writeCSV(surfacePaturagesArchipel)
+
+
+### Surfaces par archipel HORS paturages et hors cocoteraies
+
+rbind(
+  surfacesJOArchipel |>
+    select(-`Surface moyenne (m2)`, `Nb Exploitants`) |>
+    mutate(TypeCulture = 90),
+  rga23_surfacesCultures_horsCocoEtPaturage <- left_join(
+    rga23_surfacesCultures |>
+      filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309),
+    rga23_champ |> select(interview__key, Archipel_1)
+  ) |>
+    group_by(Archipel_1, TypeCulture) |>
+    summarize(
+      `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
+    )
+) |>
+  group_by(Archipel_1) |>
+  summarize(
+    `Surface (Ha)` = round(sum(`Surface (m2)`)/ 10000)
+  )
