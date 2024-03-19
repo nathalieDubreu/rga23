@@ -82,6 +82,8 @@ source("analyse/encadreSeuils_2012_2023.R")
 source("analyse/moEquivalentEtp.R")
 source("analyse/donneesCadrage2012.R")
 source("analyse/SAU_horsCoco_horsCultFourrag.R")
+source("analyse/destinationParTaille.R")
+source("analyse/encadrePointsCAPL.R")
 
 ## Pour plus tard...
 source("analyse/surfacesBio_enAttenteExpertise.R")
