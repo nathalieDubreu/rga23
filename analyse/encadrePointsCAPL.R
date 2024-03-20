@@ -7,12 +7,12 @@ rga23B |>
 rga23B |>
   filter(PointsCAPL >= 400 | indicRGA23_Coprah == 1) |>
   count()
-# 4041
+# 4023
 
 rga23B |>
   filter(indicRGA23 == 1 & (PointsCAPL >= 400 | indicRGA23_Coprah == 1)) |>
   count()
-# 3694 unités en commun
+# 3687 unités en commun
 
 #####################################
 # Points CAPL mais absents du RGA   #

@@ -78,3 +78,36 @@ writeCSV(modalites_7_12_FruitTailleExpl)
 
 modalites_7_12_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__7_12, Vivrier, "Modalites 7 à 12", totalSurfaceVivri, 3000)
 writeCSV(modalites_7_12_VivriTailleExpl)
+
+
+tableMaraichage <- rga23_prodVegetales_regroupements |>
+  filter(!is.na(totalSurfaceMarai)) |>
+  mutate(TailleExploitation = case_when(
+    totalSurfaceMarai <= 1000 ~ "Petites",
+    totalSurfaceMarai <= 10000 ~ "Moyennes",
+    TRUE ~ "Grandes"
+  )) |>
+  mutate(
+    DestinationsHorsVente = case_when(
+      PartComMaraic__1_4 == 0 ~ "0%",
+      PartComMaraic__1_4 <= 25 ~ "1 à 25%",
+      PartComMaraic__1_4 <= 50 ~ "25 et 50%",
+      PartComMaraic__1_4 <= 75 ~ "50 et 75%",
+      PartComMaraic__1_4 <= 100 ~ "Plus de 75%"
+    ),
+    VenteDirecte = case_when(
+      PartComMaraic__5_6 == 0 ~ "0%",
+      PartComMaraic__5_6 <= 25 ~ "1 à 25%",
+      PartComMaraic__5_6 <= 50 ~ "25 et 50%",
+      PartComMaraic__5_6 <= 75 ~ "50 et 75%",
+      PartComMaraic__5_6 <= 100 ~ "Plus de 75%"
+    ),
+    VenteAuxProfessionnels = case_when(
+      PartComMaraic__7_12 == 0 ~ "0%",
+      PartComMaraic__7_12 <= 25 ~ "1 à 25%",
+      PartComMaraic__7_12 <= 50 ~ "25 et 50%",
+      PartComMaraic__7_12 <= 75 ~ "50 et 75%",
+      PartComMaraic__7_12 <= 100 ~ "Plus de 75%"
+    )
+  ) |>
+  select(interview__key, TailleExploitation, DestinationsHorsVente, VenteDirecte, VenteAuxProfessionnels)

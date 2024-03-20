@@ -49,6 +49,7 @@ eleveursPointsCAPL <- calculPointsCAPLElevage(readCSV("rga23_prodAnimales.csv"))
 # Points coté cultures
 culturesChampCAPL <- readInputCSV("culturesChampCAPL.csv") |>
   rename(culture_id = idProdRGA) |>
+  mutate(PointsParUnite = as.numeric(PointsParUnite)) |>
   select(culture_id, AutreConditionNecessaire, PointsParUnite)
 
 cultivateursPointsCAPL <- left_join(readCSV("rga23_surfacesCultures.csv"), culturesChampCAPL, by = c("culture_id")) |>
