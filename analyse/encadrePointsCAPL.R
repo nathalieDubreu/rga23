@@ -31,7 +31,7 @@ rga23B |>
 CAPL_nonRGA <- rga23B |>
   filter(is.na(ValideRGA) & PointsCAPL >= 400)
 
-# Graines germées
+# Graines germées : 3
 inner_join(
   CAPL_nonRGA,
   readCSV("rga23_surfacesCultures.csv") |>
@@ -39,7 +39,13 @@ inner_join(
     select(interview__key, SurfaceCult)
 ) |> count()
 
-# Chevaux
+# Ruches : 53 éleveurs ont 20 ruches/ruchettes ou plus
+inner_join(
+  CAPL_nonRGA,
+  readCSV("rga23_prodAnimales.csv") |>
+    filter(20 * replace_na(NbRuchesPourProduire, 0) +
+      20 * replace_na(NbRuchettes, 0) >= 400)
+) |> count()
 
 
 ############################################
@@ -58,4 +64,22 @@ rga23B |>
 RGA_nonCAPL <- rga23B |>
   filter(ValideRGA == 1 & PointsCAPL < 400)
 
+validiteSerresRGA <- left_join(readCSV("rga23_surfacesCultures.csv"), readInputCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA), by = c("culture_id")) |>
+  group_by(interview__key, idSeuilRGA) |>
+  summarize(SurfaceCulturesSeuil = sum(SurfaceCult)) |>
+  filter(
+    # 9	Serres et abris hauts	100	m²
+    idSeuilRGA == 9 & SurfaceCulturesSeuil >= 100) 
+inner_join(RGA_nonCAPL, validiteSerresRGA) |> 
+  count()
+## 222 exploitants ont des serres de 100m² ou plus
 
+inner_join(
+  RGA_nonCAPL,
+  readCSV("rga23_prodAnimales.csv") |>
+    filter(
+      # 12	• 1 truie mère
+      replace_na(NbTruiesMaternite, 0) +
+        replace_na(NbTruiesGestVides, 0) >= 1)
+) |> count()
+## 50 exploitants ont au moins une truie mère
