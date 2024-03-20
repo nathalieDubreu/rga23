@@ -196,7 +196,7 @@ writeCSV(surfacePaturagesArchipel)
 
 ### Surfaces par archipel HORS paturages et hors cocoteraies
 
-rbind(
+parArchipel <- rbind(
   surfacesJOArchipel |>
     select(-`Surface moyenne (m2)`, `Nb Exploitants`) |>
     mutate(TypeCulture = 90),
@@ -212,5 +212,21 @@ rbind(
 ) |>
   group_by(Archipel_1) |>
   summarize(
-    `Surface (Ha)` = round(sum(`Surface (m2)`)/ 10000)
+    `Surface de productions végétales (Ha)` = round(sum(`Surface (m2)`) / 10000)
   )
+
+jacheres <- left_join(
+  rga23_surfacesCultures |>
+    filter(TypeCulture == 80),
+  rga23_champ |> select(interview__key, Archipel_1)
+) |>
+  group_by(Archipel_1, TypeCulture) |>
+  summarize(
+    `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
+  ) |>
+  group_by(Archipel_1) |>
+  summarize(
+    `dont jachères (Ha)` = round(sum(`Surface (m2)`) / 10000)
+  )
+
+avecJacheres <- left_join(parArchipel, jacheres)
