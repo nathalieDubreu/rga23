@@ -86,10 +86,8 @@ idExploitantsPointsCAPL <- left_join(readCSV("rga23_general.csv") |> select(inte
   mutate(
     PointsCAPL = replace_na(nombrePointsElevages, 0) +
       replace_na(nombrePointsCultures, 0) +
-  replace_na(nombrePointsJardinsOceaniens, 0)
+      replace_na(nombrePointsJardinsOceaniens, 0)
   ) |>
-  filter(indicRGA23_Coprah == 1 |
-    PointsCAPL >= 400) |>
   select(interview__key, Archipel_1, PointsCAPL, indicRGA23_Coprah)
 
 writeCSV(idExploitantsPointsCAPL)

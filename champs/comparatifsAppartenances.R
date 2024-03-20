@@ -2,9 +2,6 @@ source("champs/champRGA.R")
 source("champs/champ2012.R")
 source("champs/champCAPL.R")
 
-## Hors ceux qui sont valides via le coprah
-idExploitantsPointsCAPL_HC <- idExploitantsPointsCAPL |> filter(PointsCAPL >= 400)
-
 # Pour le copil : restriction aux questionnaires validés
 # rga23 <- rga23 |> filter((interview__status == 130 | interview__status == 120))
 
@@ -27,9 +24,13 @@ rga23A <- left_join(rga23, idExploitantsDansLeChamp2012 |> mutate(Valide2012 = 1
 )
 
 # Indicatrice de respect des seuils CAPL
-rga23B <- left_join(rga23A, idExploitantsPointsCAPL_HC |> mutate(ValideCAPL_HC = 1) |> select(-Archipel_1, -indicRGA23_Coprah),
+rga23B <- left_join(rga23A,
+  idExploitantsPointsCAPL |> select(-Archipel_1, -indicRGA23_Coprah),
   by = c("interview__key")
-)
+) |> mutate(ValideCAPL_HC = case_when(
+  PointsCAPL >= 400 ~ 1,
+  TRUE ~ 0
+))
 
 rga23B |>
   group_by(ValideRGA, Valide2012, ValideCAPL_HC) |>
