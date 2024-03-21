@@ -64,13 +64,12 @@ score_2_AccesConnaissances <- left_join(rga23_tape,
     # Bio_DAG -> 4
     AgriBio_DAG == 1 ~ 4,
     # Que chimique + ne connait pas les pratiques (ConnaissPratiques) -> 0
-    (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0 & is.na(ConnaissPratiques)) | ConnaissPratiques == 2 ~ 0,
-    # Que chimique sauf éventuellement sur un engrais + connait les pratiques -> 1
-    (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & is.na(ConnaissPratiques)) | ConnaissPratiques == 1 ~ 1,
-    # Mixte chimique et bio + participation souvent ou toujours aux plateformes -> 2
+    ConnaissPratiques == 2 ~ 0,
+    # Que chimique + connait les pratiques -> 1
+    ConnaissPratiques == 1 ~ 1,
+    # Mixte chimique et bio -> 2
     (replace_na(TypePhytosanit__1, 0) + replace_na(TypeEngrais__1, 0) >= 1) &
-      (replace_na(TypePhytosanit__2, 0) + replace_na(TypeEngrais__2, 0) + replace_na(TypeEngrais__3, 0) >= 1) &
-      FreqEvenComLocale >= 2 ~ 2,
+      (replace_na(TypePhytosanit__2, 0) + replace_na(TypeEngrais__2, 0) + replace_na(TypeEngrais__3, 0) >= 1) ~ 2,
     # Pas de chimique (produits bio ou rien) -> 3
     replace_na(TypePhytosanit__1, 0) == 0 & replace_na(TypeEngrais__1, 0) == 0 ~ 3,
     TRUE ~ 5
@@ -80,10 +79,7 @@ score_2_AccesConnaissances |>
   group_by(score) |>
   count()
 
-score_2_AccesConnaissances |>
-  filter(score == 5) |>
-  group_by(ConnaissPratiques, TypePhytosanit__1, TypeEngrais__1, TypeEngrais__2, TypeEngrais__3) |>
-  count()
+restent <- score_2_AccesConnaissances |> filter(score == 5) |> group_by(TypePhytosanit__1, TypeEngrais__1)  |>count()
 
 
 # PARTICIPATION DES PRODUCTEURS AUX RÉSEAUX ET AUX ORGANISATIONS DE BASE
