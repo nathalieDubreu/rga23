@@ -44,7 +44,7 @@ scoreCultures |>
 
 presenceEspecesAnimaux <- paste0("PresenceAnimaux__", 1:8)
 
-rga23_prodAnimales <- rga23_prodAnimales %>%
+rga23_prodAnimales <- rga23_prodAnimales |>
   mutate(nbEspeces = rowSums(across(
     all_of(presenceEspecesAnimaux),
     ~ coalesce(., 0)
@@ -134,31 +134,57 @@ scoreArbres |>
 
 transformationsPossibles <- paste0("TransformationPA__", 1:16)
 
-scoreActivites <- left_join(
-  left_join(rga23_tapeAvecVentes,
-    rga23_mainOeuvre |> mutate(
-      nbTransformations = rowSums(across(
-        all_of(transformationsPossibles),
-        ~ coalesce(., 0)
-      )),
-      nbServices = nbTransformations + ActivitesChefExploit__7 + ActivitesChefExploit__8
-    ),
-    by = "interview__key"
-  ),
-  rga23_prodVegetales |> select(interview__key, ModesProduction__4),
+typesCultHorsJacheres <- paste0("CulturesPresentes__", 1:7, "0")
+
+scoreActivites <- left_join(rga23_tapeAvecVentes,
+  rga23_mainOeuvre |> mutate(
+    nbTransformations = rowSums(across(
+      all_of(transformationsPossibles),
+      ~ coalesce(., 0)
+    )),
+    nbServices = nbTransformations + ActivitesChefExploit__7 + ActivitesChefExploit__8
+  ) |>
+    select(interview__key, nbTransformations, nbServices),
   by = "interview__key"
-) |> mutate(score = case_when(
-  venteTypeProduits == 0 ~ 99,
-  venteNbProduits == 1 ~ 0,
-  venteNbProduits == 2 | venteNbProduits == 3 | (venteTypeProduits == 1 & ModesProduction__4 == 1) ~ 1,
-  # > 2 - Plus de 3 activités productives.
-  (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 0 ~ 2,
-  # > 3 - Plus de 3 activités productives et un service (par ex. transformation de produits à la ferme, écotourisme, transport de produits agricoles, formation, etc.).
-  (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 1 ~ 3,
-  # > 4 - Plus de 3 activités productives et plusieurs services.
-  (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices > 1 ~ 4,
-  TRUE ~ 55
-))
+) |>
+  left_join(
+    rga23_prodVegetales |>
+      mutate(
+        nombreTypesCultHorsJacheres = rowSums(across(
+          all_of(typesCultHorsJacheres),
+          ~ coalesce(., 0)
+        ))
+      ) |>
+      select(interview__key, ModesProduction__4, nombreTypesCultHorsJacheres),
+    by = "interview__key"
+  ) |>
+  left_join(
+    rga23_prodAnimales |>
+      select(interview__key, nbEspeces),
+    by = "interview__key"
+  ) |>
+  left_join(
+    rga23_exploitations |>
+      select(interview__key, ProductionAgricole),
+    by = "interview__key"
+  ) |>
+  mutate(score = case_when(
+    venteNbProduits == 1 ~ 0,
+    venteNbProduits == 2 | venteNbProduits == 3 | (venteTypeProduits == 1 & ModesProduction__4 == 1) ~ 1,
+    # > 2 - Plus de 3 activités productives.
+    (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 0 ~ 2,
+    # > 3 - Plus de 3 activités productives et un service (par ex. transformation de produits à la ferme, écotourisme, transport de produits agricoles, formation, etc.).
+    (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 1 ~ 3,
+    # > 4 - Plus de 3 activités productives et plusieurs services.
+    (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices > 1 ~ 4,
+    # Pas de vente de produit mais production d'un type de cultures végétales ou élevage
+    ProductionAgricole == 1 & nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) == 1 ~ 0,
+    # Pas de vente de produit mais production de 2 ou 3 types de cultures végétales ou élevage
+    ProductionAgricole == 1 & (nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) == 2 | nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) == 3) ~ 1,
+    # Pas de vente de produit mais production de plus de 3 types de cultures végétales ou élevage
+    ProductionAgricole == 1 & (nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) > 3 | ModesProduction__4 == 1) ~ 2,
+    TRUE ~ 55
+  ))
 
 scoreActivites |>
   group_by(score) |>
