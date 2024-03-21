@@ -44,7 +44,7 @@ score_1_Plateformes |>
   count()
 
 score_1_Plateformes |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   group_by(EnvProLocalExpl__1, EvenComLocale) |>
   count()
 
@@ -79,7 +79,7 @@ score_2_AccesConnaissances |>
   group_by(score) |>
   count()
 
-restent <- score_2_AccesConnaissances |> filter(score == 5) |> group_by(TypePhytosanit__1, TypeEngrais__1)  |>count()
+restent <- score_2_AccesConnaissances |> filter(score == 55) |> group_by(TypePhytosanit__1, TypeEngrais__1)  |>count()
 
 
 # PARTICIPATION DES PRODUCTEURS AUX RÉSEAUX ET AUX ORGANISATIONS DE BASE
@@ -114,7 +114,7 @@ score_3_Participation |>
   count()
 
 score_3_Participation |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   group_by(EnvProLocalExpl__2, EnvProLocalExpl__3, EnvProLocalExpl__4, EnvProLocalExpl__5) |>
   count()
 

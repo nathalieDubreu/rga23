@@ -186,7 +186,7 @@ scoreIntegration |>
   count()
 
 restentAClasser <- scoreIntegration |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   select(
     interview__key,
     AutAlimAnimauxBasseCour,

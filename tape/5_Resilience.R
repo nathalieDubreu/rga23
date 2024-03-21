@@ -58,6 +58,6 @@ scoreStabiliteProduction |>
   count()
 
 restent <- scoreStabiliteProduction |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   group_by(RevenusExpl, EvolutionProduction, CapaciteRecup) |>
   count()

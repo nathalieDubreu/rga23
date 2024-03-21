@@ -1,11 +1,11 @@
 # 9. ÉCONOMIE CIRCULAIRE & SOLIDAIRE
 #
-# PRODUITS ET SERVICES COMMERCIALISÉS SUR LE MARCHÉ LOCAL
+# 9.1. PRODUITS ET SERVICES COMMERCIALISÉS SUR LE MARCHÉ LOCAL
 # > 0 - Aucun produit/service n’est commercialisé localement (ou pas assez de surplus produit), ou aucun marché local n’existe.
 # > 1 - Les marchés locaux existent mais pratiquement aucun des produits/services n’est commercialisé localement.
 # > 2 - Des marchés locaux existent. Certains produits/services sont commercialisés localement.
 # > 3 - La plupart des produits/services sont commercialisés localement.
-# > 4 - La plupart des produits/services sont commercialisés localement.
+# > 4 - Tout est commercialisé localement.
 
 # ComCulturesLocal et ComElevageLocal
 # Aucun produit n’est commercialisé sur l’île car il n’y a pas de marché...1
@@ -41,7 +41,7 @@ score_1_MarchesLocaux |>
   count()
 
 restent <- score_1_MarchesLocaux |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   group_by(ComCulturesLocal, ComElevageLocal) |>
   count()
 

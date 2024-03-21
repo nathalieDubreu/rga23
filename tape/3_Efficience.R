@@ -173,7 +173,7 @@ scoreIntrants <- left_join(
     # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
     (is.na(alimentsPresentsExclusivement) | alimentsPresentsExclusivement == 1) &
       (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
-      (is.na(ProvenanceSemences__2) | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
+      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 |((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
       NivAutoEnergiesR == 4 ~ 4,
     TRUE ~ 55
   ))
@@ -183,8 +183,13 @@ scoreIntrants |>
   count()
 
 restent <- scoreIntrants |>
-  filter(score == 5) |>
+  filter(score == 55) |>
   group_by(NivAutoEnergiesR, alimentsPresentsExclusivement, PartPlantsAutoP, PartSemencesAutoP) |>
+  count()
+
+scoreIntrants |>
+  filter(score == 55) |>
+  filter(is.na(NivAutoEnergiesR)) |>
   count()
 
 # GESTION DE LA FERTILITÉ DU SOL

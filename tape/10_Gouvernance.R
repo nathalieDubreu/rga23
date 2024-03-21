@@ -26,7 +26,7 @@
 # Non, peu de moyens (financier, organisationnel, ...)...4
 # Non, pas de moyens (financier, organisationnel, ...)...5
 
-scoreEmancipation <- left_join(rga23_tape,
+score_1_Emancipation <- left_join(rga23_tape,
   rga23_mainOeuvre |> select(interview__key, FormationContinue),
   by = "interview__key"
 ) |>
@@ -44,11 +44,11 @@ scoreEmancipation <- left_join(rga23_tape,
     TRUE ~ 55
   ))
 
-scoreEmancipation |>
+score_1_Emancipation |>
   group_by(score) |>
   count()
 
-scoreEmancipation |>
-  filter(score == 5) |>
+score_1_Emancipation |>
+  filter(score == 55) |>
   group_by(ProbActivite__4, MoyensCompetences, FormationContinue) |>
   count()
