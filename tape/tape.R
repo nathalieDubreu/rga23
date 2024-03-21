@@ -135,4 +135,5 @@ source("tape/6_CultureTraditions.R")
 source("tape/7_Cocreation.R")
 source("tape/8_ValeursHumainesSociales.R")
 source("tape/9_EconomieCirculaire.R")
+
 source("tape/ClassementsExploitations.R")

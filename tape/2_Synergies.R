@@ -178,7 +178,7 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
       (is.na(AutAlimPorcins) | AutAlimPorcins == 1 | poidsPorcins < poidsMax) &
       (is.na(AutAlimPoules) | AutAlimPoules == 1 | poidsPoules < poidsMax)) &
       (PropRecyclEngraisOrga == 4) ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreIntegration |>
@@ -243,7 +243,7 @@ scoreSolPlantes <- jointuresSolPlantes |>
   mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100) |>
   mutate(score = case_when(
     # Pas de cultures -> non concerné
-    RaisonsRecensement__1 == 0 ~ 9,
+    RaisonsRecensement__1 == 0 ~ 99,
     # Aucune des pratiques (1,2,5) et plusieurs cultures (ou jardin océanien ou uniquement divers fruitiers) OU Au moins une pratique et 0 ou 1 culture basse
     (PratiquesCulturales__1 == 0 & PratiquesCulturales__2 == 0 & PratiquesCulturales__5 == 0 & (nbCultures > 1 | ModesProduction__4 == 1 | (nbCultures == 1 & DiversFruitiers == 1))) |
       (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 >= 1 & (nbCultures - (replace_na(nbCulturesArbres, 0)) <= 1)) ~ 1,
@@ -255,7 +255,7 @@ scoreSolPlantes <- jointuresSolPlantes |>
     (PratiquesCulturales__1 + PratiquesCulturales__2 + PratiquesCulturales__5 >= 2) & (nbCultures > (replace_na(nbCulturesArbres, 0) + 1) | ModesProduction__4 == 1) ~ 3,
     # Monoculture (Hors cas où la seule culture est "Divers Fruitiers") - pas de jardin océanien
     (nbCultures == 1 & is.na(DiversFruitiers)) & (ModesProduction__4 == 0 | is.na(ModesProduction__4)) ~ 0,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreSolPlantes |>

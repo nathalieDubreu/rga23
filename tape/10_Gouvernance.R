@@ -41,7 +41,7 @@ scoreEmancipation <- left_join(rga23_tape,
     ProbActivite__4 == 0 & (MoyensCompetences == 1 | MoyensCompetences == 3) ~ 3,
     # OUI à la question "ProbActivite" et FormationContinue
     ProbActivite__4 == 0 & FormationContinue == 1 ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreEmancipation |>

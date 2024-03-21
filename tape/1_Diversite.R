@@ -118,7 +118,7 @@ scoreArbres <- jointuresArbres |> mutate(score = case_when(
   PartSurfaceArbres <= 30 ~ 3,
   # Plus de 30 % de la surface cultivée est occupée par des cultures d'arbres
   PartSurfaceArbres > 30 ~ 4,
-  TRUE ~ 5
+  TRUE ~ 55
 ))
 
 scoreArbres |>
@@ -148,7 +148,7 @@ scoreActivites <- left_join(
   rga23_prodVegetales |> select(interview__key, ModesProduction__4),
   by = "interview__key"
 ) |> mutate(score = case_when(
-  venteTypeProduits == 0 ~ 9,
+  venteTypeProduits == 0 ~ 99,
   venteNbProduits == 1 ~ 0,
   venteNbProduits == 2 | venteNbProduits == 3 | (venteTypeProduits == 1 & ModesProduction__4 == 1) ~ 1,
   # > 2 - Plus de 3 activités productives.
@@ -157,34 +157,9 @@ scoreActivites <- left_join(
   (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 1 ~ 3,
   # > 4 - Plus de 3 activités productives et plusieurs services.
   (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices > 1 ~ 4,
-  TRUE ~ 5
+  TRUE ~ 55
 ))
 
 scoreActivites |>
   group_by(score) |>
   count()
-
-
-## Bilan des classements 
-
-scoresDiversite <- full_join(
-  scoreCultures |>
-    group_by(score) |>
-    summarize(Diversite_1_Culture = n()),
-  scoreAnimaux |>
-    group_by(score) |>
-    summarize(Diversite_2_Animaux = n()),
-  by = c("score")
-) |>
-  full_join(
-    scoreArbres |>
-      group_by(score) |>
-      summarize(Diversite_3_Arbres = n()),
-    by = c("score")
-  ) |>
-  full_join(
-    scoreActivites |>
-      group_by(score) |>
-      summarize(Diversite_4_Activite = n()),
-    by = c("score")
-  )

@@ -175,7 +175,7 @@ scoreIntrants <- left_join(
       (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
       (is.na(ProvenanceSemences__2) | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
       NivAutoEnergiesR == 4 ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreIntrants |>
@@ -212,7 +212,7 @@ scoreEngrais <- rga23_exploitations |>
     (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 1) ~ 1,
     ## Aucun engrais de synthèse -> 4
     (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreEngrais |>
@@ -245,7 +245,7 @@ scorePesticides <- rga23_exploitations |> mutate(
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 2 ~ 1,
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 3 ~ 2,
-    TRUE ~ 5
+    TRUE ~ 55
   )
 )
 
@@ -269,7 +269,7 @@ scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
     Economies == 3 ~ 2,
     Economies == 2 ~ 3,
     Economies == 1 ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 scoreProductiviteBesoins |>

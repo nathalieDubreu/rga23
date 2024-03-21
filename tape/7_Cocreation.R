@@ -36,7 +36,7 @@ score_1_Plateformes <- left_join(rga23_tape,
     EnvProLocalExpl__1 == 1 & (EvenComLocale == 2 | EvenComLocale == 3) & presenceAveree == 1 ~ 1,
     # Adhérent d’une structure agricole (association, coopérative) OU  facebook
     EnvProLocalExpl__2 == 1 | EnvProLocalExpl__4 == 1 ~ 2,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 score_1_Plateformes |>
@@ -72,7 +72,7 @@ score_2_AccesConnaissances <- left_join(rga23_tape,
       (replace_na(TypePhytosanit__2, 0) + replace_na(TypeEngrais__2, 0) + replace_na(TypeEngrais__3, 0) >= 1) ~ 2,
     # Pas de chimique (produits bio ou rien) -> 3
     replace_na(TypePhytosanit__1, 0) == 0 & replace_na(TypeEngrais__1, 0) == 0 ~ 3,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 score_2_AccesConnaissances |>
@@ -106,7 +106,7 @@ score_3_Participation <- left_join(rga23_tape,
     presenceAveree == 1 & FreqEvenComLocale == 4 ~ 3,
     # Existence de plateformes + il y participe toujours
     presenceAveree == 1 & FreqEvenComLocale == 5 ~ 4,
-    TRUE ~ 5
+    TRUE ~ 55
   ))
 
 score_3_Participation |>

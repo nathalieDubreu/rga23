@@ -49,8 +49,8 @@ scoreStabiliteProduction <- rga23_tape |>
     ## Pas de revenus -> non concernés
     RevenusExpl == 4 ~ 9,
     ## Pas de production -> non concernés (cas des interruptions temporaires d'activités)
-    is.na(EvolutionProduction) ~ 9,
-    TRUE ~ 5
+    is.na(EvolutionProduction) ~ 99,
+    TRUE ~ 55
   ))
 
 scoreStabiliteProduction |>
