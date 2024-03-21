@@ -7,12 +7,12 @@ rga23B |>
 rga23B |>
   filter(PointsCAPL >= 400 | indicRGA23_Coprah == 1) |>
   count()
-# 4023
+# 4028
 
 rga23B |>
   filter(indicRGA23 == 1 & (PointsCAPL >= 400 | indicRGA23_Coprah == 1)) |>
   count()
-# 3687 unités en commun
+# 3690 unités en commun
 
 #####################################
 # Points CAPL mais absents du RGA   #
@@ -27,9 +27,9 @@ CAPL_nonRGA |>
     pointsMax = max(PointsCAPL),
     pointsMoy = mean(PointsCAPL)
   )
-# 347 unités respectent uniquement les points CAPL
+# 338 unités respectent uniquement les points CAPL
 ## 4110 points CAPL au mx
-## 638 points en moyenne
+## 639 points en moyenne
 
 # Graines germées : 3
 inner_join(
@@ -60,8 +60,8 @@ RGA_nonCAPL |>
     pointsMax = max(PointsCAPL),
     pointsMoy = mean(PointsCAPL)
   )
-# 386 sont valides pour le RGA mais n'atteignent pas le nombre de points CAPL
-# (ils ont 224 points en moyenne)
+# 390 sont valides pour le RGA mais n'atteignent pas le nombre de points CAPL
+# (ils ont 226 points en moyenne)
 
 validiteSerresRGA <- left_join(readCSV("rga23_surfacesCultures.csv"), readInputCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA), by = c("culture_id")) |>
   group_by(interview__key, idSeuilRGA) |>
@@ -84,7 +84,7 @@ inner_join(
     ),
   by = "interview__key"
 ) |> count()
-## 41 exploitants ont au moins une truie mère
+## 43 exploitants ont au moins une truie mère
 
 inner_join(RGA_nonCAPL,
   readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceTotalProdAgri),
@@ -92,7 +92,7 @@ inner_join(RGA_nonCAPL,
 ) |>
   filter(SurfaceTotalProdAgri >= 10000) |>
   count()
-## 25 ont plus d'un hectare de SAU
+## 23 ont plus d'un hectare de SAU
 
 inner_join(RGA_nonCAPL,
   readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceJardins),
@@ -113,3 +113,14 @@ inner_join(
   by = "interview__key"
 ) |> count()
 ## 15 ont 100 poules pondeuses
+
+validiteLegumesFraisRGA <- left_join(readCSV("rga23_surfacesCultures.csv"), readInputCSV("culturesChampRGA.csv") |> select(culture_id, idSeuilRGA), by = c("culture_id")) |>
+  group_by(interview__key, idSeuilRGA) |>
+  summarize(SurfaceCulturesSeuil = sum(SurfaceCult)) |>
+  filter(
+    # 8	Légumes frais et fraises	1000	m²
+    idSeuilRGA == 8 & SurfaceCulturesSeuil >= 1000
+  )
+inner_join(RGA_nonCAPL, validiteLegumesFraisRGA) |>
+  count()
+## 28

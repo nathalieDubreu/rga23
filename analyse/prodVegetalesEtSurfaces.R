@@ -115,13 +115,12 @@ surfacesCulturesClassEtOceaniens <- surfacesTypeCulturesEtTotal |>
 # Vente aux restaurants (hors collectifs) / hôtels................12/12
 # Sans objet (pas de production de ce type).......................13/13
 
-calculPartsDestination <- function(partComVar, destinationVar, libelleDestination) {
+calculPartsDestination <- function(partComVar, destinationVar, libelleDestination, surfaceConcernee) {
   result <- rga23_prodVegetales |>
-    filter(!is.na({{ partComVar }})) |>
+    filter(!is.na({{ partComVar }}) & {{ surfaceConcernee }} > 0) |>
     mutate(
       {{ destinationVar }} := case_when(
-        {{ partComVar }} == 0 ~ paste("0%", !!libelleDestination),
-        {{ partComVar }} <= 25 ~ paste("1 à 25%", !!libelleDestination),
+        {{ partComVar }} <= 25 ~ paste("0 à 25%", !!libelleDestination),
         {{ partComVar }} <= 50 ~ paste("25 et 50%", !!libelleDestination),
         {{ partComVar }} <= 75 ~ paste("50 et 75%", !!libelleDestination),
         {{ partComVar }} <= 100 ~ paste("Plus de 75%", !!libelleDestination)
@@ -134,32 +133,18 @@ calculPartsDestination <- function(partComVar, destinationVar, libelleDestinatio
   return(result)
 }
 
-autoConsoMaraicha <- calculPartsDestination(PartComMaraic__1, Maraichage, "AutoConsommation")
+autoConsoMaraicha <- calculPartsDestination(PartComMaraic__1, Maraichage, "AutoConsommation", totalSurfaceMarai)
 writeCSV(autoConsoMaraicha)
-autoConsoVivrier <- calculPartsDestination(PartComVivri__1, Vivrier, "AutoConsommation")
+autoConsoVivrier <- calculPartsDestination(PartComVivri__1, Vivrier, "AutoConsommation", totalSurfaceVivri)
 writeCSV(autoConsoVivrier)
-autoConsoFruit <- calculPartsDestination(PartComFruit__1, Fruitier, "AutoConsommation")
+autoConsoFruit <- calculPartsDestination(PartComFruit__1, Fruitier, "AutoConsommation", totalSurfaceFruit)
 writeCSV(autoConsoFruit)
-autoConsoPlantes <- calculPartsDestination(PartComPlantes__1, PPAM, "AutoConsommation")
+autoConsoPlantes <- calculPartsDestination(PartComPlantes__1, PPAM, "AutoConsommation", totalSurfacePlantes)
 writeCSV(autoConsoPlantes)
-autoConsoFlorales <- calculPartsDestination(PartComFlorale__1, Florales, "AutoConsommation")
+autoConsoFlorales <- calculPartsDestination(PartComFlorale__1, Florales, "AutoConsommation", totalSurfaceFlorale)
 writeCSV(autoConsoFlorales)
-autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, "AutoConsommation")
+autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, "AutoConsommation", totalSurfacePepinieres)
 writeCSV(autoConsoPepinieres)
-
-venteDirecteParticulierMaraicha <- calculPartsDestination(PartComMaraic__5, Maraichage, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierMaraicha)
-venteDirecteParticulierVivrier <- calculPartsDestination(PartComVivri__5, Vivrier, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierVivrier)
-venteDirecteParticulierFruit <- calculPartsDestination(PartComFruit__5, Fruitier, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierFruit)
-venteDirecteParticulierPlantes <- calculPartsDestination(PartComPlantes__5, PPAM, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierPlantes)
-venteDirecteParticulierFlorales <- calculPartsDestination(PartComFlorale__5, Florales, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierFlorales)
-venteDirecteParticulierPepinieres <- calculPartsDestination(PartComPepinieres__5, Pepinieres, "Vente directe au particulier")
-writeCSV(venteDirecteParticulierPepinieres)
-
 
 #############
 

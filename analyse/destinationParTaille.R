@@ -14,21 +14,22 @@ rga23_prodVegetales_regroupements <- rga23_prodVegetales |>
     PartComVivri__7_12 = PartComVivri__7 + PartComVivri__8 + PartComVivri__9 + PartComVivri__10 + PartComVivri__11 + PartComVivri__12
   )
 
-calculPartsDestinationByTailleExpl <- function(partComVar, destinationVar, libelleDestination, surfaceConcernee, seuilMin) {
+calculPartsDestinationByTailleExpl <- function(partComVar, destinationVar, surfaceConcernee, seuilMin) {
   result <- rga23_prodVegetales_regroupements |>
-    filter(!is.na({{ partComVar }})) |>
+    filter(!is.na({{ partComVar }}) & {{ surfaceConcernee }} > 0) |>
     mutate(
       {{ destinationVar }} := case_when(
-        {{ partComVar }} == 0 ~ paste("0%", !!libelleDestination),
-        {{ partComVar }} <= 25 ~ paste("1 à 25%", !!libelleDestination),
-        {{ partComVar }} <= 50 ~ paste("25 et 50%", !!libelleDestination),
-        {{ partComVar }} <= 75 ~ paste("50 et 75%", !!libelleDestination),
-        {{ partComVar }} <= 100 ~ paste("Plus de 75%", !!libelleDestination)
+        {{ partComVar }} <= 25 ~ "0 à 25%",
+        {{ partComVar }} <= 50 ~ "25 et 50%",
+        {{ partComVar }} <= 75 ~ "50 et 75%",
+        {{ partComVar }} <= 100 ~ "Plus de 75%",
+        TRUE ~ "???"
       ),
       TailleExploitation = case_when(
-        {{ surfaceConcernee }} <= seuilMin ~ paste("Petites exploitations  -  ", quo_text(enquo(destinationVar))),
-        {{ surfaceConcernee }} <= 10000 ~ paste("Moyennes exploitations  -  ", quo_text(enquo(destinationVar))),
-        TRUE ~ paste("Grandes exploitations  - ", quo_text(enquo(destinationVar))),
+        {{ surfaceConcernee }} <= seuilMin ~ "Petites",
+        {{ surfaceConcernee }} <= 10000 ~ "Moyennes",
+        {{ surfaceConcernee }} > 10000 ~ "Grandes",
+        TRUE ~ "???"
       )
     ) |>
     group_by(TailleExploitation, {{ destinationVar }}) |>
@@ -39,75 +40,65 @@ calculPartsDestinationByTailleExpl <- function(partComVar, destinationVar, libel
   return(result)
 }
 
-autoConsoMaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1, Maraichage, "AutoConsommation", totalSurfaceMarai, 1000)
+autoConsoMaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1, MaraichageAutoconsommation, totalSurfaceMarai, 1000)
 writeCSV(autoConsoMaraichaTailleExpl)
 
-autoConsoFruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1, Fruitier, "AutoConsommation", totalSurfaceFruit, 3000)
+autoConsoFruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1, FruitierAutoconsommation, totalSurfaceFruit, 3000)
 writeCSV(autoConsoFruitTailleExpl)
 
-autoConsoVivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1, Vivrier, "AutoConsommation", totalSurfaceVivri, 3000)
+autoConsoVivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1, VivrierAutoconsommation, totalSurfaceVivri, 3000)
 writeCSV(autoConsoVivriTailleExpl)
 
 
 
-modalites_1_4_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1_4, Maraichage, "Modalites 1 à 4", totalSurfaceMarai, 1000)
-writeCSV(modalites_1_4_MaraichaTailleExpl)
+DestinationsHV_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1_4, MaraichageDestinationsHV, totalSurfaceMarai, 1000)
+writeCSV(DestinationsHV_MaraichaTailleExpl)
 
-modalites_1_4_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1_4, Fruitier, "Modalites 1 à 4", totalSurfaceFruit, 3000)
-writeCSV(modalites_1_4_FruitTailleExpl)
+DestinationsHV_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1_4, FruitierDestinationsHV, totalSurfaceFruit, 3000)
+writeCSV(DestinationsHV_FruitTailleExpl)
 
-modalites_1_4_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1_4, Vivrier, "Modalites 1 à 4", totalSurfaceVivri, 3000)
-writeCSV(modalites_1_4_VivriTailleExpl)
-
-
-modalites_5_6_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__5_6, Maraichage, "Modalites 5 et 6", totalSurfaceMarai, 1000)
-writeCSV(modalites_5_6_MaraichaTailleExpl)
-
-modalites_5_6_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__5_6, Fruitier, "Modalites 5 et 6", totalSurfaceFruit, 3000)
-writeCSV(modalites_5_6_FruitTailleExpl)
-
-modalites_5_6_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__5_6, Vivrier, "Modalites 5 et 6", totalSurfaceVivri, 3000)
-writeCSV(modalites_5_6_VivriTailleExpl)
+DestinationsHV_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1_4, VivrierDestinationsHV, totalSurfaceVivri, 3000)
+writeCSV(DestinationsHV_VivriTailleExpl)
 
 
-modalites_7_12_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__7_12, Maraichage, "Modalites 7 à 12", totalSurfaceMarai, 1000)
-writeCSV(modalites_7_12_MaraichaTailleExpl)
+VenteDirecte_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__5_6, MaraichageVenteDirecte, totalSurfaceMarai, 1000)
+writeCSV(VenteDirecte_MaraichaTailleExpl)
 
-modalites_7_12_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__7_12, Fruitier, "Modalites 7 à 12", totalSurfaceFruit, 3000)
-writeCSV(modalites_7_12_FruitTailleExpl)
+VenteDirecte_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__5_6, FruitierVenteDirecte, totalSurfaceFruit, 3000)
+writeCSV(VenteDirecte_FruitTailleExpl)
 
-modalites_7_12_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__7_12, Vivrier, "Modalites 7 à 12", totalSurfaceVivri, 3000)
-writeCSV(modalites_7_12_VivriTailleExpl)
+VenteDirecte_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__5_6, VivrierVenteDirecte, totalSurfaceVivri, 3000)
+writeCSV(VenteDirecte_VivriTailleExpl)
 
 
-tableMaraichage <- rga23_prodVegetales_regroupements |>
-  filter(!is.na(totalSurfaceMarai)) |>
-  mutate(TailleExploitation = case_when(
-    totalSurfaceMarai <= 1000 ~ "Petites",
-    totalSurfaceMarai <= 10000 ~ "Moyennes",
-    TRUE ~ "Grandes"
-  )) |>
-  mutate(
-    DestinationsHorsVente = case_when(
-      PartComMaraic__1_4 == 0 ~ "0%",
-      PartComMaraic__1_4 <= 25 ~ "1 à 25%",
-      PartComMaraic__1_4 <= 50 ~ "25 et 50%",
-      PartComMaraic__1_4 <= 75 ~ "50 et 75%",
-      PartComMaraic__1_4 <= 100 ~ "Plus de 75%"
-    ),
-    VenteDirecte = case_when(
-      PartComMaraic__5_6 == 0 ~ "0%",
-      PartComMaraic__5_6 <= 25 ~ "1 à 25%",
-      PartComMaraic__5_6 <= 50 ~ "25 et 50%",
-      PartComMaraic__5_6 <= 75 ~ "50 et 75%",
-      PartComMaraic__5_6 <= 100 ~ "Plus de 75%"
-    ),
-    VenteAuxProfessionnels = case_when(
-      PartComMaraic__7_12 == 0 ~ "0%",
-      PartComMaraic__7_12 <= 25 ~ "1 à 25%",
-      PartComMaraic__7_12 <= 50 ~ "25 et 50%",
-      PartComMaraic__7_12 <= 75 ~ "50 et 75%",
-      PartComMaraic__7_12 <= 100 ~ "Plus de 75%"
-    )
-  ) |>
-  select(interview__key, TailleExploitation, DestinationsHorsVente, VenteDirecte, VenteAuxProfessionnels)
+VenteAuxProfessionnels_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__7_12, MaraichageVenteAuxProfessionnels, totalSurfaceMarai, 1000)
+writeCSV(VenteAuxProfessionnels_MaraichaTailleExpl)
+
+VenteAuxProfessionnels_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__7_12, FruitierVenteAuxProfessionnels, totalSurfaceFruit, 3000)
+writeCSV(VenteAuxProfessionnels_FruitTailleExpl)
+
+VenteAuxProfessionnels_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__7_12, VivrierVenteAuxProfessionnels, totalSurfaceVivri, 3000)
+writeCSV(VenteAuxProfessionnels_VivriTailleExpl)
+
+
+#### Graphiques
+library(ggplot2)
+
+ggplot(
+  DestinationsHV_MaraichaTailleExpl |> mutate(Proportion = `En %` / 100),
+  aes(x = TailleExploitation, y = Proportion, fill = MaraichageDestinationsHV)
+) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = scales::percent(Proportion)),
+    position = position_stack(vjust = 0.5),
+    size = 3, color = "black"
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal() +
+  labs(x = "Taille des exploitations", 
+       y = "Proportion d'exploitants", 
+       fill = "Part de destinations hors vente", 
+       title = "MARAICHAGE - Part de destination hors vente par taille d'exploitation")
+
+nom_fichier <- paste(Sys.getenv("cheminAcces"), "/SortiesR/DestinationsHV_MaraichaTailleExpl.jpg", sep="")
+ggsave(nom_fichier, plot = last_plot(), width = 10, height = 6, units = "in")
