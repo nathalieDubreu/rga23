@@ -3,15 +3,84 @@ library(rlang)
 #### Regroupement de modalités de destination des produits
 rga23_prodVegetales_regroupements <- rga23_prodVegetales |>
   mutate(
-    PartComMaraic__1_4 = PartComMaraic__1 + PartComMaraic__2 + PartComMaraic__3 + PartComMaraic__4,
-    PartComMaraic__5_6 = PartComMaraic__5 + PartComMaraic__6,
-    PartComMaraic__7_12 = PartComMaraic__7 + PartComMaraic__8 + PartComMaraic__9 + PartComMaraic__10 + PartComMaraic__11 + PartComMaraic__12,
-    PartComFruit__1_4 = PartComFruit__1 + PartComFruit__2 + PartComFruit__3 + PartComFruit__4,
-    PartComFruit__5_6 = PartComFruit__5 + PartComFruit__6,
-    PartComFruit__7_12 = PartComFruit__7 + PartComFruit__8 + PartComFruit__9 + PartComFruit__10 + PartComFruit__11 + PartComFruit__12,
-    PartComVivri__1_4 = PartComVivri__1 + PartComVivri__2 + PartComVivri__3 + PartComVivri__4,
-    PartComVivri__5_6 = PartComVivri__5 + PartComVivri__6,
-    PartComVivri__7_12 = PartComVivri__7 + PartComVivri__8 + PartComVivri__9 + PartComVivri__10 + PartComVivri__11 + PartComVivri__12
+    ## Regroupements des destinations pour le maraichage
+    PartComMaraic__1_4 = rowSums(across(
+      all_of(paste0("PartComMaraic__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComMaraic__5_6 = rowSums(across(
+      all_of(paste0("PartComMaraic__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComMaraic__7_12 = rowSums(across(
+      all_of(paste0("PartComMaraic__", 7:12)),
+      ~ coalesce(., 0)
+    )),
+    ## Regroupements des destinations pour le fruitier
+    PartComFruit__1_4 = rowSums(across(
+      all_of(paste0("PartComFruit__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComFruit__5_6 = rowSums(across(
+      all_of(paste0("PartComFruit__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComFruit__7_12 = rowSums(across(
+      all_of(paste0("PartComFruit__", 7:12)),
+      ~ coalesce(., 0)
+    )),
+    ## Regroupements des destinations pour le vivrier
+    PartComVivri__1_4 = rowSums(across(
+      all_of(paste0("PartComVivri__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComVivri__5_6 = rowSums(across(
+      all_of(paste0("PartComVivri__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComVivri__7_12 = rowSums(across(
+      all_of(paste0("PartComVivri__", 7:12)),
+      ~ coalesce(., 0)
+    )),
+    ## Regroupements des destinations pour le floral
+    PartComFlorale__1_4 = rowSums(across(
+      all_of(paste0("PartComFlorale__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComFlorale__5_6 = rowSums(across(
+      all_of(paste0("PartComFlorale__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComFlorale__7_12 = rowSums(across(
+      all_of(paste0("PartComFlorale__", 7:12)),
+      ~ coalesce(., 0)
+    )),
+    ## Regroupements des destinations pour les PPAM
+    PartComPlantes__1_4 = rowSums(across(
+      all_of(paste0("PartComPlantes__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComPlantes__5_6 = rowSums(across(
+      all_of(paste0("PartComPlantes__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComPlantes__7_12 = rowSums(across(
+      all_of(paste0("PartComPlantes__", 7:12)),
+      ~ coalesce(., 0)
+    )),
+    ## Regroupements des destinations pour les pépinières
+    PartComPepinieres__1_4 = rowSums(across(
+      all_of(paste0("PartComPepinieres__", 1:4)),
+      ~ coalesce(., 0)
+    )),
+    PartComPepinieres__5_6 = rowSums(across(
+      all_of(paste0("PartComPepinieres__", 5:6)),
+      ~ coalesce(., 0)
+    )),
+    PartComPepinieres__7_12 = rowSums(across(
+      all_of(paste0("PartComPepinieres__", 7:12)),
+      ~ coalesce(., 0)
+    ))
   )
 
 calculPartsDestinationByTailleExpl <- function(partComVar, destinationVar, surfaceConcernee, seuilMin) {
@@ -37,55 +106,46 @@ calculPartsDestinationByTailleExpl <- function(partComVar, destinationVar, surfa
     mutate(`En %` = round(`Nb exploitants` / sum(`Nb exploitants`) * 100, 1)) |>
     arrange({{ destinationVar }})
 
+  write.csv(result, file.path(Sys.getenv("cheminAcces"), "SortiesR", paste(deparse(substitute(destinationVar)), ".csv", sep = "")), row.names = FALSE)
+
   return(result)
 }
 
-autoConsoMaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1, MaraichageAutoconsommation, totalSurfaceMarai, 1000)
-writeCSV(autoConsoMaraichaTailleExpl)
+## Autoconsommation seule pour certains types de cultures
+calculPartsDestinationByTailleExpl(PartComMaraic__1, MaraichageAutoconsommation, totalSurfaceMarai, 1000)
+calculPartsDestinationByTailleExpl(PartComFruit__1, FruitierAutoconsommation, totalSurfaceFruit, 3000)
+calculPartsDestinationByTailleExpl(PartComVivri__1, VivrierAutoconsommation, totalSurfaceVivri, 3000)
 
-autoConsoFruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1, FruitierAutoconsommation, totalSurfaceFruit, 3000)
-writeCSV(autoConsoFruitTailleExpl)
+## Destination Hors Vente
+DestinationsHV_Maraic_TailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1_4, MaraichageDestinationsHV, totalSurfaceMarai, 1000)
+DestinationsHV_Fruit_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1_4, FruitierDestinationsHV, totalSurfaceFruit, 3000)
+DestinationsHV_Vivri_TailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1_4, VivrierDestinationsHV, totalSurfaceVivri, 3000)
+DestinationsHV_Florale_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFlorale__1_4, FloraleDestinationsHV, totalSurfaceFlorale, 3000)
+DestinationsHV_Plantes_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPlantes__1_4, PlantesDestinationsHV, totalSurfacePlantes, 3000)
+DestinationsHV_Pepinieres_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPepinieres__1_4, PepinieresDestinationsHV, totalSurfacePepinieres, 3000)
 
-autoConsoVivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1, VivrierAutoconsommation, totalSurfaceVivri, 3000)
-writeCSV(autoConsoVivriTailleExpl)
+## Vente Directe
+VenteDirecte_Maraic_TailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__5_6, MaraichageVenteDirecte, totalSurfaceMarai, 1000)
+VenteDirecte_Fruit_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__5_6, FruitierVenteDirecte, totalSurfaceFruit, 3000)
+VenteDirecte_Vivri_TailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__5_6, VivrierVenteDirecte, totalSurfaceVivri, 3000)
+VenteDirecte_Florale_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFlorale__5_6, FloraleVenteDirecte, totalSurfaceFlorale, 3000)
+VenteDirecte_Plantes_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPlantes__5_6, PlantesVenteDirecte, totalSurfacePlantes, 3000)
+VenteDirecte_Pepinieres_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPepinieres__5_6, PepinieresVenteDirecte, totalSurfacePepinieres, 3000)
 
-
-
-DestinationsHV_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__1_4, MaraichageDestinationsHV, totalSurfaceMarai, 1000)
-writeCSV(DestinationsHV_MaraichaTailleExpl)
-
-DestinationsHV_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__1_4, FruitierDestinationsHV, totalSurfaceFruit, 3000)
-writeCSV(DestinationsHV_FruitTailleExpl)
-
-DestinationsHV_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__1_4, VivrierDestinationsHV, totalSurfaceVivri, 3000)
-writeCSV(DestinationsHV_VivriTailleExpl)
-
-
-VenteDirecte_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__5_6, MaraichageVenteDirecte, totalSurfaceMarai, 1000)
-writeCSV(VenteDirecte_MaraichaTailleExpl)
-
-VenteDirecte_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__5_6, FruitierVenteDirecte, totalSurfaceFruit, 3000)
-writeCSV(VenteDirecte_FruitTailleExpl)
-
-VenteDirecte_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__5_6, VivrierVenteDirecte, totalSurfaceVivri, 3000)
-writeCSV(VenteDirecte_VivriTailleExpl)
-
-
-VenteAuxProfessionnels_MaraichaTailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__7_12, MaraichageVenteAuxProfessionnels, totalSurfaceMarai, 1000)
-writeCSV(VenteAuxProfessionnels_MaraichaTailleExpl)
-
-VenteAuxProfessionnels_FruitTailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__7_12, FruitierVenteAuxProfessionnels, totalSurfaceFruit, 3000)
-writeCSV(VenteAuxProfessionnels_FruitTailleExpl)
-
-VenteAuxProfessionnels_VivriTailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__7_12, VivrierVenteAuxProfessionnels, totalSurfaceVivri, 3000)
-writeCSV(VenteAuxProfessionnels_VivriTailleExpl)
+## Vente aux professionnels
+VenteAuxProfessionnels_Maraic_TailleExpl <- calculPartsDestinationByTailleExpl(PartComMaraic__7_12, MaraichageVenteAuxProfessionnels, totalSurfaceMarai, 1000)
+VenteAuxProfessionnels_Fruit_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFruit__7_12, FruitierVenteAuxProfessionnels, totalSurfaceFruit, 3000)
+VenteAuxProfessionnels_Vivri_TailleExpl <- calculPartsDestinationByTailleExpl(PartComVivri__7_12, VivrierVenteAuxProfessionnels, totalSurfaceVivri, 3000)
+VenteAuxProfessionnels_Florale_TailleExpl <- calculPartsDestinationByTailleExpl(PartComFlorale__7_12, FloraleVenteAuxProfessionnels, totalSurfaceFlorale, 3000)
+VenteAuxProfessionnels_Plantes_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPlantes__7_12, PlantesVenteAuxProfessionnels, totalSurfacePlantes, 3000)
+VenteAuxProfessionnels_Pepinieres_TailleExpl <- calculPartsDestinationByTailleExpl(PartComPepinieres__7_12, PepinieresVenteAuxProfessionnels, totalSurfacePepinieres, 3000)
 
 
 #### Graphiques
 library(ggplot2)
 
 ggplot(
-  DestinationsHV_MaraichaTailleExpl |> mutate(Proportion = `En %` / 100),
+  DestinationsHV_Maraic_TailleExpl |> mutate(Proportion = `En %` / 100),
   aes(x = TailleExploitation, y = Proportion, fill = MaraichageDestinationsHV)
 ) +
   geom_bar(stat = "identity") +
@@ -95,10 +155,12 @@ ggplot(
   ) +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal() +
-  labs(x = "Taille des exploitations", 
-       y = "Proportion d'exploitants", 
-       fill = "Part de destinations hors vente", 
-       title = "MARAICHAGE - Part de destination hors vente par taille d'exploitation")
+  labs(
+    x = "Taille des exploitations",
+    y = "Proportion d'exploitants",
+    fill = "Part de destinations hors vente",
+    title = "MARAICHAGE - Part de destination hors vente par taille d'exploitation"
+  )
 
-nom_fichier <- paste(Sys.getenv("cheminAcces"), "/SortiesR/DestinationsHV_MaraichaTailleExpl.jpg", sep="")
+nom_fichier <- paste(Sys.getenv("cheminAcces"), "/SortiesR/DestinationsHV_Maraic_TailleExpl.jpg", sep = "")
 ggsave(nom_fichier, plot = last_plot(), width = 10, height = 6, units = "in")
