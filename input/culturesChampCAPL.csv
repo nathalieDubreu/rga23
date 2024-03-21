@@ -140,8 +140,8 @@ idProdRGA;ProductionRGA;AutreConditionNecessaire;Production;Unit;PointsParUnite
 506;Nono;;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
 507;Poivrier;;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
 508;Tamanu;;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
-509;Vanillier - ombrage naturel;;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
-510;Vanillier - serre ou ombrière;;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
+509;Vanillier - ombrage naturel;;Vanille sous ombrage naturel ou tuteur naturel (conversion en m�);m²;3.1
+510;Vanillier - serre ou ombrière;;Vanille sous ombrage artificiel ou tuteur artificiel (conversion en m�);m²;3.1
 511;Autres (canelle, santal, bancoulier...);;Plantes aromatiques, épices ou médicinales, kava;m²;0.3
 601;Ornementales (plantes vertes et potées fleuries, orchidées...);;Pépinières;m²;0.5
 602;Fruitières;;Pépinières;m²;0.5
