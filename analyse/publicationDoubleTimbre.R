@@ -86,11 +86,12 @@ rga23_mainOeuvre <- inner_join(
   )
 
 ## Tableaux hackmd + publication
-source("analyse/exploitations.R")
+source("analyse/partie6_Fertilisation.R")
+source("analyse/profilsExploitations.R")
 source("analyse/prodVegetalesEtSurfaces.R")
 source("analyse/prodAnimales.R")
 source("analyse/chefExplEtMainOeuvre.R")
-source("analyse/coprahculteurs.R")
+source("analyse/partie5_Coprahculture.R")
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
 ## Tableaux supplémentaires pour la publication

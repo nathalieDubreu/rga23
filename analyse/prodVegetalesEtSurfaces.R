@@ -44,7 +44,7 @@ propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent <- full_join(surfacesCla
   )
 
 ## Retour à l'ensemble des surfaces déclarées
-propSurfacesIrrigueesCultClassiques <- rga23_surfacesCultures_HC_HP |>
+surfacesIrrigueesCultClassiques <- rga23_surfacesCultures_HC_HP |>
   group_by(TypeCultureTexte) |>
   summarize(
     SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
@@ -52,7 +52,7 @@ propSurfacesIrrigueesCultClassiques <- rga23_surfacesCultures_HC_HP |>
     proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
   )
 
-propSurfacesIrrigueesJO <- rga23_prodVegetales |>
+surfacesIrrigueesJO <- rga23_prodVegetales |>
   mutate(TypeCultureTexte = "Jardins océaniens") |>
   group_by(TypeCultureTexte) |>
   summarize(
@@ -61,16 +61,16 @@ propSurfacesIrrigueesJO <- rga23_prodVegetales |>
     proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
   )
 
-propSurfacesIrrigueesParTypeCult <- rbind(propSurfacesIrrigueesCultClassiques, propSurfacesIrrigueesJO)
+surfacesIrrigueesParTypeCult <- rbind(surfacesIrrigueesCultClassiques, surfacesIrrigueesJO)
 
-proportionIrrigueeSurLEnsemble <- propSurfacesIrrigueesParTypeCult |>
+proportionIrrigueeSurLEnsemble <- surfacesIrrigueesParTypeCult |>
   summarize(
-    SurfacesIrriguees = sum(SurfacesIrriguees),
-    SurfacesTotales = sum(SurfacesTotales),
-    proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
+    sommeSurfacesIrriguees = sum(SurfacesIrriguees),
+    sommeSurfacesTotales = sum(SurfacesTotales),
+    proportion = round(sum(SurfacesIrriguees) / sum(SurfacesTotales) * 100, 4)
   )
 
-propSurfacesIrrigueesParTypeCult <- propSurfacesIrrigueesParTypeCult |> 
+propSurfacesIrrigueesParTypeCult <- surfacesIrrigueesParTypeCult |> 
   select(TypeCultureTexte, proportion)
 
 writeCSV(propSurfacesIrrigueesParTypeCult)

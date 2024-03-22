@@ -29,9 +29,6 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Encadré centré sur une approximation des seuils de 2012 pour permettre des comparaisons ? [Comparaison seuils 2012 et 2023](https://hackmd.io/@hXnaxghhS0iCd1Ro92vvbA/BkfujWh7a)
 
-<!-- - Nombre d'exploitations bio : -->
-
-<!-- <font color="blue">`r kable(exploitationsBio)`</font> -->
 
 ## Surface agricole 
 
@@ -137,45 +134,46 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 - Part de la production de coprah dans les revenus annuels
 
-<font color="blue">`r kable(partRevenusCoprah)`</font>
+<font color="blue">`r kable(Partie5_partRevenusCoprah)`</font>
 
-- <font color="blue">`r coprahculteursSommes$NbCocoExploitees`</font> cocoteraies exploitées
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPP`</font> en tant que propriétaire plein (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesPP`</font> entretenues)
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesPI`</font> en tant que propriétaire en indivision (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesPI`</font> entretenues),
-  - <font color="blue">`r coprahculteursSommes$NbCocoExploiteesE`</font> en tant qu'exploitant (dont <font color="blue">`r coprahculteursSommes$NbCocoEntretenuesE`</font> entretenues).
+- <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoExploitees`</font> cocoteraies exploitées
+  - <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoExploiteesPP`</font> en tant que propriétaire plein (dont <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoEntretenuesPP`</font> entretenues)
+  - <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoExploiteesPI`</font> en tant que propriétaire en indivision (dont <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoEntretenuesPI`</font> entretenues),
+  - <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoExploiteesE`</font> en tant qu'exploitant (dont <font color="blue">`r Partie5_comptagesCocoteraies$NbCocoEntretenuesE`</font> entretenues).
   
-- <font color="blue">`r coprahculteursSommes$NbMoyCoco`</font> cocoteraies exploitées en moyenne (de <font color="blue">`r coprahculteursSommes$NbMinCoco`</font> à <font color="blue">`r coprahculteursSommes$NbMaxCoco`</font>)
+- <font color="blue">`r Partie5_comptagesCocoteraies$NbMoyCoco`</font> cocoteraies exploitées en moyenne (de <font color="blue">`r Partie5_comptagesCocoteraies$NbMinCoco`</font> à <font color="blue">`r Partie5_comptagesCocoteraies$NbMaxCoco`</font>)
 
 - Part du revenu de la vente de coprah conservé :
 
-- Les producteurs ont conservé 100% du revenu de la cocoteraie pour <font color="blue">`r nbCocoteraiesToutRevenu`</font> cocoteraies
+- Les producteurs ont conservé 100% du revenu de la cocoteraie pour <font color="blue">`r Partie5_nbCocoteraiesConservationToutRevenu`</font> cocoteraies
 
-<font color="blue">`r kable(cocoteraiesExploiteesPartRevenu)`</font>
+<font color="blue">`r kable(Partie5_cocoteraiesStatutPartRevenu)`</font>
 
 - Proportion de producteurs par statut avec: 
   - Plantation de nouveaux cocotiers
-<font color="blue">`r kable(replanter)`</font>
+<font color="blue">`r kable(Partie5_replanter)`</font>
   
   - Suppression des anciens cocotiers (parmi ceux qui ont replanté)
-<font color="blue">`r kable(supprimer)`</font>
+<font color="blue">`r kable(Partie5_supprimer)`</font>
 
   - Entretien (par mode: défrichage/débroussaillage, engrais, pose de bagues) 
 
 ## Fertilisation et protection des cultures
 
 - Part d’exploitants qui utilisent des produits phytosanitaires et SAU associée :
-<font color="blue">`r kable(produitsPhyto)`</font>
+<font color="blue">`r kable(Partie6_partExploitantsProduitsPhyto)`</font>
+Les exploitants qui utilisent les produits phyto possèdent `r Partie6_nbHa_HC_HP_ExplQuiUtilisentProduitsPhyto` de cultures végétales (hors cocoteraies et hors pâturages)
 
 - Part des exploitants par archipel :
-<font color="blue">`r kable(produitsPhytoArchipel)`</font>
+<font color="blue">`r kable(Partie6_partUtilisationProduitsPhytoArchipel)`</font>
 
 - Type de produits utilisés :
-<font color="blue">`r kable(typeProduitsPhyto)`</font>
+<font color="blue">`r kable(Partie6_typeProduitsPhyto)`</font>
 
 - Part d’exploitants qui utilisent des engrais par archipel :
 
 Parmi les cultivateurs :
-<font color="blue">`r kable(engrais)`</font>
+<font color="blue">`r kable(Partie6_partUtilisationEngraisArchipel)`</font>
 
 - Type d'engrais utilisés :
-<font color="blue">`r kable(typeEngrais)`</font>
+<font color="blue">`r kable(Partie6_typeEngrais)`</font>
