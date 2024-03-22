@@ -117,8 +117,6 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 
 ## Elevage (par archipel)
 
-<!-- <font color="blue">`r kable(eleveursBio)`</font> -->
-
 - Cheptels d’animaux par archipel
   - Bovins
   - Ovins

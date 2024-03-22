@@ -117,16 +117,15 @@ nombreAnimauxGenre <- left_join(rga23_prodAnimales, rga23_mainOeuvre |> select(i
   pivot_wider(names_from = SexeChefExpl, values_from = "Nombre d'animaux")
 writeCSV(nombreAnimauxGenre)
 
-
-eleveursBio <- rga23_exploitations |>
-  filter(RaisonsRecensement__2 == 1 & eligibilite == 1) |>
-  mutate(`Exploitations avec élevages` = case_when(
-    AgriBio == 1 ~ "Totalement bio",
-    AgriBio == 2 ~ "Pas bio",
-    AgriBio == 3 ~ "En partie bio"
-  )) |>
-  group_by(`Exploitations avec élevages`) |>
-  calculPourcentage()
+# eleveursBio <- rga23_exploitations |>
+#   filter(RaisonsRecensement__2 == 1 & eligibilite == 1) |>
+#   mutate(`Exploitations avec élevages` = case_when(
+#     AgriBio == 1 ~ "Totalement bio",
+#     AgriBio == 2 ~ "Pas bio",
+#     AgriBio == 3 ~ "En partie bio"
+#   )) |>
+#   group_by(`Exploitations avec élevages`) |>
+#   calculPourcentage()
 
 detailsCheptels <- summary <- rga23_prodAnimales |>
   summarise(
