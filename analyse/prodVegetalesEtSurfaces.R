@@ -1,5 +1,6 @@
 # Irrigation ?
 
+## Nombre de chefs d'exploitations qui déclarent avoir irrigué
 irrigation <- rga23_prodVegetales |>
   filter(!is.na(Irrigation)) |>
   mutate(Irrigation = case_when(
@@ -8,34 +9,70 @@ irrigation <- rga23_prodVegetales |>
   )) |>
   group_by(Irrigation) |>
   calculPourcentage()
+# Irrigation       n
+#    Non         1178
+#    Oui         1600
 
-propSurfacesIrriguees <- rga23_surfacesCultures |>
-  filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
+## Surfaces irriguées parmi les surfaces classiques des exploitants qui irriguent
+surfacesClassiquesIrrigueesParExploitant <- rga23_surfacesCultures_HC_HP |>
+  group_by(interview__key) |>
+  summarize(
+    SurfacesIrrigueesClassiques = sum(replace_na(SurfaceIrrig, 0)),
+    SurfacesTotalesClassiques = sum(replace_na(SurfaceCult, 0))
+  ) |>
+  filter(SurfacesIrrigueesClassiques > 0)
+## 1351 exploitants ont déclaré des surfaces classiques irriguées
+
+## Surfaces irriguées parmi les JO des exploitants qui irriguent
+surfacesJOIrrigueesParExploitant <- rga23_prodVegetales |>
+  group_by(interview__key) |>
+  summarize(
+    SurfacesIrrigueesJO = sum(replace_na(SurfaceIrrigJardins, 0)),
+    SurfacesTotalesJO = sum(replace_na(SurfaceJardins, 0))
+  ) |>
+  filter(SurfacesIrrigueesJO > 0)
+## 56 exploitants ont déclaré des surfaces de JO irriguées
+
+## Porportion de surfaces irriguées parmi les surfaces possédées par les exploitants qui irriguent
+propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent <- full_join(surfacesClassiquesIrrigueesParExploitant, surfacesJOIrrigueesParExploitant) |>
+  mutate(
+    surfacesIrrigueesTotalesDeclarees = replace_na(SurfacesIrrigueesClassiques, 0) + replace_na(SurfacesIrrigueesJO, 0),
+    surfacesTotalesDeclarees = replace_na(SurfacesTotalesClassiques, 0) + replace_na(SurfacesTotalesJO, 0)
+  ) |>
+  summarize(
+    proportion = round(sum(surfacesIrrigueesTotalesDeclarees) / sum(surfacesTotalesDeclarees) * 100)
+  )
+
+## Retour à l'ensemble des surfaces déclarées
+propSurfacesIrrigueesCultClassiques <- rga23_surfacesCultures_HC_HP |>
+  group_by(TypeCultureTexte) |>
   summarize(
     SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
     SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
-    PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0) / sum(replace_na(SurfaceCult, 0)) * 100), 1)
+    proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
   )
 
-propSurfacesIrrigueesParTypeCult <- rga23_surfacesCultures |>
-  filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
-  mutate(TypeCulture = case_when(
-    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
-    (TypeCulture == 20) ~ "20 - Cultures vivrières",
-    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors cocoteraies)",
-    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
-    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
-    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
-    (culture_id == 703 | culture_id == 704) ~ "70 - Cultures fourragères (hors pâturages)",
-    (TypeCulture == 80) ~ "80 - Jachères",
-    TRUE ~ as.character(TypeCulture)
-  )) |>
-  group_by(TypeCulture) |>
+propSurfacesIrrigueesJO <- rga23_prodVegetales |>
+  mutate(TypeCultureTexte = "Jardins océaniens") |>
+  group_by(TypeCultureTexte) |>
   summarize(
-    SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
-    SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
-    PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0) / sum(replace_na(SurfaceCult, 0)) * 100), 1)
+    SurfacesIrriguees = sum(replace_na(SurfaceIrrigJardins, 0)),
+    SurfacesTotales = sum(replace_na(SurfaceJardins, 0)),
+    proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
   )
+
+propSurfacesIrrigueesParTypeCult <- rbind(propSurfacesIrrigueesCultClassiques, propSurfacesIrrigueesJO)
+
+proportionIrrigueeSurLEnsemble <- propSurfacesIrrigueesParTypeCult |>
+  summarize(
+    SurfacesIrriguees = sum(SurfacesIrriguees),
+    SurfacesTotales = sum(SurfacesTotales),
+    proportion = round(SurfacesIrriguees / SurfacesTotales * 100, 1)
+  )
+
+propSurfacesIrrigueesParTypeCult <- propSurfacesIrrigueesParTypeCult |> 
+  select(TypeCultureTexte, proportion)
+
 writeCSV(propSurfacesIrrigueesParTypeCult)
 
 # OrigineEauIrrig
