@@ -9,6 +9,32 @@ irrigation <- rga23_prodVegetales |>
   group_by(Irrigation) |>
   calculPourcentage()
 
+propSurfacesIrriguees <- rga23_surfacesCultures |>
+  filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
+  summarize(SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
+            SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
+            PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0)/sum(replace_na(SurfaceCult, 0))*100),1))
+
+
+propSurfacesIrrigueesParTypeCult <- rga23_surfacesCultures |>
+  filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
+  mutate(TypeCulture = case_when(
+    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
+    (TypeCulture == 20) ~ "20 - Cultures vivrières",
+    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors cocoteraies)",
+    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
+    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
+    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
+    (culture_id == 703 | culture_id == 704) ~ "70 - Cultures fourragères (hors pâturages)",
+    (TypeCulture == 80) ~ "80 - Jachères",
+    TRUE ~ as.character(TypeCulture)
+  )) |>
+  group_by(TypeCulture) |>
+  summarize(SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
+            SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
+            PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0)/sum(replace_na(SurfaceCult, 0))*100),1))
+writeCSV(propSurfacesIrrigueesParTypeCult)
+
 # Surface agricole utilisée par type de faire-valoir (parcelles)
 
 surfacesParFaireValoir <- rga23_parcelles |>
