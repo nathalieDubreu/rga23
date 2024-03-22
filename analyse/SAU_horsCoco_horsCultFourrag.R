@@ -1,35 +1,22 @@
-rga23_surfacesCultures_horsCocoEtFourrag <- rga23_surfacesCultures |>
-  filter(TypeCulture != 70 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
-  mutate(TypeCulture = case_when(
-    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
-    (TypeCulture == 20) ~ "20 - Cultures vivrières",
-    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors cocoteraies)",
-    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
-    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
-    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
-    (TypeCulture == 70) ~ "70 - Cultures fourragères",
-    (TypeCulture == 80) ~ "80 - Jachères",
-    TRUE ~ as.character(TypeCulture)
-  ))
-
 ## Tableaux pour la partie CULTURES
 
-## Surfaces de cultures classiques par type et archipel
+## Surfaces de cultures classiques par type et archipel - HORS COCOTERAIES ET HORS CULTURES FOURRAGERES
 
-surfacesParTypeHorsCocoFourragEtArchipel <- left_join(
-  rga23_surfacesCultures_horsCocoEtFourrag,
+surfacesParType_HC_HF_Archipel <- left_join(
+  rga23_surfacesCultures_HC_HP |> filter(TypeCulture != 70),
   rga23_champ |> select(interview__key, Archipel_1)
 ) |>
-  group_by(Archipel_1, TypeCulture) |>
+  group_by(Archipel_1, TypeCultureTexte) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE),
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`)
   )
 
-surfacesParTypeHorsCocoFourrag <- rga23_surfacesCultures_horsCocoEtFourrag |>
+surfacesParType_HC_HF <- rga23_surfacesCultures_HC_HP |>
+  filter(TypeCulture != 70) |>
   mutate(Archipel_1 = "Total") |>
-  group_by(Archipel_1, TypeCulture) |>
+  group_by(Archipel_1, TypeCultureTexte) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE),
@@ -37,8 +24,8 @@ surfacesParTypeHorsCocoFourrag <- rga23_surfacesCultures_horsCocoEtFourrag |>
   )
 
 surfacesParTypeCultureArchipelEtTotal <- rbind(
-  surfacesParTypeHorsCocoFourragEtArchipel,
-  surfacesParTypeHorsCocoFourrag
+  surfacesParType_HC_HF_Archipel,
+  surfacesParType_HC_HF
 ) |>
   pivot_wider(names_from = c(Archipel_1), values_from = c(`Nb Exploitants`, `Surface (m2)`, `Surface moyenne (m2)`), values_fill = 0)
 
@@ -47,22 +34,23 @@ writeCSV(surfacesParTypeCultureArchipelEtTotal)
 
 ## Surfaces de cultures classiques par type, sexe de l'exploitant et archipel
 
-surfacesParTypeHorsCocoFourragEtArchipelS <- left_join(
-  rga23_surfacesCultures_horsCocoEtFourrag,
+surfacesParType_HC_HF_Archipel_sexe <- left_join(
+  rga23_surfacesCultures_HC_HP |> filter(TypeCulture != 70),
   rga23_champ |> select(interview__key, Archipel_1)
 ) |>
   left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
-  group_by(Archipel_1, TypeCulture, SexeChefExpl) |>
+  group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE),
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`)
   )
 
-surfacesParTypeHorsCocoFourragS <- rga23_surfacesCultures_horsCocoEtFourrag |>
+surfacesParType_HC_HF_sexe <- rga23_surfacesCultures_HC_HP |>
+  filter(TypeCulture != 70) |>
   left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
   mutate(Archipel_1 = "Total") |>
-  group_by(Archipel_1, TypeCulture, SexeChefExpl) |>
+  group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE),
@@ -70,8 +58,8 @@ surfacesParTypeHorsCocoFourragS <- rga23_surfacesCultures_horsCocoEtFourrag |>
   )
 
 surfacesParTypeCultureArchipelEtTotalSexe <- rbind(
-  surfacesParTypeHorsCocoFourragEtArchipelS,
-  surfacesParTypeHorsCocoFourragS
+  surfacesParType_HC_HF_Archipel_sexe,
+  surfacesParType_HC_HF_sexe
 ) |>
   pivot_wider(names_from = c(Archipel_1, SexeChefExpl), values_from = c(`Nb Exploitants`, `Surface (m2)`, `Surface moyenne (m2)`), values_fill = 0)
 
@@ -88,9 +76,9 @@ surfacesJOArchipel <- left_join(
       SurfaceBioJardins == 1 ~ SurfaceJardins,
       TRUE ~ 0
     ),
-    TypeCulture = "Jardins océaniens"
+    TypeCultureTexte = "Jardins océaniens"
   ) |>
-  group_by(Archipel_1, TypeCulture) |>
+  group_by(Archipel_1, TypeCultureTexte) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceJardins, na.rm = TRUE),
@@ -99,7 +87,7 @@ surfacesJOArchipel <- left_join(
 
 writeCSV(surfacesJOArchipel)
 
-ensembleSurfacesTypeJoArchipel <- rbind(surfacesParTypeHorsCocoFourragEtArchipel, surfacesJOArchipel)
+ensembleSurfacesTypeJoArchipel <- rbind(surfacesParType_HC_HF_Archipel, surfacesJOArchipel)
 
 surfacesJOArchipelSexe <- left_join(
   rga23_prodVegetales |> filter(ModesProduction__4 == 1),
@@ -111,9 +99,9 @@ surfacesJOArchipelSexe <- left_join(
       SurfaceBioJardins == 1 ~ SurfaceJardins,
       TRUE ~ 0
     ),
-    TypeCulture = "Jardins océaniens"
+    TypeCultureTexte = "Jardins océaniens"
   ) |>
-  group_by(Archipel_1, TypeCulture, SexeChefExpl) |>
+  group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceJardins, na.rm = TRUE),
@@ -125,10 +113,10 @@ surfacesJOSexe <- left_join(
   rga23_mainOeuvre |> select(interview__key, SexeChefExpl)
 ) |>
   mutate(
-    TypeCulture = "Jardins océaniens",
+    TypeCultureTexte = "Jardins océaniens",
     Archipel_1 = "Total"
   ) |>
-  group_by(Archipel_1, TypeCulture, SexeChefExpl) |>
+  group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
     `Surface (m2)` = sum(SurfaceJardins, na.rm = TRUE),
@@ -147,7 +135,7 @@ writeCSV(surfacesJoArchipelEtTotalSexe)
 
 surfaceCultFourrageres <- rga23_surfacesCultures |>
   filter(TypeCulture == 70) |>
-  mutate(TypeCulture = case_when(
+  mutate(TypeCultureTexte = case_when(
     (culture_id == 701) ~ "70a - Cultures fourragères : pâturages",
     (culture_id == 702) ~ "70a - Cultures fourragères : pâturages",
     (culture_id == 703) ~ "70b - Cultures fourragères : maïs fourrage et ensilage et sorgho",
@@ -155,31 +143,31 @@ surfaceCultFourrageres <- rga23_surfacesCultures |>
     (culture_id == 705) ~ "70a - Cultures fourragères : pâturages",
     TRUE ~ as.character(TypeCulture)
   )) |>
-  group_by(TypeCulture) |>
+  group_by(TypeCultureTexte) |>
   summarize(
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
   )
 
 encadreSAUTypeTotal <- rbind(
   surfaceCultFourrageres,
-  surfacesParTypeHorsCocoFourrag |> ungroup() |>
+  surfacesParType_HC_HF |> ungroup() |>
     select(-Archipel_1, -`Nb Exploitants`, -`Surface moyenne (m2)`),
   surfacesJO <- rga23_prodVegetales |>
     filter(ModesProduction__4 == 1) |>
     mutate(
-      TypeCulture = "Jardins océaniens"
+      TypeCultureTexte = "Jardins océaniens"
     ) |>
-    group_by(TypeCulture) |>
+    group_by(TypeCultureTexte) |>
     summarize(`Surface (m2)` = sum(SurfaceJardins, na.rm = TRUE))
 ) |>
-  arrange(TypeCulture)
+  arrange(TypeCultureTexte)
 encadreSAUTypeTotalHa <- encadreSAUTypeTotal |>
   mutate(`Surface (Ha)` = round(`Surface (m2)` / 10000)) |>
   select(-`Surface (m2)`)
 writeCSV(encadreSAUTypeTotalHa)
 
 hectaresCulturesVegetales <- encadreSAUTypeTotal |>
-  filter(TypeCulture != "70a - Cultures fourragères : pâturages") |>
+  filter(TypeCultureTexte != "70a - Cultures fourragères : pâturages") |>
   summarize(`Surface (Ha)` = round(sum(`Surface (m2)`) / 10000))
 
 surfacePaturagesArchipel <- left_join(
@@ -196,16 +184,13 @@ writeCSV(surfacePaturagesArchipel)
 
 ### Surfaces par archipel HORS paturages et hors cocoteraies
 
-parArchipel <- rbind(
+surfacesParArchipel <- rbind(
   surfacesJOArchipel |>
-    select(-`Surface moyenne (m2)`, `Nb Exploitants`) |>
-    mutate(TypeCulture = 90),
-  rga23_surfacesCultures_horsCocoEtPaturage <- left_join(
-    rga23_surfacesCultures |>
-      filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309),
-    rga23_champ |> select(interview__key, Archipel_1)
+    select(-`Surface moyenne (m2)`, `Nb Exploitants`),
+  left_join(
+    rga23_surfacesCultures_HC_HP, rga23_champ |> select(interview__key, Archipel_1)
   ) |>
-    group_by(Archipel_1, TypeCulture) |>
+    group_by(Archipel_1) |>
     summarize(
       `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
     )
@@ -220,13 +205,9 @@ jacheres <- left_join(
     filter(TypeCulture == 80),
   rga23_champ |> select(interview__key, Archipel_1)
 ) |>
-  group_by(Archipel_1, TypeCulture) |>
-  summarize(
-    `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
-  ) |>
   group_by(Archipel_1) |>
   summarize(
-    `dont jachères (Ha)` = round(sum(`Surface (m2)`) / 10000)
+    `dont jachères (Ha)` = round(sum(SurfaceCult, na.rm = TRUE) / 10000)
   )
 
-avecJacheres <- left_join(parArchipel, jacheres)
+avecJacheres <- left_join(surfacesParArchipel, jacheres)

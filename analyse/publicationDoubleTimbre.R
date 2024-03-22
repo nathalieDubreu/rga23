@@ -25,6 +25,22 @@ rga23_surfacesCultures <- inner_join(
   readCSV("rga23_surfacesCultures.csv"),
   rga23_champ |> select(interview__key)
 )
+
+## Surfaces de cultures hors cocoteraies et hors pâturages
+rga23_surfacesCultures_HC_HP <- rga23_surfacesCultures |>
+  filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
+  mutate(TypeCultureTexte = case_when(
+    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
+    (TypeCulture == 20) ~ "20 - Cultures vivrières",
+    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors cocoteraies)",
+    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
+    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
+    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
+    (TypeCulture == 70) ~ "70 - Cultures fourragères (hors pâturages)",
+    (TypeCulture == 80) ~ "80 - Jachères",
+    TRUE ~ as.character(TypeCulture)
+  ))
+
 rga23_tape <- inner_join(
   readCSV("rga23_tape.csv"),
   rga23_champ |> select(interview__key, Archipel_1)
