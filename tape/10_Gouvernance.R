@@ -41,6 +41,10 @@ score_1_Emancipation <- left_join(rga23_tape,
     ProbActivite__4 == 0 & (MoyensCompetences == 1 | MoyensCompetences == 3) ~ 3,
     # OUI à la question "ProbActivite" et FormationContinue
     ProbActivite__4 == 0 & FormationContinue == 1 ~ 4,
+    # Vu FAO : ProbActivite__4 == 0 & MoyensCompetences == 5 -> 3
+    ProbActivite__4 == 0 & MoyensCompetences == 5 ~ 3,
+    # Vu FAO : ProbActivite__4 == 1 & MoyensCompetences == 1, 2, 3 ou FormationContinue = 1 -> 1
+    ProbActivite__4 == 1 & (MoyensCompetences <= 3 | FormationContinue == 1) ~ 1,
     TRUE ~ 55
   ))
 
@@ -48,7 +52,3 @@ score_1_Emancipation |>
   group_by(score) |>
   count()
 
-score_1_Emancipation |>
-  filter(score == 55) |>
-  group_by(ProbActivite__4, MoyensCompetences, FormationContinue) |>
-  count()
