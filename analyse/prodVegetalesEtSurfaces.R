@@ -11,10 +11,11 @@ irrigation <- rga23_prodVegetales |>
 
 propSurfacesIrriguees <- rga23_surfacesCultures |>
   filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
-  summarize(SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
-            SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
-            PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0)/sum(replace_na(SurfaceCult, 0))*100),1))
-
+  summarize(
+    SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
+    SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
+    PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0) / sum(replace_na(SurfaceCult, 0)) * 100), 1)
+  )
 
 propSurfacesIrrigueesParTypeCult <- rga23_surfacesCultures |>
   filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
@@ -30,10 +31,49 @@ propSurfacesIrrigueesParTypeCult <- rga23_surfacesCultures |>
     TRUE ~ as.character(TypeCulture)
   )) |>
   group_by(TypeCulture) |>
-  summarize(SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
-            SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
-            PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0)/sum(replace_na(SurfaceCult, 0))*100),1))
+  summarize(
+    SurfacesIrriguees = sum(replace_na(SurfaceIrrig, 0)),
+    SurfacesTotales = sum(replace_na(SurfaceCult, 0)),
+    PropSurfacesIrriguees = round(sum(replace_na(SurfaceIrrig, 0) / sum(replace_na(SurfaceCult, 0)) * 100), 1)
+  )
 writeCSV(propSurfacesIrrigueesParTypeCult)
+
+# OrigineEauIrrig
+# Réseau collectif agricole.....1
+# Réseau collectif (communal)...3
+# Réseau individuel.............2
+
+reseauCollectifAgricole <- rga23_prodVegetales |>
+  filter(!is.na(OrigineEauIrrig__1)) |>
+  group_by(OrigineEauIrrig__1) |>
+  calculPourcentage()
+
+reseauIndividuel <- rga23_prodVegetales |>
+  filter(!is.na(OrigineEauIrrig__2)) |>
+  group_by(OrigineEauIrrig__2) |>
+  calculPourcentage()
+
+reseauCollectifCommunal <- rga23_prodVegetales |>
+  filter(!is.na(OrigineEauIrrig__3)) |>
+  group_by(OrigineEauIrrig__3) |>
+  calculPourcentage()
+
+# Aspersion.....................................1
+# Goutte à goutte...............................2
+# Micro-asperseurs..............................3
+# Manuellement (tuyau, cuve sur tracteur).......4
+# Autres canaux d'irrigation (tarodière, ...)...5
+
+modeIrrigation <- rga23_prodVegetales |>
+  filter(Irrigation == 1) |>
+  summarize(
+    aspersion = round(sum(replace_na(ModeIrrigation__1, 0) / n() * 100)),
+    goutteAGoutte = round(sum(replace_na(ModeIrrigation__2, 0) / n() * 100)),
+    microAsperseurs = round(sum(replace_na(ModeIrrigation__3, 0) / n() * 100)),
+    manuellement = round(sum(replace_na(ModeIrrigation__4, 0) / n() * 100)),
+    autresCanaux = round(sum(replace_na(ModeIrrigation__5, 0) / n() * 100))
+  )
+writeCSV(modeIrrigation)
 
 # Surface agricole utilisée par type de faire-valoir (parcelles)
 
@@ -50,7 +90,7 @@ surfacesParFaireValoir <- rga23_parcelles |>
     TRUE ~ as.character(faireValoirParcelle)
   )) |>
   group_by(`Faire valoir`) |>
-  summarize(`Surface (en Ha)` = round((sum(polygone__area, na.rm = TRUE) + sum(surfaceParcelleNonDelimitee, na.rm = TRUE)) / 10000), 1)
+  summarize(`Surface (en Ha)` = round((sum(polygone__area, na.rm = TRUE) + sum(surfaceParcelleNonDelimitee, na.rm = TRUE)) / 10000, 1))
 
 surfacesParcelles <- sum(surfacesParFaireValoir$`Surface (en Ha)`)
 
@@ -233,5 +273,3 @@ sauMoyenneTypeExpl <- rbind(
     )
 )
 writeCSV(sauMoyenneTypeExpl)
-
-
