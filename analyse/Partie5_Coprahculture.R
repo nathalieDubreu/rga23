@@ -4,7 +4,7 @@
 rga23_coprahculteurs <- rga23_coprahculteurs |>
   filter(eligibiliteCoprah == 1)
 
-Partie5_nombreCoprahculteurs <- rga23_coprahculteurs |> 
+Partie5_nombreCoprahculteurs <- rga23_coprahculteurs |>
   group_by(indicRGA23_Coprah) |>
   count()
 writeCSV(Partie5_nombreCoprahculteurs)
@@ -123,52 +123,79 @@ Partie5_supprimer <- producteursProprietairePlein |>
 writeCSV(Partie5_supprimer)
 
 # Séchoir solaire....................................1
-Partie5_sechoirSolaire <- rga23_coprahculteurs |>
-  group_by(SechoirCoprah__1) |>
+sechoirSolaire <- rga23_coprahculteurs |>
+  mutate(
+    Type = "Séchoir Solaire",
+    Utilisation = case_when(
+      SechoirCoprah__1 == 0 ~ "Non",
+      SechoirCoprah__1 == 1 ~ "Oui"
+    )
+  ) |>
+  group_by(Type, Utilisation) |>
   calculPourcentage()
-writeCSV(Partie5_sechoirSolaire)
 # Séchoir thermique..................................2
-Partie5_sechoirThermique <- rga23_coprahculteurs |>
-  group_by(SechoirCoprah__2) |>
+sechoirThermique <- rga23_coprahculteurs |>
+  mutate(
+    Type = "Séchoir thermique",
+    Utilisation = case_when(
+      SechoirCoprah__2 == 0 ~ "Non",
+      SechoirCoprah__2 == 1 ~ "Oui"
+    )
+  ) |>
+  group_by(Type, Utilisation) |>
   calculPourcentage()
-writeCSV(Partie5_sechoirThermique)
 # Aucun séchoir (séchage sur bâche au soleil, ...)...3
-Partie5_aucunSechoir <- rga23_coprahculteurs |>
-  group_by(SechoirCoprah__3) |>
+aucunSechoir <- rga23_coprahculteurs |>
+  mutate(
+    Type = "Aucun séchoir (séchage sur bâche au soleil, ...)",
+    Utilisation = case_when(
+      SechoirCoprah__3 == 0 ~ "Non",
+      SechoirCoprah__3 == 1 ~ "Oui"
+    )
+  ) |>
+  group_by(Type, Utilisation) |>
   calculPourcentage()
-writeCSV(Partie5_aucunSechoir)
+Partie5_sechoirs <- rbind(sechoirSolaire, sechoirThermique, aucunSechoir) |>
+  pivot_wider(names_from = Utilisation, values_from = `En %`, values_fill = list(Pourcentage_0 = 0, Pourcentage_1 = 0))
+writeCSV(Partie5_sechoirs)
 
-Partie5_propCocoEntretenuesStatut <- rga23_coprahculteurs |> summarize(
-  nbCocoEntretenues1 = sum(EntretienCoco1, na.rm = TRUE),
-  nbCoco1 = sum(nbCocoStatut1, na.rm = TRUE),
-  propCocoEntretenuesPP = nbCocoEntretenues1 / nbCoco1 * 100,
-  nbCocoEntretenues2 = sum(EntretienCoco2, na.rm = TRUE),
-  nbCoco2 = sum(nbCocoStatut2, na.rm = TRUE),
-  propCocoEntretenuesPI = nbCocoEntretenues2 / nbCoco2 * 100,
-  nbCocoEntretenues3 = sum(EntretienCoco3, na.rm = TRUE),
-  nbCoco3 = sum(nbCocoStatut3, na.rm = TRUE),
-  propCocoEntretenuesE = nbCocoEntretenues3 / nbCoco3 * 100,
-)|> select(propCocoEntretenuesPP, propCocoEntretenuesPI, propCocoEntretenuesE)
+Partie5_propCocoEntretenuesStatut <- rga23_coprahculteurs |>
+  summarize(
+    nbCocoEntretenues1 = sum(EntretienCoco1, na.rm = TRUE),
+    nbCoco1 = sum(nbCocoStatut1, na.rm = TRUE),
+    propCocoEntretenuesPP = nbCocoEntretenues1 / nbCoco1 * 100,
+    nbCocoEntretenues2 = sum(EntretienCoco2, na.rm = TRUE),
+    nbCoco2 = sum(nbCocoStatut2, na.rm = TRUE),
+    propCocoEntretenuesPI = nbCocoEntretenues2 / nbCoco2 * 100,
+    nbCocoEntretenues3 = sum(EntretienCoco3, na.rm = TRUE),
+    nbCoco3 = sum(nbCocoStatut3, na.rm = TRUE),
+    propCocoEntretenuesE = nbCocoEntretenues3 / nbCoco3 * 100,
+  ) |>
+  select(propCocoEntretenuesPP, propCocoEntretenuesPI, propCocoEntretenuesE)
 writeCSV(Partie5_propCocoEntretenuesStatut)
 
-Partie5_propCocoEntretenuesMode <- rga23_coprahculteurs |> summarize(
-  sommeCocoEntretenues_Mode1 = sum(ifelse((!is.na(ModeEntretCoco1__1) & ModeEntretCoco1__1 == 1), EntretienCoco1, 0)+
-                                 ifelse((!is.na(ModeEntretCoco2__1) & ModeEntretCoco2__1 == 1), EntretienCoco2, 0) + 
-                                ifelse((!is.na(ModeEntretCoco3__1) & ModeEntretCoco3__1 == 1), EntretienCoco3, 0)),
-  sommeCocoEntretenues_Mode2 = sum(ifelse((!is.na(ModeEntretCoco1__2) & ModeEntretCoco1__2 == 1), EntretienCoco1, 0)+
-                                 ifelse((!is.na(ModeEntretCoco2__2) & ModeEntretCoco2__2 == 1), EntretienCoco2, 0) + 
-                                 ifelse((!is.na(ModeEntretCoco3__2) & ModeEntretCoco3__2 == 1), EntretienCoco3, 0)),
-  sommeCocoEntretenues_Mode3 = sum(ifelse((!is.na(ModeEntretCoco1__3) & ModeEntretCoco1__3 == 1), EntretienCoco1, 0)+
-                                 ifelse((!is.na(ModeEntretCoco2__3) & ModeEntretCoco2__3 == 1), EntretienCoco2, 0) + 
-                                 ifelse((!is.na(ModeEntretCoco3__3) & ModeEntretCoco3__3 == 1), EntretienCoco3, 0)),
-  sommeCocoEntretenues = sum(ifelse(!is.na(EntretienCoco1), EntretienCoco1, 0)+
-                               ifelse(!is.na(EntretienCoco2), EntretienCoco2, 0) + 
-                               ifelse(!is.na(EntretienCoco3), EntretienCoco3, 0)),
-  propCocoterairesEntretenuesMode1 = sommeCocoEntretenues_Mode1 / sommeCocoEntretenues * 100,
-  propCocoterairesEntretenuesMode2 = sommeCocoEntretenues_Mode2 / sommeCocoEntretenues * 100,
-  propCocoterairesEntretenuesMode3 = sommeCocoEntretenues_Mode3 / sommeCocoEntretenues * 100
-) |> select(propCocoterairesEntretenuesMode1, propCocoterairesEntretenuesMode2, propCocoterairesEntretenuesMode3)
+Partie5_propCocoEntretenuesMode <- rga23_coprahculteurs |>
+  summarize(
+    sommeCocoEntretenues_Mode1 = sum(ifelse((!is.na(ModeEntretCoco1__1) & ModeEntretCoco1__1 == 1), EntretienCoco1, 0) +
+      ifelse((!is.na(ModeEntretCoco2__1) & ModeEntretCoco2__1 == 1), EntretienCoco2, 0) +
+      ifelse((!is.na(ModeEntretCoco3__1) & ModeEntretCoco3__1 == 1), EntretienCoco3, 0)),
+    sommeCocoEntretenues_Mode2 = sum(ifelse((!is.na(ModeEntretCoco1__2) & ModeEntretCoco1__2 == 1), EntretienCoco1, 0) +
+      ifelse((!is.na(ModeEntretCoco2__2) & ModeEntretCoco2__2 == 1), EntretienCoco2, 0) +
+      ifelse((!is.na(ModeEntretCoco3__2) & ModeEntretCoco3__2 == 1), EntretienCoco3, 0)),
+    sommeCocoEntretenues_Mode3 = sum(ifelse((!is.na(ModeEntretCoco1__3) & ModeEntretCoco1__3 == 1), EntretienCoco1, 0) +
+      ifelse((!is.na(ModeEntretCoco2__3) & ModeEntretCoco2__3 == 1), EntretienCoco2, 0) +
+      ifelse((!is.na(ModeEntretCoco3__3) & ModeEntretCoco3__3 == 1), EntretienCoco3, 0)),
+    sommeCocoEntretenues = sum(ifelse(!is.na(EntretienCoco1), EntretienCoco1, 0) +
+      ifelse(!is.na(EntretienCoco2), EntretienCoco2, 0) +
+      ifelse(!is.na(EntretienCoco3), EntretienCoco3, 0)),
+    propCocoterairesEntretenuesMode1 = sommeCocoEntretenues_Mode1 / sommeCocoEntretenues * 100,
+    propCocoterairesEntretenuesMode2 = sommeCocoEntretenues_Mode2 / sommeCocoEntretenues * 100,
+    propCocoterairesEntretenuesMode3 = sommeCocoEntretenues_Mode3 / sommeCocoEntretenues * 100
+  ) |>
+  select(propCocoterairesEntretenuesMode1, propCocoterairesEntretenuesMode2, propCocoterairesEntretenuesMode3)
 writeCSV(Partie5_propCocoEntretenuesMode)
 
-Partie5_propBaguees <- rga23_cocoteraies |> group_by(cocoteraieBaguee) |> calculPourcentage()
+Partie5_propBaguees <- rga23_cocoteraies |>
+  group_by(cocoteraieBaguee) |>
+  calculPourcentage()
 writeCSV(Partie5_propBaguees)
