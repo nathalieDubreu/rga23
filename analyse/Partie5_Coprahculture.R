@@ -4,6 +4,11 @@
 rga23_coprahculteurs <- rga23_coprahculteurs |>
   filter(eligibiliteCoprah == 1)
 
+Partie5_nombreCoprahculteurs <- rga23_coprahculteurs |> 
+  group_by(indicRGA23_Coprah) |>
+  count()
+writeCSV(Partie5_nombreCoprahculteurs)
+
 Partie5_comptagesCocoteraies <- rga23_coprahculteurs |>
   summarize(
     NbCocoExploitees = sum(NbCocoteraies, na.rm = TRUE),

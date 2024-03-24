@@ -86,17 +86,17 @@ rga23_mainOeuvre <- inner_join(
   )
 
 ## Tableaux hackmd + publication
-source("analyse/partie6_Fertilisation.R")
 source("analyse/profilsExploitations.R")
 source("analyse/prodVegetalesEtSurfaces.R")
 source("analyse/prodAnimales.R")
 source("analyse/chefExplEtMainOeuvre.R")
 source("analyse/partie5_Coprahculture.R")
+source("analyse/partie6_Fertilisation.R")
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
 ## Tableaux supplémentaires pour la publication
 source("analyse/encadreSeuils_2012_2023.R")
-source("analyse/moEquivalentEtp.R")
+source("analyse/Partie1_moEquivalentEtp.R")
 source("analyse/donneesCadrage2012.R")
 source("analyse/SAU_horsCoco_horsCultFourrag.R")
 source("analyse/destinationParTaille.R")

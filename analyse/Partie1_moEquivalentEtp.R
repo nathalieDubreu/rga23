@@ -11,19 +11,17 @@ rga23_mainOeuvreETP <- rga23_mainOeuvre |>
 
 etpChef <- rga23_mainOeuvreETP |>
   summarize(
-    nbChefsEnEtp = sum(ChefETP),
-    nbChefs = n()
+    enEtp = sum(ChefETP),
+    nombre = n()
   )
 
-etpChefArchipel <- rga23_mainOeuvreETP |>
+Partie1_etpChefArchipel <- rga23_mainOeuvreETP |>
   group_by(Archipel_1) |>
   summarize(
     nbChefs = n(),
     nbChefsEnEtp = sum(ChefETP)
   )
-
-writeCSV(etpChef)
-writeCSV(etpChefArchipel)
+writeCSV(Partie1_etpChefArchipel)
 
 ## Coexploitants
 
@@ -38,19 +36,17 @@ rga23_coexploitantsETP <- rga23_coexploitants |>
 
 etpCoexploitants <- rga23_coexploitantsETP |>
   summarize(
-    nbCoexploitants = n(),
-    nbCoexploitantsEnEtp = sum(CoexpoitantsETP)
+    nombre = n(),
+    enEtp = sum(CoexpoitantsETP)
   )
 
-etpCoexploitantsArchipel <- rga23_coexploitantsETP |>
+Partie1_etpCoexploitantsArchipel <- rga23_coexploitantsETP |>
   group_by(Archipel_1) |>
   summarize(
     nbCoexploitants = n(),
     nbCoexploitantsEnEtp = sum(CoexpoitantsETP)
   )
-
-writeCSV(etpCoexploitants)
-writeCSV(etpCoexploitantsArchipel)
+writeCSV(Partie1_etpCoexploitantsArchipel)
 
 ## Main d'oeuvre
 
@@ -67,19 +63,17 @@ rga23_moPermanenteFamETP <- rga23_moPermanenteFam |>
 
 etpMOPermFam <- rga23_moPermanenteFamETP |>
   summarize(
-    nbMOPermFam = n(),
-    nbMOPermFamEnEtp = sum(MOPermFamETP)
+    nombre = n(),
+    enEtp = sum(MOPermFamETP)
   )
 
-etpMOPermFamArchipel <- rga23_moPermanenteFamETP |>
+Partie1_etpMOPermFamArchipel <- rga23_moPermanenteFamETP |>
   group_by(Archipel_1) |>
   summarize(
     nbMOPermFam = n(),
     nbMOPermFamEnEtp = sum(MOPermFamETP)
   )
-
-writeCSV(etpMOPermFam)
-writeCSV(etpMOPermFamArchipel)
+writeCSV(Partie1_etpMOPermFamArchipel)
 
 ### Permanente non familiale
 
@@ -100,20 +94,17 @@ rga23_mainOeuvreETP <- rga23_mainOeuvreETP |>
 
 etpMOPermNonFam <- rga23_mainOeuvreETP |>
   summarize(
-    nbMOPermFam = sum(nbFemmesNFPerm, na.rm = TRUE) + sum(nbHommesNFPerm, na.rm = TRUE),
-    nbMOPermFamEnEtp = sum(MoPermNonFamETP)
+    nombre = sum(nbFemmesNFPerm, na.rm = TRUE) + sum(nbHommesNFPerm, na.rm = TRUE),
+    enEtp = sum(MoPermNonFamETP)
   )
 
-etpMOPermNonFamArchipel <- rga23_mainOeuvreETP |>
+Partie1_etpMOPermNonFamArchipel <- rga23_mainOeuvreETP |>
   group_by(Archipel_1) |>
   summarize(
     nbMOPermFam = sum(nbFemmesNFPerm, na.rm = TRUE) + sum(nbHommesNFPerm, na.rm = TRUE),
     nbMOPermFamEnEtp = sum(MoPermNonFamETP)
   )
-
-writeCSV(etpMOPermNonFam)
-writeCSV(etpMOPermNonFamArchipel)
-
+writeCSV(Partie1_etpMOPermNonFamArchipel)
 
 ### Occasionnelle
 
@@ -121,22 +112,30 @@ rga23_mainOeuvreETP <- rga23_mainOeuvreETP |>
   mutate(totalTempsTravailHOccas = case_when(
     UniteDureeMOOccas == 2 ~ 8 * DureeMOOccas,
     UniteDureeMOOccas == 3 ~ 8 * 5 * DureeMOOccas,
-    UniteDureeMOOccas == 4 ~ 8 * 5 * 52/12 * DureeMOOccas,
+    UniteDureeMOOccas == 4 ~ 8 * 5 * 52 / 12 * DureeMOOccas,
     TRUE ~ DureeMOOccas
   ))
 
 etpMOOccas <- rga23_mainOeuvreETP |>
   summarize(
-    nbMOMAOccas = sum(totalMOOccas, na.rm = TRUE),
-    nbMOOccasEnEtp = sum(totalTempsTravailHOccas, na.rm = TRUE) / 1600
+    nombre = sum(totalMOOccas, na.rm = TRUE),
+    enEtp = sum(totalTempsTravailHOccas, na.rm = TRUE) / 1600
   )
 
-etpMOOccasArchipel <- rga23_mainOeuvreETP |>
+Partie1_etpMOOccasArchipel <- rga23_mainOeuvreETP |>
   group_by(Archipel_1) |>
   summarize(
     nbMOMAOccas = sum(totalMOOccas, na.rm = TRUE),
     nbMOOccasEnEtp = sum(totalTempsTravailHOccas, na.rm = TRUE) / 1600
   )
+writeCSV(Partie1_etpMOOccasArchipel)
 
-writeCSV(etpMOOccas)
-writeCSV(etpMOOccasArchipel)
+Partie1_nombreEtETP <- rbind(
+  etpChef |> mutate(Statut = "Chefs d'exploitations"),
+  etpCoexploitants |> mutate(Statut = "Coexploitants"),
+  etpMOPermFam |> mutate(Statut = "Main d'oeuvre permanente familiale"),
+  etpMOPermNonFam |> mutate(Statut = "Main d'oeuvre permanente non familiale"),
+  etpMOOccas |> mutate(Statut = "Main d'oeuvre occasionnelle")
+) |>
+  select(Statut, nombre, enEtp)
+writeCSV(Partie1_nombreEtETP)
