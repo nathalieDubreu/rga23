@@ -13,7 +13,7 @@ rga23_champ <- left_join(
   )) |>
   select(-eligibilite, -eligibiliteCoprah)
 
-Partie1_TypeExploitations <- rga23_champ |>
+Partie1_TypesExploitations <- rga23_champ |>
   group_by(TypeExploitation) |>
   count()
 writeCSV(Partie1_TypesExploitations)
@@ -29,7 +29,7 @@ rga23_prodVegetales <- inner_join(
 )
 rga23_prodAnimales <- inner_join(
   readCSV("rga23_prodAnimales.csv"),
-  rga23_champ |> select(interview__key, Archipel_1)
+  rga23_champ |> select(interview__key, Archipel_1, lettre_unite)
 )
 rga23_surfacesCultures <- inner_join(
   readCSV("rga23_surfacesCultures.csv"),
@@ -61,6 +61,10 @@ rga23_coprahculteurs <- inner_join(
 ) |>
   filter(eligibiliteCoprah == 1)
 ## Conservation des coprahculteurs eligibles (5 ont coché la case Coprahculture mais ont finalement indiqué ne pas avoir eu de production de coprah)
+rga23_cocoteraies <- inner_join(
+  readCSV("rga23_cocoteraies.csv"),
+  rga23_champ |> select(interview__key)
+)
 
 rga23_exploitations <- inner_join(
   readCSV("rga23_exploitations.csv"),

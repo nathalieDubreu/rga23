@@ -6,6 +6,7 @@ eleveurs <- rga23_prodAnimales |>
     EleveursOvins = sum(PresenceAnimaux__2, na.rm = TRUE),
     EleveursPorcins = sum(PresenceAnimaux__3, na.rm = TRUE),
     EleveursVolailles = sum(PresenceAnimaux__4, na.rm = TRUE),
+    EleveursPoulesPondeuses = sum(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1, na.rm = TRUE),
     EleveursEquides = sum(PresenceAnimaux__5, na.rm = TRUE),
     EleveursLapins = sum(PresenceAnimaux__6, na.rm = TRUE),
     EleveursRuches = sum(PresenceAnimaux__7, na.rm = TRUE),
@@ -20,7 +21,11 @@ nombreAnimaux <- rga23_prodAnimales |>
     NombreOvins = sum(nbTotalOvins, na.rm = TRUE),
     NombrePorcins = sum(nbTotalPorcs, na.rm = TRUE),
     NombreVolailles = sum(across(
-      c("NbOies", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+      c("NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+      ~ sum(coalesce(.x, 0))
+    )),
+    NombrePoulesPondeuses = sum(across(
+      c("NombrePoules0", "NombrePoules1", "NombrePoules3"),
       ~ sum(coalesce(.x, 0))
     )),
     NombreEquides = sum(nbTotalEquides, na.rm = TRUE),
@@ -107,7 +112,7 @@ Partie4_nbAnimauxGenre <- left_join(
     NombreOvins = sum(nbTotalOvins, na.rm = TRUE),
     NombrePorcins = sum(nbTotalPorcs, na.rm = TRUE),
     NombreVolailles = sum(across(
-      c("NbOies", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+      c("NbOies", "NbCailles", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
       ~ sum(coalesce(.x, 0))
     )),
     NombreEquides = sum(nbTotalEquides, na.rm = TRUE),
@@ -173,6 +178,8 @@ Partie4_detailsCheptels <- summary <- rga23_prodAnimales |>
     NbPoulettes = sum(NbPoulettes, na.rm = TRUE),
     NbPoussins = sum(NbPoussins, na.rm = TRUE),
     NbRuchers = sum(NbRuchers, na.rm = TRUE),
+    NbRuchesPourProduire = sum(NbRuchesPourProduire, na.rm = TRUE),
+    NbRuchettes = sum(NbRuchettes, na.rm = TRUE),
     NbTaureauxLait = sum(NbTaureauxLait, na.rm = TRUE),
     NbTaureauxViande = sum(NbTaureauxViande, na.rm = TRUE),
     NbTruiesGestVides = sum(NbTruiesGestVides, na.rm = TRUE),
@@ -189,13 +196,26 @@ Partie4_detailsCheptels <- summary <- rga23_prodAnimales |>
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Somme")
 writeCSV(Partie4_detailsCheptels)
 
-Partie4_categoriesApiculteurs <- rga23_prodAnimales |>
+Partie4_categoriesApiculteursYCRuchettes <- rga23_prodAnimales |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, NbRuchesPourProduire, NbRuchettes) |>
   mutate(CategorieNombreRuches = case_when(
     NbRuchesPourProduire + NbRuchettes < 30 ~ "0 à 29 ruches pour produire et ruchettes",
     NbRuchesPourProduire + NbRuchettes < 50 ~ "30 et 49 ruches pour produire et ruchettes",
     NbRuchesPourProduire + NbRuchettes >= 50 ~ "Plus de 50 ruches pour produire et ruchettes",
+    TRUE ~ "?"
+  )) |>
+  group_by(CategorieNombreRuches) |>
+  calculPourcentage()
+writeCSV(Partie4_categoriesApiculteursYCRuchettes)
+
+Partie4_categoriesApiculteurs <- rga23_prodAnimales |>
+  filter(PresenceAnimaux__7 == 1) |>
+  select(interview__key, NbRuchesPourProduire, NbRuchettes) |>
+  mutate(CategorieNombreRuches = case_when(
+    NbRuchesPourProduire < 30 ~ "0 à 29 ruches pour produire",
+    NbRuchesPourProduire < 50 ~ "30 et 49 ruches pour produire",
+    NbRuchesPourProduire >= 50 ~ "Plus de 50 ruches pour produire",
     TRUE ~ "?"
   )) |>
   group_by(CategorieNombreRuches) |>
@@ -211,11 +231,41 @@ Partie4_poulesPondeuses <- rga23_prodAnimales |>
     NbOeufsAutresPoules = replace_na(ProductionPoules0, 0) + replace_na(ProductionPoules1, 0)
   ) |>
   summarize(
+    ## En cage
     NbEleveursPoulesEnCage = sum(TypeVolailles__1 == 1, na.rm = TRUE),
     NbPoulesEnCage = sum(PoulesEnCage),
-    ProdMoyenneAutresPoules = sum(NbOeufsAutresPoules) / sum(AutresPoules),
+    ProdMoyennePoulesEnCage = sum(NbOeufsPoulesEnCage) / sum(PoulesEnCage),
+    ## Autres poules
     NbEleveursAutresPoules = sum(TypeVolailles__3 == 1 | TypeVolailles__4 == 1, na.rm = TRUE),
     NbAutresPoules = sum(AutresPoules),
-    ProdMoyennePoulesEnCage = sum(NbOeufsPoulesEnCage) / sum(PoulesEnCage)
+    ProdMoyenneAutresPoules = sum(NbOeufsAutresPoules) / sum(AutresPoules)
   )
 writeCSV(Partie4_poulesPondeuses)
+
+partsAnimauxEnDivagationArchipel <- rga23_prodAnimales |>
+  filter(nbTotalBovins > 0 | nbTotalCaprins > 0 | nbTotalEquides > 0) |>
+  group_by(Archipel_1) |>
+  summarize(
+    NombreBovins = sum(nbTotalBovins, na.rm = TRUE),
+    PartBovinsDivagation = sum(NbBovinsLiberte, na.rm = TRUE) / sum(nbTotalBovins, na.rm = TRUE) * 100,
+    NombreCaprins = sum(nbTotalCaprins, na.rm = TRUE),
+    PartCaprinsDivagation = sum(NbCaprinsLiberte, na.rm = TRUE) / sum(nbTotalCaprins, na.rm = TRUE) * 100,
+    NombreEquides = sum(nbTotalEquides, na.rm = TRUE),
+    PartEquidesDivagation = sum(NbEquidesLiberte, na.rm = TRUE) / sum(nbTotalEquides, na.rm = TRUE) * 100
+  )
+
+partsAnimauxEnDivagationTotal <- rga23_prodAnimales |>
+  filter(nbTotalBovins > 0 | nbTotalCaprins > 0 | nbTotalEquides > 0) |>
+  mutate(Archipel_1 = "Total") |>
+  group_by(Archipel_1) |>
+  summarize(
+    NombreBovins = sum(nbTotalBovins, na.rm = TRUE),
+    PartBovinsDivagation = sum(NbBovinsLiberte, na.rm = TRUE) / sum(nbTotalBovins, na.rm = TRUE) * 100,
+    NombreCaprins = sum(nbTotalCaprins, na.rm = TRUE),
+    PartCaprinsDivagation = sum(NbCaprinsLiberte, na.rm = TRUE) / sum(nbTotalCaprins, na.rm = TRUE) * 100,
+    NombreEquides = sum(nbTotalEquides, na.rm = TRUE),
+    PartEquidesDivagation = sum(NbEquidesLiberte, na.rm = TRUE) / sum(nbTotalEquides, na.rm = TRUE) * 100
+  )
+
+Partie4_partsAnimauxEnDivagation <- rbind(partsAnimauxEnDivagationArchipel, partsAnimauxEnDivagationTotal)
+writeCSV(Partie4_partsAnimauxEnDivagation)

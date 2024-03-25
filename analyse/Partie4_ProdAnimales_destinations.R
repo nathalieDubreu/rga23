@@ -1,5 +1,3 @@
-library(rlang)
-
 #### Regroupement de modalités de destination des produits
 rga23_prodAnimales_regroupements <- rga23_prodAnimales |>
   mutate(
