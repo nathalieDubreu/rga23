@@ -189,16 +189,33 @@ Partie4_detailsCheptels <- summary <- rga23_prodAnimales |>
   pivot_longer(cols = everything(), names_to = "Variable", values_to = "Somme")
 writeCSV(Partie4_detailsCheptels)
 
-categoriesApiculteurs <- rga23_prodAnimales |>
+Partie4_categoriesApiculteurs <- rga23_prodAnimales |>
   filter(PresenceAnimaux__7 == 1) |>
   select(interview__key, NbRuchesPourProduire, NbRuchettes) |>
   mutate(CategorieNombreRuches = case_when(
-    NbRuchesPourProduire + NbRuchettes < 10 ~ "0 à 9 ruches pour produire et ruchettes",
-    NbRuchesPourProduire + NbRuchettes < 20 ~ "10 à 29 ruches pour produire et ruchettes",
-    NbRuchesPourProduire + NbRuchettes < 30 ~ "20 à 29 ruches pour produire et ruchettes",
+    NbRuchesPourProduire + NbRuchettes < 30 ~ "0 à 29 ruches pour produire et ruchettes",
     NbRuchesPourProduire + NbRuchettes < 50 ~ "30 et 49 ruches pour produire et ruchettes",
     NbRuchesPourProduire + NbRuchettes >= 50 ~ "Plus de 50 ruches pour produire et ruchettes",
     TRUE ~ "?"
   )) |>
   group_by(CategorieNombreRuches) |>
-  count()
+  calculPourcentage()
+writeCSV(Partie4_categoriesApiculteurs)
+
+Partie4_poulesPondeuses <- rga23_prodAnimales |>
+  filter(TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1) |>
+  mutate(
+    PoulesEnCage = replace_na(NombrePoules3, 0),
+    NbOeufsPoulesEnCage = replace_na(ProductionPoules3, 0),
+    AutresPoules = replace_na(NombrePoules0, 0) + replace_na(NombrePoules1, 0),
+    NbOeufsAutresPoules = replace_na(ProductionPoules0, 0) + replace_na(ProductionPoules1, 0)
+  ) |>
+  summarize(
+    NbEleveursPoulesEnCage = sum(TypeVolailles__1 == 1, na.rm = TRUE),
+    NbPoulesEnCage = sum(PoulesEnCage),
+    ProdMoyenneAutresPoules = sum(NbOeufsAutresPoules) / sum(AutresPoules),
+    NbEleveursAutresPoules = sum(TypeVolailles__3 == 1 | TypeVolailles__4 == 1, na.rm = TRUE),
+    NbAutresPoules = sum(AutresPoules),
+    ProdMoyennePoulesEnCage = sum(NbOeufsPoulesEnCage) / sum(PoulesEnCage)
+  )
+writeCSV(Partie4_poulesPondeuses)

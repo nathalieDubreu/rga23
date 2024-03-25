@@ -51,7 +51,7 @@ rga23_prodAnimales_regroupements <- rga23_prodAnimales |>
     # ))
   )
 
-Partie4_DestinationOeufsEtMiel <- rga23_prodAnimales_regroupements |> summarize(
+Partie4_destinationOeufsEtMiel <- rga23_prodAnimales_regroupements |> summarize(
   NbOeufs_Total = sum(NbOeufs),
   partOeufs_DHV = round(sum(NbOeufs_DHV) / (sum(NbOeufs_DHV) + sum(NbOeufs_VD) + sum(NbOeufs_VP))*100),
   partOeufs_VD = round(sum(NbOeufs_VD) / (sum(NbOeufs_DHV) + sum(NbOeufs_VD) + sum(NbOeufs_VP))*100),
@@ -61,4 +61,4 @@ Partie4_DestinationOeufsEtMiel <- rga23_prodAnimales_regroupements |> summarize(
   partMiel_VD = round(sum(KilosMiel_VD) / (sum(KilosMiel_DHV) + sum(KilosMiel_VD) + sum(KilosMiel_VP))*100),
   partMiel_VP = round(sum(KilosMiel_VP) / (sum(KilosMiel_DHV) + sum(KilosMiel_VD) + sum(KilosMiel_VP))*100)
 )
-writeCSV(Partie4_DestinationOeufsEtMiel)
+writeCSV(Partie4_destinationOeufsEtMiel)
