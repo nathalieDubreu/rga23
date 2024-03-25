@@ -1,12 +1,22 @@
 ## Restriction au champ 23 du RGA
-rga23_champ <- readCSV("rga23_general.csv") |>
+rga23_champ <- left_join(
+  readCSV("rga23_general.csv"),
+  readCSV("rga23_coprahculteurs.csv") |> select(interview__key, eligibiliteCoprah)
+) |>
+  left_join(readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite)) |>
   filter(indicRGA23 == 1) |>
   mutate(TypeExploitation = case_when(
-    RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 0 ~ "Cultivateurs seuls",
-    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & RaisonsRecensement__3 == 0 ~ "Eleveurs seuls",
-    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 0 & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
+    RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & (eligibiliteCoprah == 0 | is.na(eligibiliteCoprah)) ~ "Cultivateurs seuls",
+    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & (eligibiliteCoprah == 0 | is.na(eligibiliteCoprah)) ~ "Eleveurs seuls",
+    (eligibilite == 0 | is.na(eligibilite)) & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
     TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
-  ))
+  )) |>
+  select(-eligibilite, -eligibiliteCoprah)
+
+Partie1_TypeExploitations <- rga23_champ |>
+  group_by(TypeExploitation) |>
+  count()
+writeCSV(Partie1_TypesExploitations)
 
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(
@@ -48,15 +58,17 @@ rga23_tape <- inner_join(
 rga23_coprahculteurs <- inner_join(
   readCSV("rga23_coprahculteurs.csv"),
   rga23_champ |> select(interview__key, indicRGA23_Coprah)
-)
-rga23_cocoteraies <- inner_join(
-  readCSV("rga23_cocoteraies.csv"),
-  rga23_champ |> select(interview__key)
-)
+) |>
+  filter(eligibiliteCoprah == 1)
+## Conservation des coprahculteurs eligibles (5 ont coché la case Coprahculture mais ont finalement indiqué ne pas avoir eu de production de coprah)
+
 rga23_exploitations <- inner_join(
   readCSV("rga23_exploitations.csv"),
   rga23_champ |> select(interview__key, RaisonsRecensement__1, RaisonsRecensement__2, Archipel_1)
-)
+) |>
+  filter(eligibilite == 1)
+## Conservation des exploitants eligibles (27 ont coché la case Elevages ou cultures mais n'ont pas passé les filtres d'éligibilite)
+
 rga23_coexploitants <- inner_join(
   readCSV("rga23_coexploitants.csv"),
   rga23_champ |> select(interview__key, Archipel_1)

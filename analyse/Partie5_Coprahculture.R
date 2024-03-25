@@ -1,9 +1,5 @@
 ## Coprahculteurs
 
-## Conservation des coprahculteurs eligibles (5 ont coché la case Coprahculture mais ont finalement indiqué ne pas avoir eu de production de coprah)
-rga23_coprahculteurs <- rga23_coprahculteurs |>
-  filter(eligibiliteCoprah == 1)
-
 Partie5_nombreCoprahculteurs <- rga23_coprahculteurs |>
   group_by(indicRGA23_Coprah) |>
   count()
