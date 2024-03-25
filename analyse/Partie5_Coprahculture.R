@@ -156,7 +156,7 @@ aucunSechoir <- rga23_coprahculteurs |>
   group_by(Type, Utilisation) |>
   calculPourcentage()
 Partie5_sechoirs <- rbind(sechoirSolaire, sechoirThermique, aucunSechoir) |>
-  pivot_wider(names_from = Utilisation, values_from = `En %`, values_fill = list(Pourcentage_0 = 0, Pourcentage_1 = 0))
+  pivot_wider(names_from = Utilisation, values_from = `En %`)
 writeCSV(Partie5_sechoirs)
 
 Partie5_propCocoEntretenuesStatut <- rga23_coprahculteurs |>

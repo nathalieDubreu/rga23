@@ -87,20 +87,22 @@ rga23_mainOeuvre <- inner_join(
 
 ## Tableaux hackmd + publication
 source("analyse/profilsExploitations.R")
-source("analyse/prodVegetalesEtSurfaces.R")
-source("analyse/prodAnimales.R")
 source("analyse/chefExplEtMainOeuvre.R")
-source("analyse/partie5_Coprahculture.R")
-source("analyse/partie6_Fertilisation.R")
+source("analyse/Partie3_ProdVegetales.R")
+source("analyse/Partie4_ProdAnimales.R")
+source("analyse/Partie5_Coprahculture.R")
+source("analyse/Partie6_Fertilisation.R")
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
 ## Tableaux supplémentaires pour la publication
 source("analyse/encadreSeuils_2012_2023.R")
-source("analyse/Partie1_moEquivalentEtp.R")
-source("analyse/donneesCadrage2012.R")
+source("analyse/Partie1_Exploitations_moEtp.R")
 source("analyse/SAU_horsCoco_horsCultFourrag.R")
-source("analyse/destinationParTaille.R")
-source("analyse/encadrePointsCAPL.R")
+source("analyse/Partie3_ProdVegetales_destinationsParTailleExpl.R")
+source("analyse/Encadre_PointsCAPL.R")
+
+## Vérifications par rapport à 2012
+source("analyse/donneesCadrage2012.R")
 
 ## Pour plus tard...
-source("analyse/surfacesBio_enAttenteExpertise.R")
+# source("analyse/surfacesBio_enAttenteExpertise.R")

@@ -57,17 +57,17 @@ surfacesParType_HC_HF_sexe <- rga23_surfacesCultures_HC_HP |>
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`)
   )
 
-surfacesParTypeCultureArchipelEtTotalSexe <- rbind(
+Partie3_surfacesParTypeCultureArchipelEtTotalSexe <- rbind(
   surfacesParType_HC_HF_Archipel_sexe,
   surfacesParType_HC_HF_sexe
 ) |>
   pivot_wider(names_from = c(Archipel_1, SexeChefExpl), values_from = c(`Nb Exploitants`, `Surface (m2)`, `Surface moyenne (m2)`), values_fill = 0)
 
-writeCSV(surfacesParTypeCultureArchipelEtTotalSexe)
+writeCSV(Partie3_surfacesParTypeCultureArchipelEtTotalSexe)
 
 ## Jardins océaniens
 
-surfacesJOArchipel <- left_join(
+Partie3_surfacesJOArchipel <- left_join(
   rga23_prodVegetales |> filter(ModesProduction__4 == 1),
   rga23_champ |> select(interview__key, Archipel_1)
 ) |>
@@ -85,9 +85,9 @@ surfacesJOArchipel <- left_join(
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`),
   )
 
-writeCSV(surfacesJOArchipel)
+writeCSV(Partie3_surfacesJOArchipel)
 
-ensembleSurfacesTypeJoArchipel <- rbind(surfacesParType_HC_HF_Archipel, surfacesJOArchipel)
+ensembleSurfacesTypeJoArchipel <- rbind(surfacesParType_HC_HF_Archipel, Partie3_surfacesJOArchipel)
 
 surfacesJOArchipelSexe <- left_join(
   rga23_prodVegetales |> filter(ModesProduction__4 == 1),
@@ -123,13 +123,13 @@ surfacesJOSexe <- left_join(
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`),
   )
 
-surfacesJoArchipelEtTotalSexe <- rbind(
+Partie3_surfacesJoArchipelEtTotalSexe <- rbind(
   surfacesJOArchipelSexe,
   surfacesJOSexe
 ) |>
   pivot_wider(names_from = c(Archipel_1, SexeChefExpl), values_from = c(`Nb Exploitants`, `Surface (m2)`, `Surface moyenne (m2)`), values_fill = 0)
 
-writeCSV(surfacesJoArchipelEtTotalSexe)
+writeCSV(Partie3_surfacesJoArchipelEtTotalSexe)
 
 ### Tableau pour l'encadré
 
@@ -185,7 +185,7 @@ writeCSV(surfacePaturagesArchipel)
 ### Surfaces par archipel HORS paturages et hors cocoteraies
 
 surfacesParArchipel <- rbind(
-  surfacesJOArchipel |>
+  Partie3_surfacesJOArchipel |>
     select(-`Surface moyenne (m2)`, `Nb Exploitants`),
   left_join(
     rga23_surfacesCultures_HC_HP, rga23_champ |> select(interview__key, Archipel_1)
@@ -211,3 +211,4 @@ jacheres <- left_join(
   )
 
 avecJacheres <- left_join(surfacesParArchipel, jacheres)
+

@@ -1,3 +1,5 @@
+# A reprendre avec la nouvelle variable définie pour la DAG ?!?
+
 ## Surface bio ou non / archipel
 surfacesCulturesBioNon <- rga23_surfacesCultures |>
   mutate(TypeCulture = case_when(

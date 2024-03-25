@@ -270,6 +270,6 @@ nbCoexploitantsArchipelTypeExpl <- rga23_mainOeuvre |>
     contains("Pluriactifs")
   )
 
-nbCoexploitantsArchipelSeuils <- rbind(nbCoexploitantsArchipelTypeExpl, nbCoexploitantsTypeExpl)
+nbCoexploitantsArchipelTypeExplTotal <- rbind(nbCoexploitantsArchipelTypeExpl, nbCoexploitantsTypeExpl)
 
-writeCSV(nbCoexploitantsArchipelTypeExpl)
+writeCSV(nbCoexploitantsArchipelTypeExplTotal)

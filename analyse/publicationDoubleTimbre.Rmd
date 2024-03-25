@@ -43,7 +43,7 @@ Au total : <font color="blue">`r rga23_champ |> count()`</font> exploitations va
 
 - Cheptels
 
-<font color="blue">`r kable(cheptels)`</font>
+<font color="blue">`r kable(Partie4_nbEleveursEtAnimaux)`</font>
   
 - Actifs agricoles :
   - Nombre de personnes
