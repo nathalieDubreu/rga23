@@ -95,10 +95,10 @@ source("analyse/Partie6_Fertilisation.R")
 rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
 ## Tableaux supplémentaires pour la publication
-source("analyse/encadreSeuils_2012_2023.R")
 source("analyse/Partie1_Exploitations_moEtp.R")
 source("analyse/SAU_horsCoco_horsCultFourrag.R")
 source("analyse/Partie3_ProdVegetales_destinationsParTailleExpl.R")
+source("analyse/Encadre_Seuils_2012_2023.R")
 source("analyse/Encadre_PointsCAPL.R")
 
 ## Vérifications par rapport à 2012

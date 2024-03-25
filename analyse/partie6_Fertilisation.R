@@ -17,7 +17,7 @@ writeCSV(Partie6_partExploitantsProduitsPhyto)
 Partie6_nbHa_HC_HP_ExplQuiUtilisentProduitsPhyto <- inner_join(rga23_exploitations |> filter(UtilisationPhytosanit == 1),
   rga23_surfacesCultures_HC_HP,
   by = "interview__key"
-) |> summarize(`Nombre d'hectares de productions végétales (hors cocoteraies, hors pâturages) appartenant aux exploitants qui utilisent des produits phytosanitaires` = sum(SurfaceCult, rm.na = TRUE) / 10000)
+) |> summarize(`Nombre d'hectares de productions végétales (hors cocoteraies, hors pâturages) appartenant aux exploitants qui utilisent des produits phytosanitaires` = round(sum(SurfaceCult, rm.na = TRUE) / 10000))
 writeCSV(Partie6_nbHa_HC_HP_ExplQuiUtilisentProduitsPhyto)
 
 ## par Archipel

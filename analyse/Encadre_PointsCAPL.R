@@ -8,17 +8,17 @@ writeCSV(EncadreCAPL_ValiditeEnsembles)
 
 EncadreCAPL_CroisementEnsembles <- rga23B |>
   mutate(
-    `Valide RGA 2023` = case_when(
-      indicRGA23 == 1 ~ "OUI",
-      TRUE ~ "NON"
+    `RGA 2023` = case_when(
+      indicRGA23 == 1 ~ "Valides RGA 23",
+      TRUE ~ "non"
     ),
-    `Valide Points CAPL` = case_when(
-      PointsCAPL >= 400 | indicRGA23_Coprah == 1 ~ "OUI",
-      TRUE ~ "NON"
+    `Points CAPL` = case_when(
+      PointsCAPL >= 400 | indicRGA23_Coprah == 1 ~ ">= 400 points",
+      TRUE ~ "non"
     ),
   ) |>
   filter(indicRGA23 == 1 | PointsCAPL >= 400) |>
-  group_by(`Valide RGA 2023`, `Valide Points CAPL`) |>
+  group_by(`RGA 2023`, `Points CAPL`) |>
   count()
 # 3880 unités en commun
 writeCSV(EncadreCAPL_CroisementEnsembles)
