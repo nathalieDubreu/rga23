@@ -1,7 +1,7 @@
 # A reprendre avec la nouvelle variable définie pour la DAG ?!?
 
 ## Surface bio ou non / archipel
-surfacesCulturesBioNon <- rga23_surfacesCultures |>
+surfacesCulturesBioNon <- left_join(rga23_surfacesCultures, rga23_exploitations) |>
   mutate(TypeCulture = case_when(
     (TypeCulture == 10) ~ "10 - Cultures maraîchères",
     (TypeCulture == 20) ~ "20 - Cultures vivrières",
@@ -17,56 +17,65 @@ surfacesCulturesBioNon <- rga23_surfacesCultures |>
   mutate(surfaceBioCult = case_when(
     SurfaceBio == 1 ~ SurfaceCult,
     TRUE ~ 0
+  ), surfaceBioDAGCult = case_when(
+    (AgriBio_DAG == 1 | AgriBio_DAG == 3) & SurfaceBio == 1 ~ SurfaceCult,
+    TRUE ~ 0
   )) |>
   summarize(
-    `Nb Exploitants` = n_distinct(interview__key),
-    `Surface BIO (Ha)` = round((sum(surfaceBioCult, na.rm = TRUE) / 10000), 1),
-    `Surface (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1),
-    `Surface moyenne (m²)` = round(mean(SurfaceCult, na.rm = TRUE), 0)
+    `Surface BIO déclarée RGA (Ha)` = round((sum(surfaceBioCult, na.rm = TRUE) / 10000), 1),
+    `Surface BIO validée DAG (Ha)` = round((sum(surfaceBioDAGCult, na.rm = TRUE) / 10000), 1),
+    `Nb Exploitants de ce type de cultures` = n_distinct(interview__key),
+    `Surface (Ha)` = round((sum(SurfaceCult, na.rm = TRUE) / 10000), 1)
   )
 
-surfaceTotaleBioClassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface BIO (Ha)`, na.rm = TRUE))
+surfaceTotaleBioClassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface BIO déclarée RGA (Ha)`, na.rm = TRUE))
+surfaceTotaleBioDAGlassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface BIO validée DAG (Ha)`, na.rm = TRUE))
 surfaceTotaleClassiques <- as.numeric(sum(surfacesCulturesBioNon$`Surface (Ha)`, na.rm = TRUE))
 nbExploitantsTotalClassiques <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1) |> count())
 
 surfacesCulturesBioNonEtTotal <- surfacesCulturesBioNon |>
   add_row(
     TypeCulture = "Total cultures classiques",
-    `Nb Exploitants` = nbExploitantsTotalClassiques,
-    `Surface BIO (Ha)` = surfaceTotaleBioClassiques,
-    `Surface (Ha)` = surfaceTotaleClassiques,
-    `Surface moyenne (m²)` = as.numeric(NA)
+    `Surface BIO déclarée RGA (Ha)` = surfaceTotaleBioClassiques,
+    `Surface BIO validée DAG (Ha)` = surfaceTotaleBioDAGlassiques,
+    `Nb Exploitants de ce type de cultures` = nbExploitantsTotalClassiques,
+    `Surface (Ha)` = surfaceTotaleClassiques
   )
 
-surfacesJardinsOceaniensBioNon <- rga23_prodVegetales |>
+surfacesJardinsOceaniensBioNon <- left_join(rga23_prodVegetales, rga23_exploitations) |>
   filter(ModesProduction__4 == 1) |>
   mutate(SurfaceBioJardins = case_when(
     SurfaceBioJardins == 1 ~ SurfaceJardins,
     TRUE ~ 0
+  ), SurfaceBioDAGJardins = case_when(
+    (AgriBio_DAG == 1 | AgriBio_DAG == 3) & SurfaceBioJardins == 1 ~ SurfaceJardins,
+    TRUE ~ 0
   )) |>
   summarize(
-    `Nb Exploitants` = n_distinct(interview__key),
-    `Surface Bio (Ha)` = round((sum(SurfaceBioJardins, na.rm = TRUE) / 10000), 1),
-    `Surface (Ha)` = round((sum(SurfaceJardins, na.rm = TRUE) / 10000), 1),
-    `Surface moyenne (m²)` = round(mean(SurfaceJardins, na.rm = TRUE), 0)
+    `Surface BIO déclarée RGA (Ha)` = round((sum(SurfaceBioJardins, na.rm = TRUE) / 10000), 1),
+    `Surface BIO validée DAG (Ha)` = round((sum(SurfaceBioDAGJardins, na.rm = TRUE) / 10000), 1),
+    `Nb Exploitants de ce type de cultures` = n_distinct(interview__key),
+    `Surface (Ha)` = round((sum(SurfaceJardins, na.rm = TRUE) / 10000), 1)
   )
 
-surfaceTotaleBio <- surfaceTotaleBioClassiques + surfacesJardinsOceaniensBioNon$`Surface Bio (Ha)`
+surfaceTotaleBio <- surfaceTotaleBioClassiques + surfacesJardinsOceaniensBioNon$`Surface BIO déclarée RGA (Ha)`
+surfaceTotaleDAGBio <- surfaceTotaleBioDAGlassiques + surfacesJardinsOceaniensBioNon$`Surface BIO validée DAG (Ha)`
 surfaceTotale <- surfaceTotaleClassiques + surfacesJardinsOceaniensBioNon$`Surface (Ha)`
 nbExploitantsTotal <- as.integer(rga23_prodVegetales |> filter(ModesProduction__1 == 1 | ModesProduction__4 == 1) |> count())
 
-surfacesCulturesClassEtOceaniens <- surfacesCulturesBioNonEtTotal |>
+surfacesBioParType <- surfacesCulturesBioNonEtTotal |>
   add_row(
     TypeCulture = "Jardins Oceaniens",
-    `Nb Exploitants` = surfacesJardinsOceaniensBioNon$`Nb Exploitants`,
-    `Surface BIO (Ha)` = surfacesJardinsOceaniensBioNon$`Surface Bio (Ha)`,
-    `Surface (Ha)` = surfacesJardinsOceaniensBioNon$`Surface (Ha)`,
-    `Surface moyenne (m²)` = surfacesJardinsOceaniensBioNon$`Surface moyenne (m²)`
+    `Surface BIO déclarée RGA (Ha)` = surfacesJardinsOceaniensBioNon$`Surface BIO déclarée RGA (Ha)`,
+    `Surface BIO validée DAG (Ha)` = surfacesJardinsOceaniensBioNon$`Surface BIO validée DAG (Ha)`,
+    `Nb Exploitants de ce type de cultures` = surfacesJardinsOceaniensBioNon$`Nb Exploitants de ce type de cultures`,
+    `Surface (Ha)` = surfacesJardinsOceaniensBioNon$`Surface (Ha)`
   ) |>
   add_row(
     TypeCulture = "Total",
-    `Nb Exploitants` = nbExploitantsTotal,
-    `Surface BIO (Ha)` = surfaceTotaleBio,
-    `Surface (Ha)` = surfaceTotale,
-    `Surface moyenne (m²)` = as.numeric(NA)
+    `Surface BIO déclarée RGA (Ha)` = surfaceTotaleBio,
+    `Surface BIO validée DAG (Ha)` = surfaceTotaleDAGBio,
+    `Nb Exploitants de ce type de cultures` = nbExploitantsTotal,
+    `Surface (Ha)` = surfaceTotale
   )
+writeCSV(surfacesBioParType)
