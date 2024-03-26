@@ -13,18 +13,12 @@
 # > 4 - Intégration complète: les animaux sont exclusivement nourris avec des aliments produits à la ferme, des résidus de récolte et des sous-produits et / ou des pâturages,
 # tout leur fumier est recyclé comme engrais et ils fournissent plus d’un service (par ex. nourriture, produits, traction, etc.).
 
-presenceEspecesAnimaux <- paste0("PresenceAnimaux__", 1:6)
-
-rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
+rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales_alimentation |>
   mutate(
     nbEspecesRuminants = rowSums(across(
       c(PresenceAnimaux__1, PresenceAnimaux__2, PresenceAnimaux__5, PresenceAnimaux__8),
       ~ coalesce(., 0)
     )),
-    nbEspecesHorsAbeilles = rowSums(across(
-      all_of(presenceEspecesAnimaux),
-      ~ coalesce(., 0)
-    )) + replace_na(PresenceAnimaux__8, 0),
     uniquementRuminants = case_when(
       nbEspecesRuminants == nbEspecesHorsAbeilles ~ 1,
       TRUE ~ 0
@@ -70,45 +64,15 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
 scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids, by = c("interview__key")) |>
   mutate(score = case_when(
     nbEspecesHorsAbeilles == 0 ~ 0,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 6) &
-      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 6) &
-      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 6) &
-      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 6) &
-      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 6) &
-      (is.na(AutAlimPorcins) | AutAlimPorcins == 6) &
-      (is.na(AutAlimPoules) | AutAlimPoules == 6)) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 6) &
       PropRecyclEngraisOrga == 1 ~ 0,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 5 | AutAlimAnimauxBasseCour == 4) &
-      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 5 | AutAlimBovinsFourrage == 4) &
-      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 5 | AutAlimCaprinsFourrage == 4) &
-      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 5 | AutAlimEquidesFourrages == 4) &
-      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 5 | AutAlimOvinsFourrage == 4) &
-      (is.na(AutAlimPorcins) | AutAlimPorcins == 5 | AutAlimPorcins == 4) &
-      (is.na(AutAlimPoules) | AutAlimPoules == 5 | AutAlimPoules == 4)) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 4 | niveauAutonomie == 5 | niveauAutonomie == 4.5) &
       (PropRecyclEngraisOrga == 1 | PropRecyclEngraisOrga == 2) ~ 1,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 3) &
-      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 3) &
-      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 3) &
-      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 3) &
-      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 3) &
-      (is.na(AutAlimPorcins) | AutAlimPorcins == 3) &
-      (is.na(AutAlimPoules) | AutAlimPoules == 3)) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 3) &
       (PropRecyclEngraisOrga == 2 | PropRecyclEngraisOrga == 3) ~ 2,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 2) &
-      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 2) &
-      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 2) &
-      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 2) &
-      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 2) &
-      (is.na(AutAlimPorcins) | AutAlimPorcins == 2) &
-      (is.na(AutAlimPoules) | AutAlimPoules == 2)) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 2) &
       (PropRecyclEngraisOrga == 3 | PropRecyclEngraisOrga == 4) ~ 3,
-    ((is.na(AutAlimAnimauxBasseCour) | AutAlimAnimauxBasseCour == 1) &
-      (is.na(AutAlimBovinsFourrage) | AutAlimBovinsFourrage == 1) &
-      (is.na(AutAlimCaprinsFourrage) | AutAlimCaprinsFourrage == 1) &
-      (is.na(AutAlimEquidesFourrages) | AutAlimEquidesFourrages == 1) &
-      (is.na(AutAlimOvinsFourrage) | AutAlimOvinsFourrage == 1) &
-      (is.na(AutAlimPorcins) | AutAlimPorcins == 1) &
-      (is.na(AutAlimPoules) | AutAlimPoules == 1)) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 1) &
       (PropRecyclEngraisOrga == 4) ~ 4,
     ## Cas des élevages avec uniquement des ruminants (hors abeilles)
     (uniquementRuminants == 1 & PropRecyclEngraisOrga == 1) ~ 1,
@@ -173,6 +137,15 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
 scoreIntegration |>
   group_by(score) |>
   count()
+
+# score     n
+# <dbl> <int>
+#   1     0  2475
+# 2     1   182
+# 3     2    57
+# 4     3    51
+# 5     4    76
+# 6    55   253
 
 restentAClasser <- scoreIntegration |>
   filter(score == 55) |>

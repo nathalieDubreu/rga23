@@ -8,95 +8,6 @@
 # > 3 - La majorité des intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté..
 # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
 
-## RenouvAnimaux
-# Le renouvellement de vos animaux est-il :
-# Assuré sur la ferme...........................................1
-# Produit localement à l'extérieur de la ferme (en Polynésie)...2
-# Importé.......................................................3
-
-# ComplAlimentation -> distinction entre autonomes ou pas du tout
-
-# Plus de 90%.......................................1
-# 75% à moins de 90%................................2
-# 50% à moins de 75%................................3
-# 25% à moins de 50%................................4
-# Moins de 25%......................................5
-# Aucune autonomie (tout est acheté)................6
-# Sans objet, ce type d'aliment n'est pas utilisé...7
-
-alimentsAchetesExclusivement <- (
-  (rga23_prodAnimales$ComplAlimentation__2 == 1 |
-    rga23_prodAnimales$ComplAlimentation__3 == 1 |
-    rga23_prodAnimales$ComplAlimentation__4 == 1 |
-    rga23_prodAnimales$ComplAlimentation__5 == 1) &
-    rga23_prodAnimales$ComplAlimentation__1 == 0 &
-    rga23_prodAnimales$ComplAlimentation__6 == 0 &
-    rga23_prodAnimales$ComplAlimentation__7 == 0 &
-    rga23_prodAnimales$ComplAlimentation__8 == 0 &
-    rga23_prodAnimales$ComplAlimentation__9 == 0 &
-    rga23_prodAnimales$ComplAlimentation__10 == 0)
-
-alimentsPresentsExclusivement <- (
-  (rga23_prodAnimales$ComplAlimentation__1 == 1 | rga23_prodAnimales$ComplAlimentation__7 == 1) &
-    (rga23_prodAnimales$ComplAlimentation__2 == 0 &
-      rga23_prodAnimales$ComplAlimentation__3 == 0 &
-      rga23_prodAnimales$ComplAlimentation__4 == 0 &
-      rga23_prodAnimales$ComplAlimentation__5 == 0 &
-      rga23_prodAnimales$ComplAlimentation__6 == 0 &
-      rga23_prodAnimales$ComplAlimentation__8 == 0 &
-      rga23_prodAnimales$ComplAlimentation__9 == 0 &
-      rga23_prodAnimales$ComplAlimentation__10 == 0
-    )
-)
-
-autonomieAlimentaire <- function(niveau1, niveau2) {
-  variables <- c(
-    "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
-    "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
-  )
-  conditions <- lapply(variables, function(col) {
-    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep = ""), ") | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau1, " | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau2, ")")
-  })
-  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
-  return(condition)
-}
-
-autonomie_2_3_ <- autonomieAlimentaire(2, 3)
-autonomie_5_6_ <- autonomieAlimentaire(5, 6)
-autonomie_6_ <- autonomieAlimentaire(6,6)
-autonomie_5_ <- autonomieAlimentaire(5,5)
-autonomie_4_ <- autonomieAlimentaire(4,4)
-autonomie_3_ <- autonomieAlimentaire(3,3)
-autonomie_2_ <- autonomieAlimentaire(2,2)
-autonomie_1_ <- autonomieAlimentaire(1,1)
-
-rga23_prodAnimales_intrants <- rga23_prodAnimales |>
-  mutate(
-    alimentsAchetesExclusivement = case_when(
-      alimentsAchetesExclusivement ~ 1,
-      TRUE ~ as.numeric(NA)
-    ),
-    alimentsPresentsExclusivement = case_when(
-      alimentsPresentsExclusivement ~ 1,
-      TRUE ~ as.numeric(NA)
-    ),
-    niveauAutonomie = case_when(
-      rowSums(across(
-        c(
-          "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
-          "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
-        ),
-        ~ coalesce(., 0)
-      )) == 0 ~ as.numeric(NA),
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_1_)) ~ 1,
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_2_3_)) ~ 2.3,
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_4_)) ~ 4,
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_6_)) ~ 5.6,
-      TRUE ~ 0
-    )
-  ) |>
-  select(interview__key, niveauAutonomie, alimentsAchetesExclusivement, alimentsPresentsExclusivement)
-
 ## ProvenancePlants -> autoproduits = 1 (avec PartPlantsAutoP)
 # 0 à 10% du volume utilisé.......1
 # 10 à 25% du volume utilisé......2
@@ -105,7 +16,6 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
 # Plus de 75% du volume utilisé...5
 
 ## ProvenanceSemences -> autoproduits = 2 (avec PartSemencesAutoP)
-
 ## ProvenanceSemences -> Fournies par d'autres agriculteurs (dons) = 3
 
 ## EnergiesRenouv avec le niveau d'autonomie : NivAutoEnergiesR
@@ -114,26 +24,64 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
 # 75%....3
 # 100%...4
 
-# TypePhytosanit -> bio = 2 avec le cas échéant : AutoProdPhytoBio (oui/non/partie)
-
 scoreIntrants <- left_join(rga23_tape,
-  rga23_prodAnimales_intrants,
-  by = "interview__key"
+  rga23_prodAnimales_alimentation,
+  by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
 ) |>
   left_join(
     rga23_exploitations,
     by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
   ) |>
-  mutate(PartAutoproduction = case_when(
-    ## Uniquement des semences
-    UtilisationPlants == 2 & UtilisationGraines == 1 ~ PartSemencesAutoP,
-    ## Uniquement des plants
-    UtilisationPlants == 1 & UtilisationGraines == 2 ~ PartPlantsAutoP,
-    ## Presence de plants et semences
-    UtilisationPlants == 1 & UtilisationGraines == 1 ~ trunc((PartSemencesAutoP + PartPlantsAutoP) / 2),
-    ## Ni l'un ni l'autre
-    TRUE ~ as.numeric(NA)
-  )) |>
+  mutate(
+    PartSemencesAutoP_Ech = case_when(
+      ## Uniquement de l'auto-production ou de l'échange -> part réévaluée à 5
+      (ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0 ~ 5,
+      TRUE ~ PartSemencesAutoP
+    ),
+    PartAutoproduction = case_when(
+      ## Uniquement des semences échangées
+      UtilisationPlants == 2 & UtilisationGraines == 1 ~ PartSemencesAutoP_Ech,
+      ## Uniquement des plants
+      UtilisationPlants == 1 & UtilisationGraines == 2 ~ PartPlantsAutoP,
+      ## Presence de plants et semences
+      UtilisationPlants == 1 & UtilisationGraines == 1 ~ trunc((PartSemencesAutoP_Ech + PartPlantsAutoP) / 2),
+      ## Ni l'un ni l'autre
+      TRUE ~ as.numeric(NA)
+    ),
+    niveauAutonomieInv = case_when(
+      niveauAutonomie < 3 ~ 5,
+      niveauAutonomie < 4 ~ 4,
+      niveauAutonomie < 5 ~ 3,
+      niveauAutonomie < 6 ~ 2,
+      niveauAutonomie == 6 ~ 1,
+      TRUE ~ as.numeric(NA)
+    ),
+    notePonderee = case_when(
+      # Les 3 sont présents
+      ## Part d'auto-production des plants et semences = 60% de la note
+      ## Autonomie alimentaire des animaux calculée = 25% de la note
+      ## Niveau d'énergie renouvelable (+ 1 pour replacer l'échelle des notes jusque 5) = 15% de la note
+      EnergiesRenouv == 1 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.15 * (NivAutoEnergiesR + 1) + 0.25 * niveauAutonomieInv + 0.60 * PartAutoproduction) - 1,
+      # Pas de production d'énergie renouvelable :
+      ## Autonomie alimentaire des animaux calculée = 35% de la note
+      ## Part d'auto-production des plants et semences = 65% de la note
+      ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
+      EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.35 * niveauAutonomieInv + 0.65 * PartAutoproduction) - 1,
+      # Pas d'animaux dont on contrôle l'autonomie alimentaire
+      ## Part d'auto-production des plants et semences = 65% de la note
+      ## Niveau d'énergie renouvelable (+ 1 pour replacer l'échelle des notes jusque 5) = 35% de la note
+      EnergiesRenouv == 1 & is.na(niveauAutonomie) & !is.na(PartAutoproduction) ~ trunc(0.35 * (NivAutoEnergiesR + 1) + 0.65 * PartAutoproduction),
+      # Pas de semences ni plants
+      ## Autonomie alimentaire des animaux = 65% de la note
+      ## Niveau d'énergie renouvelable (+ 1 pour replacer l'échelle des notes jusque 5) = 35% de la note
+      is.na(PartAutoproduction) & EnergiesRenouv == 1 & !is.na(niveauAutonomieInv) ~ trunc(0.35 * (NivAutoEnergiesR + 1) + 0.65 * niveauAutonomieInv),
+      # Pas de semences ni plants + pas d'énergie renouvelable produite
+      ## Autonomie alimentaire des animaux calculée
+      ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
+      is.na(PartAutoproduction) & EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) ~ niveauAutonomieInv - 1,
+            TRUE ~ 55
+    )
+  ) |>
   mutate(score = case_when(
     # > 0 - Tous les intrants sont produits et achetés en dehors de l’agroécosystème.
     (is.na(niveauAutonomie) | alimentsAchetesExclusivement == 1) &
@@ -141,7 +89,7 @@ scoreIntrants <- left_join(rga23_tape,
       (is.na(ProvenanceSemences__2) | ProvenanceSemences__2 == 0) &
       EnergiesRenouv == 2 ~ 0,
     # > 1 - La majorité des intrants sont achetés en dehors de l’agroécosystème.
-    (is.na(niveauAutonomie) | niveauAutonomie == 5.6) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 5 | niveauAutonomie == 6 | niveauAutonomie == 5.5) &
       (is.na(PartAutoproduction) | PartAutoproduction == 1 | PartAutoproduction == 2) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 1) ~ 1,
     # > 2 - Certains intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
@@ -149,29 +97,28 @@ scoreIntrants <- left_join(rga23_tape,
       (is.na(PartAutoproduction) | PartAutoproduction == 3) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 2) ~ 2,
     # > 3 - La majorité des intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté..
-    (is.na(niveauAutonomie) | niveauAutonomie == 2.3) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 2 | niveauAutonomie == 3 | niveauAutonomie == 2.5) &
       (is.na(PartAutoproduction) | PartAutoproduction == 4) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 3) ~ 3,
     # > 3 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté MAIS pas ou peu d'énergie renouvelable produite
     (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
-      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
+      (is.na(PartAutoproduction) | PartAutoproduction == 5) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR <= 3) ~ 3,
     # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
     (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
-      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
+      (is.na(PartAutoproduction) | PartAutoproduction == 5) &
       NivAutoEnergiesR == 4 ~ 4,
+    # Pondération pour le restant
+    notePonderee <= 1 ~ 0,
+    notePonderee == 2 ~ 1,
+    notePonderee == 3 ~ 2,
+    notePonderee == 4 ~ 3,
+    notePonderee == 5 ~ 4,
     TRUE ~ 55
   ))
 
 scoreIntrants |>
   group_by(score) |>
-  count()
-
-restent <- scoreIntrants |>
-  filter(score == 55) |>
-  group_by(NivAutoEnergiesR, niveauAutonomie, PartAutoproduction) |>
   count()
 
 # GESTION DE LA FERTILITÉ DU SOL

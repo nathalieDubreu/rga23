@@ -42,14 +42,6 @@ scoreCultures |>
 # > 3 – Plus de 3 espèces avec un nombre significatif d’animaux.
 # > 4 - Plus de 3 espèces de races différentes bien adaptées aux conditions climatiques locales et changeantes.
 
-presenceEspecesAnimaux <- paste0("PresenceAnimaux__", 1:8)
-
-rga23_prodAnimales <- rga23_prodAnimales |>
-  mutate(nbEspeces = rowSums(across(
-    all_of(presenceEspecesAnimaux),
-    ~ coalesce(., 0)
-  )))
-
 scoreAnimaux <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, indicRGA23_Elevage), by = "interview__key") |>
   mutate(score = case_when(
     nbEspeces == 0 ~ 0,
