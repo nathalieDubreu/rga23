@@ -49,78 +49,53 @@ alimentsPresentsExclusivement <- (
     )
 )
 
-autonomieAlimentaire_2niveaux <- function(niveau1, niveau2) {
+autonomieAlimentaire <- function(niveau1, niveau2) {
   variables <- c(
     "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
     "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
   )
-
   conditions <- lapply(variables, function(col) {
     paste0("(is.na(", paste("rga23_prodAnimales$", col, sep = ""), ") | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau1, " | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau2, ")")
   })
-
   condition <- paste0("(", paste(conditions, collapse = " & "), ")")
-
   return(condition)
 }
 
-autonomie_5_6_ <- autonomieAlimentaire_2niveaux(5, 6)
-
-autonomieAlimentaire <- function(niveau) {
-  variables <- c(
-    "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
-    "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
-  )
-
-  conditions <- lapply(variables, function(col) {
-    paste0("(is.na(", paste("rga23_prodAnimales$", col, sep = ""), ") | ", paste("rga23_prodAnimales$", col, sep = ""), " == ", niveau, ")")
-  })
-
-  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
-
-  return(condition)
-}
-
-autonomie_5_ <- autonomieAlimentaire(5)
-autonomie_4_ <- autonomieAlimentaire(4)
-autonomie_3_ <- autonomieAlimentaire(3)
-autonomie_2_ <- autonomieAlimentaire(2)
-autonomie_1_ <- autonomieAlimentaire(1)
+autonomie_2_3_ <- autonomieAlimentaire(2, 3)
+autonomie_5_6_ <- autonomieAlimentaire(5, 6)
+autonomie_6_ <- autonomieAlimentaire(6,6)
+autonomie_5_ <- autonomieAlimentaire(5,5)
+autonomie_4_ <- autonomieAlimentaire(4,4)
+autonomie_3_ <- autonomieAlimentaire(3,3)
+autonomie_2_ <- autonomieAlimentaire(2,2)
+autonomie_1_ <- autonomieAlimentaire(1,1)
 
 rga23_prodAnimales_intrants <- rga23_prodAnimales |>
   mutate(
     alimentsAchetesExclusivement = case_when(
       alimentsAchetesExclusivement ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
       TRUE ~ as.numeric(NA)
     ),
     alimentsPresentsExclusivement = case_when(
       alimentsPresentsExclusivement ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
       TRUE ~ as.numeric(NA)
     ),
-    autonomie_3_ = case_when(
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_3_)) ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
-      TRUE ~ as.numeric(NA)
-    ),
-    autonomie_4_ = case_when(
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_4_)) ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
-      TRUE ~ as.numeric(NA)
-    ),
-    autonomie_5_ = case_when(
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_)) ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
-      TRUE ~ as.numeric(NA)
-    ),
-    autonomie_5_6_ = case_when(
-      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_6_)) ~ 1,
-      RaisonsRecensement__2 == 1 ~ 0,
-      TRUE ~ as.numeric(NA)
+    niveauAutonomie = case_when(
+      rowSums(across(
+        c(
+          "AutAlimAnimauxBasseCour", "AutAlimBovinsFourrage", "AutAlimCaprinsFourrage",
+          "AutAlimEquidesFourrages", "AutAlimOvinsFourrage", "AutAlimPorcins", "AutAlimPoules"
+        ),
+        ~ coalesce(., 0)
+      )) == 0 ~ as.numeric(NA),
+      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_1_)) ~ 1,
+      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_2_3_)) ~ 2.3,
+      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_4_)) ~ 4,
+      RaisonsRecensement__2 == 1 & eval(parse(text = autonomie_5_6_)) ~ 5.6,
+      TRUE ~ 0
     )
   ) |>
-  select(interview__key, alimentsAchetesExclusivement, alimentsPresentsExclusivement, autonomie_5_6_, autonomie_5_, autonomie_4_, autonomie_3_)
+  select(interview__key, niveauAutonomie, alimentsAchetesExclusivement, alimentsPresentsExclusivement)
 
 ## ProvenancePlants -> autoproduits = 1 (avec PartPlantsAutoP)
 # 0 à 10% du volume utilisé.......1
@@ -141,39 +116,51 @@ rga23_prodAnimales_intrants <- rga23_prodAnimales |>
 
 # TypePhytosanit -> bio = 2 avec le cas échéant : AutoProdPhytoBio (oui/non/partie)
 
-scoreIntrants <- left_join(
-  left_join(rga23_tape,
-    rga23_prodAnimales_intrants,
-    by = "interview__key"
-  ),
-  rga23_exploitations |> select(interview__key, ProvenancePlants__1, PartPlantsAutoP, ProvenanceSemences__1, ProvenanceSemences__2, ProvenanceSemences__3, ProvenanceSemences__4, PartSemencesAutoP),
+scoreIntrants <- left_join(rga23_tape,
+  rga23_prodAnimales_intrants,
   by = "interview__key"
 ) |>
+  left_join(
+    rga23_exploitations,
+    by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
+  ) |>
+  mutate(PartAutoproduction = case_when(
+    ## Uniquement des semences
+    UtilisationPlants == 2 & UtilisationGraines == 1 ~ PartSemencesAutoP,
+    ## Uniquement des plants
+    UtilisationPlants == 1 & UtilisationGraines == 2 ~ PartPlantsAutoP,
+    ## Presence de plants et semences
+    UtilisationPlants == 1 & UtilisationGraines == 1 ~ trunc((PartSemencesAutoP + PartPlantsAutoP) / 2),
+    ## Ni l'un ni l'autre
+    TRUE ~ as.numeric(NA)
+  )) |>
   mutate(score = case_when(
     # > 0 - Tous les intrants sont produits et achetés en dehors de l’agroécosystème.
-    (is.na(alimentsAchetesExclusivement) | alimentsAchetesExclusivement == 1) &
+    (is.na(niveauAutonomie) | alimentsAchetesExclusivement == 1) &
       (is.na(ProvenancePlants__1) | ProvenancePlants__1 == 0) &
       (is.na(ProvenanceSemences__2) | ProvenanceSemences__2 == 0) &
       EnergiesRenouv == 2 ~ 0,
     # > 1 - La majorité des intrants sont achetés en dehors de l’agroécosystème.
-    (is.na(autonomie_5_6_) | autonomie_5_6_ == 1) &
-      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 1 | PartPlantsAutoP == 2) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 1 | PartSemencesAutoP == 2) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 5.6) &
+      (is.na(PartAutoproduction) | PartAutoproduction == 1 | PartAutoproduction == 2) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 1) ~ 1,
     # > 2 - Certains intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
-    (is.na(autonomie_4_) | autonomie_4_ == 1) &
-      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 3) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 3) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 4) &
+      (is.na(PartAutoproduction) | PartAutoproduction == 3) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 2) ~ 2,
     # > 3 - La majorité des intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté..
-    (is.na(autonomie_3_) | autonomie_3_ == 1) &
-      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 4) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 4) &
+    (is.na(niveauAutonomie) | niveauAutonomie == 2.3) &
+      (is.na(PartAutoproduction) | PartAutoproduction == 4) &
       (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 3) ~ 3,
-    # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
-    (is.na(alimentsPresentsExclusivement) | alimentsPresentsExclusivement == 1) &
+    # > 3 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté MAIS pas ou peu d'énergie renouvelable produite
+    (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
       (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
-      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 |((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
+      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
+      (is.na(NivAutoEnergiesR) | NivAutoEnergiesR <= 3) ~ 3,
+    # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
+    (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
+      (is.na(ProvenancePlants__1) | PartPlantsAutoP == 5) &
+      (is.na(ProvenanceSemences__2) | PartSemencesAutoP == 5 | ((ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0)) &
       NivAutoEnergiesR == 4 ~ 4,
     TRUE ~ 55
   ))
@@ -184,12 +171,7 @@ scoreIntrants |>
 
 restent <- scoreIntrants |>
   filter(score == 55) |>
-  group_by(NivAutoEnergiesR, alimentsPresentsExclusivement, PartPlantsAutoP, PartSemencesAutoP) |>
-  count()
-
-scoreIntrants |>
-  filter(score == 55) |>
-  filter(is.na(NivAutoEnergiesR)) |>
+  group_by(NivAutoEnergiesR, niveauAutonomie, PartAutoproduction) |>
   count()
 
 # GESTION DE LA FERTILITÉ DU SOL

@@ -24,13 +24,13 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
     nbEspecesHorsAbeilles = rowSums(across(
       all_of(presenceEspecesAnimaux),
       ~ coalesce(., 0)
-    )) + ifelse(is.na(PresenceAnimaux__8), 0, PresenceAnimaux__8),
+    )) + replace_na(PresenceAnimaux__8, 0),
     uniquementRuminants = case_when(
       nbEspecesRuminants == nbEspecesHorsAbeilles ~ 1,
       TRUE ~ 0
     ),
     nbAnimauxBasseCour = rowSums(across(
-      c("NbOies", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
+      c("NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
       ~ coalesce(., 0)
     )),
     nbPoulesPondeuses = rowSums(across(
@@ -41,24 +41,13 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales |>
       c("nbAnimauxBasseCour", "nbPoulesPondeuses", "nbTotalBovins", "nbTotalOvins", "nbTotalPorcs", "nbTotalEquides", "nbTotalCaprins"),
       ~ coalesce(., 0)
     )),
-    poidsBovins = 900 * ifelse(is.na(nbTotalBovins), 0, nbTotalBovins),
-    poidsOvins = 150 * ifelse(is.na(nbTotalOvins), 0, nbTotalOvins),
-    poidsPoules = 3 * ifelse(is.na(nbPoulesPondeuses), 0, nbPoulesPondeuses),
-    poidsAnimauxBasseCour = 3 * ifelse(is.na(nbAnimauxBasseCour), 0, nbAnimauxBasseCour),
-    poidsCaprins = 150 * ifelse(is.na(nbTotalCaprins), 0, nbTotalCaprins),
-    poidsEquides = 800 * ifelse(is.na(nbTotalEquides), 0, nbTotalEquides),
-    poidsPorcins = 150 * ifelse(is.na(nbTotalPorcs), 0, nbTotalPorcs),
-    # poidsTotalAnimaux = rowSums(across(
-    #   c("poidsBovins", "poidsOvins", "poidsPoules", "poidsAnimauxBasseCour", "poidsCaprins", "poidsEquides", "poidsPorcins"),
-    #   ~ coalesce(., 0)
-    # )),
-    # partPoidsBovins = ifelse(poidsBovins == 0, 0, poidsBovins / poidsTotalAnimaux),
-    # partPoidsOvins = ifelse(poidsOvins == 0, 0, poidsOvins / poidsTotalAnimaux),
-    # partPoidsPoules = ifelse(poidsPoules == 0, 0, poidsPoules / poidsTotalAnimaux),
-    # partPoidsAnimauxBasseCour = ifelse(poidsAnimauxBasseCour == 0, 0, poidsAnimauxBasseCour / poidsTotalAnimaux),
-    # partPoidsCaprins = ifelse(poidsCaprins == 0, 0, poidsCaprins / poidsTotalAnimaux),
-    # partPoidsEquides = ifelse(poidsEquides == 0, 0, poidsEquides / poidsTotalAnimaux),
-    # partPoidsPorcins = ifelse(poidsPorcins == 0, 0, poidsPorcins / poidsTotalAnimaux),
+    poidsBovins = 900 * replace_na(nbTotalBovins, 0),
+    poidsOvins = 150 * replace_na(nbTotalOvins, 0),
+    poidsPoules = 3 * replace_na(nbPoulesPondeuses, 0),
+    poidsAnimauxBasseCour = 3 * replace_na(nbAnimauxBasseCour, 0),
+    poidsCaprins = 150 * replace_na(nbTotalCaprins, 0),
+    poidsEquides = 800 * replace_na(nbTotalEquides, 0),
+    poidsPorcins = 150 * replace_na(nbTotalPorcs, 0),
     poidsMax = pmax(poidsBovins, poidsOvins, poidsPoules, poidsAnimauxBasseCour, poidsCaprins, poidsEquides, poidsPorcins)
   )
 

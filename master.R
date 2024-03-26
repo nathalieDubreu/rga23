@@ -5,6 +5,12 @@ library("tidyr")
 
 source("fonctions.R")
 
+# Analyse
+source("analyse/publicationDoubleTimbre.R")
+
+# Tape
+source("tape/tape.R")
+
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")
 source("champs/champ2012.R")
@@ -12,13 +18,6 @@ source("champs/champCAPL.R")
 source("champs/comparatifsAppartenances.R")
 ## Tests unitaires
 source("champs/champCAPL_tests.R")
-
-# Analyse
-source("analyse/publicationDoubleTimbre.R")
-
-# Tape
-source("tape/tape.R")
-
 
 ######## Programmes des étapes préalables à l'analyse
 

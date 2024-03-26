@@ -1,18 +1,17 @@
 # Analyse des données du rga23
 
-## Champs
-- `champRGA.R` : Champ du RGA23
-- `champ2012.R` : Approximation des seuils de 2012
-- `champCAPL.R` : Calcul des points CAPL
-- `comparatifsAppartenances.R` : Comparatifs d'appartenance aux champs
-- `champCAPL_tests.R` : Quelques tests unitaires
-  
 ## Analyse
 - `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
 
 ## Analyse supplémentaire : TAPE
 - `tape.R`
 
+## Champs
+- `champRGA.R` : Champ du RGA23
+- `champ2012.R` : Approximation des seuils de 2012
+- `champCAPL.R` : Calcul des points CAPL
+- `comparatifsAppartenances.R` : Comparatifs d'appartenance aux champs
+- `champCAPL_tests.R` : Quelques tests unitaires
 
 # Programmes des étapes préalables à l'analyse
 
