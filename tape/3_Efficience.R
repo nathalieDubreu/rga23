@@ -49,11 +49,16 @@ scoreIntrants <- left_join(rga23_tape,
       TRUE ~ as.numeric(NA)
     ),
     niveauAutonomieInv = case_when(
-      niveauAutonomie < 3 ~ 5,
-      niveauAutonomie < 4 ~ 4,
-      niveauAutonomie < 5 ~ 3,
-      niveauAutonomie < 6 ~ 2,
-      niveauAutonomie == 6 ~ 1,
+      # Au moins 75 %
+      niveauAutonomie <= 2 ~ 5,
+      # 50 à 75% (voire 90%)
+      niveauAutonomie <= 3 ~ 4,
+      # 25 à 50% (voire 75%)
+      niveauAutonomie <= 4 ~ 3,
+      # 1 à 25% (voire 50%)
+      niveauAutonomie <= 5 ~ 2,
+      # 0 % (voire une partie jusqu'à 25%)
+      niveauAutonomie <= 6 ~ 1,
       TRUE ~ as.numeric(NA)
     ),
     notePonderee = case_when(
@@ -79,7 +84,11 @@ scoreIntrants <- left_join(rga23_tape,
       ## Autonomie alimentaire des animaux calculée
       ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
       is.na(PartAutoproduction) & EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) ~ niveauAutonomieInv - 1,
-            TRUE ~ 55
+      # Pas d'animaux dont on contrôle l'autonomie alimentaire + pas d'énergie renouvelable produite
+      ## Part d'auto-production des plants et semences
+      ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
+      !is.na(PartAutoproduction) & EnergiesRenouv == 2 & is.na(niveauAutonomie) ~ PartAutoproduction - 1,
+      TRUE ~ 55
     )
   ) |>
   mutate(score = case_when(
@@ -95,20 +104,16 @@ scoreIntrants <- left_join(rga23_tape,
     # > 2 - Certains intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
     (is.na(niveauAutonomie) | niveauAutonomie == 4) &
       (is.na(PartAutoproduction) | PartAutoproduction == 3) &
-      (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 2) ~ 2,
+      (NivAutoEnergiesR == 1 | NivAutoEnergiesR == 2) ~ 2,
     # > 3 - La majorité des intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté..
     (is.na(niveauAutonomie) | niveauAutonomie == 2 | niveauAutonomie == 3 | niveauAutonomie == 2.5) &
       (is.na(PartAutoproduction) | PartAutoproduction == 4) &
-      (is.na(NivAutoEnergiesR) | NivAutoEnergiesR == 3) ~ 3,
-    # > 3 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté MAIS pas ou peu d'énergie renouvelable produite
-    (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
-      (is.na(PartAutoproduction) | PartAutoproduction == 5) &
-      (is.na(NivAutoEnergiesR) | NivAutoEnergiesR <= 3) ~ 3,
+      (NivAutoEnergiesR == 2 | NivAutoEnergiesR == 3) ~ 3,
     # > 4 - Tous les intrants sont produits au sein de l’agroécosystème ou échangés avec d’autres membres de la communauté.
     (is.na(niveauAutonomie) | alimentsPresentsExclusivement == 1) &
       (is.na(PartAutoproduction) | PartAutoproduction == 5) &
       NivAutoEnergiesR == 4 ~ 4,
-    # Pondération pour le restant
+    # Pondération pour le reste des exploitations
     notePonderee <= 1 ~ 0,
     notePonderee == 2 ~ 1,
     notePonderee == 3 ~ 2,
