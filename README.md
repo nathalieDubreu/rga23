@@ -56,6 +56,7 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
 - `modificationsFichiersBaseStat.R` : 
     - Récupération des variables de rga23_gestion dans le rga23_general (suppression du fichier **rga23_gestion**)
     - Nouvelle répartition des variables entre **rga23_general** et **rga23_mainOeuvre**
+- `ajoutsIndicEtPointsCAPL.R` : Ajout du nombre de points CAPL calculés et d'une indicatrice de respect du seuil des 400 points ou de production de 2,7 tonnes ou plus de coprah
 #### B - En vue de l'intégration dans le SIA
 - `integrationSIA.R` : suppression des variables relatives à la situation conjugale de l'exploitant avant mise à disposition pour intégration dans le SIA
 

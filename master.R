@@ -47,6 +47,7 @@ source("miseEnForme/ajoutIndicatrices.R")
 #### Pour mise à dispo générale de la base de données :
 source("miseEnForme/anonymisation.R")
 source("miseEnForme/modificationsFichiersBaseStat.R")
+source("miseEnForme/ajoutsIndicEtPointsCAPL.R")
 #### Pour intégration dans le SIA :
 # source("miseEnForme/integrationSIA.R")
 
