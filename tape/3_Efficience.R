@@ -66,7 +66,7 @@ scoreIntrants <- left_join(rga23_tape,
       ## Part d'auto-production des plants et semences = 60% de la note
       ## Autonomie alimentaire des animaux calculée = 25% de la note
       ## Niveau d'énergie renouvelable (+ 1 pour replacer l'échelle des notes jusque 5) = 15% de la note
-      EnergiesRenouv == 1 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.15 * (NivAutoEnergiesR + 1) + 0.25 * niveauAutonomieInv + 0.60 * PartAutoproduction) - 1,
+      EnergiesRenouv == 1 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.15 * (NivAutoEnergiesR + 1) + 0.25 * niveauAutonomieInv + 0.60 * PartAutoproduction),
       # Pas de production d'énergie renouvelable :
       ## Autonomie alimentaire des animaux calculée = 35% de la note
       ## Part d'auto-production des plants et semences = 65% de la note
