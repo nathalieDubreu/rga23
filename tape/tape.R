@@ -1,11 +1,5 @@
-# Restriction aux exploitations respectant les critères
-source("champs/champCAPL.R")
-
-rga23_eligibles <- inner_join(idExploitantsPointsCAPL,
-  readCSV("rga23_general.csv") |>
-    select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3),
-  by = c("interview__key")
-) |>
+# Champ TAPE : Restriction aux exploitations ayant plus de 400 points CAPL
+rga23_eligibles <- readCSV("rga23_general.csv") |>
   filter(PointsCAPL >= 400) |>
   select(interview__key, lettre_unite, RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3)
 
@@ -135,6 +129,6 @@ source("tape/6_CultureTraditions.R")
 source("tape/7_Cocreation.R")
 source("tape/8_ValeursHumainesSociales.R")
 source("tape/9_EconomieCirculaire.R")
-source("tape/9_Gouvernance.R")
+source("tape/10_Gouvernance.R")
 
 source("tape/ClassementsExploitations.R")
