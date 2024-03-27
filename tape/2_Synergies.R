@@ -61,7 +61,7 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales_alimentation |>
 # Aucune autonomie (tout est acheté)................6
 # Sans objet, ce type d'aliment n'est pas utilisé...7
 
-scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids, by = c("interview__key")) |>
+score_1_Integration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids, by = c("interview__key")) |>
   mutate(score = case_when(
     nbEspecesHorsAbeilles == 0 ~ 0,
     (is.na(niveauAutonomie) | niveauAutonomie == 6) &
@@ -134,41 +134,9 @@ scoreIntegration <- left_join(rga23_exploitations, rga23_prodAnimales_NbEtPoids,
     TRUE ~ 55
   ))
 
-scoreIntegration |>
+score_1_Integration |>
   group_by(score) |>
   count()
-
-# score     n
-# <dbl> <int>
-#   1     0  2475
-# 2     1   182
-# 3     2    57
-# 4     3    51
-# 5     4    76
-# 6    55   253
-
-restentAClasser <- scoreIntegration |>
-  filter(score == 55) |>
-  select(
-    interview__key,
-    AutAlimAnimauxBasseCour,
-    AutAlimBovinsFourrage,
-    AutAlimCaprinsFourrage,
-    AutAlimEquidesFourrages,
-    AutAlimOvinsFourrage,
-    AutAlimPorcins,
-    AutAlimPoules,
-    PropRecyclEngraisOrga,
-    nbEspecesHorsAbeilles,
-    nbAnimauxBasseCour,
-    nbPoulesPondeuses,
-    nbTotalBovins,
-    nbTotalOvins,
-    nbTotalPorcs,
-    nbTotalEquides,
-    nbTotalCaprins,
-    nbTotalAnimaux
-  )
 
 # PropRecyclEngraisOrga
 
@@ -200,7 +168,7 @@ jointuresSolPlantes <- left_join(
     by = "interview__key"
   )
 
-scoreSolPlantes <- jointuresSolPlantes |>
+score_2_SolPlantes <- jointuresSolPlantes |>
   left_join(rga23_general |> select(interview__key, RaisonsRecensement__1)) |>
   mutate(partPaturage = totalSurfaceFourrages / SurfaceTotalProdAgri * 100) |>
   mutate(score = case_when(
@@ -220,17 +188,33 @@ scoreSolPlantes <- jointuresSolPlantes |>
     TRUE ~ 55
   ))
 
-scoreSolPlantes |>
+score_2_SolPlantes |>
   group_by(score) |>
   count()
 
-# INTEGRATION AVEC LES ARBRES (AGROFORESTERIE, SILVOPASTORALISME, AGROSILVOPASTORALISME)
+# 2.3 INTEGRATION AVEC LES ARBRES (AGROFORESTERIE, SILVOPASTORALISME, AGROSILVOPASTORALISME)
 # Considérez aussi les zones forestières communales.
 # > 0 - Pas d’intégration: les arbres (et autres plantes vivaces) n’ont pas de rôle pour l’homme ou dans la production végétale ou animale.
 # > 1 - Faible intégration: un petit nombre d’arbres (et autres plantes vivaces) ne fournissent qu’un seul produit (par exemple fruits, bois, fourrage, substances médicinales ou biopesticides…) ou qu’un seul service pour les cultures et/ou les animaux (par exemple de l’ombre pour les animaux, une fertilité accrue du sol, une rétention d’eau, une barrière à l’érosion du sol.
 # > 2 - Intégration moyenne: un nombre important d’arbres (et d’autres plantes vivaces) fournissent au moins un produit ou un service.
 # > 3 - Intégration élevée: un nombre important d’arbres (et autres plantes vivaces) fournissent plusieurs produits et services.
 # > 4 - Intégration complète: de nombreux arbres (et autres vivaces) fournissent plusieurs produits et services.
+
+score_3_IntegrationArbres <- left_join(rga23_tape,
+  nbCulturesArbresDeclarees,
+  by = "interview__key"
+) |>
+  mutate(score = case_when(
+    is.na(nbCulturesArbres) & PsceArbresHorsRente__3 == 1 ~ 0,
+    is.na(nbCulturesArbres) & PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 0 &
+      (replace_na(RaisonsArbresHorsR__1, 0) == 0 & replace_na(RaisonsArbresHorsR__3, 0) == 0 & replace_na(RaisonsArbresHorsR__4, 0) == 0 & replace_na(RaisonsArbresHorsR__5, 0) == 0) ~ 1,
+    TRUE ~ 55
+  ))
+
+score_3_IntegrationArbres |>
+  group_by(score) |>
+  count()
+
 
 # CONNECTIVITÉ ENTRE LES ÉLÉMENTS DE L’AGROÉCOSYSTÈME ET LE PAYSAGE
 # Considérez les zones environnantes, les environnements semi-naturels et les zones potentielles de compensation écologique.

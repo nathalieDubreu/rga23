@@ -72,14 +72,14 @@ rga23_tapeAvecPresenceArbres <- rga23_tape |>
   ))
 
 jointuresArbres <- left_join(
-  left_join(
-    rga23_tapeAvecPresenceArbres |> select(interview__key, RaisonsRecensement__1, PsceArbresHorsRente__1, PsceArbresHorsRente__2, PsceArbresHorsRente__3),
-    nbCulturesArbresDeclarees,
-    by = "interview__key"
-  ),
-  rga23_prodVegetales |> select(interview__key, ModesProduction__4, SurfaceTotalProdAgri),
+  rga23_tapeAvecPresenceArbres |> select(interview__key, RaisonsRecensement__1, PsceArbresHorsRente__1, PsceArbresHorsRente__2, PsceArbresHorsRente__3),
+  nbCulturesArbresDeclarees,
   by = "interview__key"
 ) |>
+  left_join(
+    rga23_prodVegetales |> select(interview__key, ModesProduction__4, SurfaceTotalProdAgri),
+    by = "interview__key"
+  ) |>
   mutate(
     NbArbresHectares = 10000 / (SurfaceTotalProdAgri / nbPiedsTotal),
     PartSurfaceArbres = surfaceTotalArbres / SurfaceTotalProdAgri * 100
