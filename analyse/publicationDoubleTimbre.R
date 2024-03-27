@@ -7,11 +7,11 @@ rga23_complet <- left_join(
 Partie5_comptagesCoprah <- rga23_complet |> summarize(
   nombreTotalInterrogations = n(),
   coprahPlus2t7 = sum(ifelse(lettre_unite == "C" | lettre_unite == "X", 1, 0)),
-  coprahInterroges = sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 1, 1, 0)),
-  coprahInjoignables = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 3, 1, 0)) /
+  coprahInjoignablesInconnus = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & (statut_collecte == 4 | statut_collecte == 3 | statut_collecte == 2), 1, 0)) /
     coprahPlus2t7 * 100, 1),
   coprahDoublons = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 5, 1, 0)) /
     coprahPlus2t7 * 100, 1),
+  coprahInterroges = sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 1, 1, 0)),
   coprahArret = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 1 & InterruptionTemporaireCoprah == 2, 1, 0), na.rm = TRUE) /
     coprahInterroges * 100, 1)
 )
