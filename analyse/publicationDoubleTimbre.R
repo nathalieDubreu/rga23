@@ -1,9 +1,24 @@
-## Restriction au champ 23 du RGA
-rga23_champ <- left_join(
+rga23_complet <- left_join(
   readCSV("rga23_general.csv"),
-  readCSV("rga23_coprahculteurs.csv") |> select(interview__key, eligibiliteCoprah)
+  readCSV("rga23_coprahculteurs.csv") |> select(interview__key, eligibiliteCoprah, InterruptionTemporaireCoprah)
 ) |>
-  left_join(readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite)) |>
+  left_join(readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite))
+
+Partie5_comptagesCoprah <- rga23_complet |> summarize(
+  nombreTotalInterrogations = n(),
+  coprahPlus2t7 = sum(ifelse(lettre_unite == "C" | lettre_unite == "X", 1, 0)),
+  coprahInterroges = sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 1, 1, 0)),
+  coprahInjoignables = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 3, 1, 0)) /
+    coprahPlus2t7 * 100, 1),
+  coprahDoublons = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 5, 1, 0)) /
+    coprahPlus2t7 * 100, 1),
+  coprahArret = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & statut_collecte == 1 & InterruptionTemporaireCoprah == 2, 1, 0), na.rm = TRUE) /
+    coprahInterroges * 100, 1)
+)
+writeCSV(Partie5_comptagesCoprah)
+
+## Restriction au champ 23 du RGA
+rga23_champ <- rga23_complet |>
   filter(indicRGA23 == 1) |>
   mutate(TypeExploitation = case_when(
     RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & (eligibiliteCoprah == 0 | is.na(eligibiliteCoprah)) ~ "Cultivateurs seuls",
@@ -11,7 +26,7 @@ rga23_champ <- left_join(
     (eligibilite == 0 | is.na(eligibilite)) & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
     TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
   )) |>
-  select(-eligibilite, -eligibiliteCoprah)
+  select(-eligibilite, -eligibiliteCoprah, -InterruptionTemporaireCoprah)
 
 Partie1_TypesExploitations <- rga23_champ |>
   group_by(TypeExploitation) |>

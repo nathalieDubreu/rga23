@@ -67,3 +67,26 @@ Partie6_typeEngrais <- rga23_exploitations |>
   group_by(`Type engrais`) |>
   calculPourcentage()
 writeCSV(Partie6_typeEngrais)
+
+## Epandage des engrais :
+
+Partie6_epandageManuel <- rga23_exploitations |>
+  mutate(
+    Epandeurs = case_when(
+      MaterielEpandage__1 == 1 ~ 1,
+      MaterielEpandage__2 == 1 ~ 1,
+      MaterielEpandage__3 == 1 ~ 1,
+      MaterielEpandage__4 == 1 ~ 1,
+      MaterielEpandage__5 == 1 ~ 1,
+      MaterielEpandage__6 == 1 ~ 1,
+      MaterielEpandage__7 == 1 ~ 1,
+      MaterielEpandage__8 == 1 ~ 1,
+      TRUE ~ 0
+    )
+  ) |>
+  summarize(
+    NbEpandeurs = sum(Epandeurs),
+    NbEpandeursManuels = sum(MaterielEpandage__4, na.rm = TRUE),
+    ProportionEpandeursManuels = round(NbEpandeursManuels / NbEpandeurs * 100, 1)
+  )
+writeCSV(Partie6_epandageManuel)
