@@ -22,6 +22,15 @@ Partie5_comptagesCoprah <- rga23_complet |> summarize(
 )
 writeCSV(Partie5_comptagesCoprah)
 
+rga23_complet |> summarize(
+  caseCultureCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1, 1, 0)),
+  caseElevageCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1, 1, 0)),
+  caseCoprahCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1, 1, 0)),
+  caseCultureCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
+  caseElevageCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
+  caseCoprahCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
+)
+
 ## Restriction au champ 23 du RGA
 rga23_champ <- rga23_complet |>
   filter(indicRGA23 == 1) |>
