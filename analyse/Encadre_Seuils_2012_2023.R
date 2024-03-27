@@ -1,11 +1,28 @@
 source("champs/comparatifsAppartenances.R")
 
-Encadre2012_ValiditeEnsembles <- rga23B |> 
-  summarize(`Valide RGA 2023` = sum(ValideRGA == 1, na.rm=TRUE),
-           `Valide RGA 2012` = sum(Valide2012 == 1, na.rm=TRUE))
+Encadre2012_ValiditeEnsembles <- rga23B |>
+  summarize(
+    ## RGA23
+    `Valide Elevage RGA 2023` = sum(indicRGA23_Elevage == 1, na.rm = TRUE),
+    `Valide Cultures RGA 2023` = sum(indicRGA23_Cultures == 1, na.rm = TRUE),
+    `Valide RGA 2023 (hors coprah)` = sum(ValideRGA == 1, na.rm = TRUE),
+    `Valide Coprah Uniquement RGA 2023` = sum(indicRGA23_Coprah == 1 & is.na(ValideRGA), na.rm = TRUE),
+    ## RGA12
+    `Valide Elevage RGA 2012` = sum(indicRGA12_Elevage == 1, na.rm = TRUE),
+    `Valide Cultures RGA 2012` = sum(indicRGA12_Cultures == 1, na.rm = TRUE),
+    `Valide RGA 2012` = sum(Valide2012 == 1, na.rm = TRUE)
+  )
 # 3517 valides RGA12
 # 2886 valides RGA23 - hors coprah
 writeCSV(Encadre2012_ValiditeEnsembles)
+
+Encadre2012_ValiditeArchipel <- rga23B |>
+  group_by(Archipel_1) |>
+  summarize(
+    `Valide RGA 2012` = sum(Valide2012 == 1, na.rm = TRUE),
+    `Valide RGA 2023` = sum(ValideRGA == 1, na.rm = TRUE)
+  )
+writeCSV(Encadre2012_ValiditeArchipel)
 
 Encadre2012_CroisementEnsembles <- rga23B |>
   mutate(
@@ -79,6 +96,7 @@ validiteSerresRGA <- left_join(readCSV("rga23_surfacesCultures.csv"), readInputC
   group_by(interview__key, idSeuilRGA) |>
   summarize(SurfaceCulturesSeuil = sum(SurfaceCult)) |>
   filter(
-        # 9	Serres et abris hauts	100	m²
-        idSeuilRGA == 9 & SurfaceCulturesSeuil >= 100) 
+    # 9	Serres et abris hauts	100	m²
+    idSeuilRGA == 9 & SurfaceCulturesSeuil >= 100
+  )
 ecartSerres <- inner_join(culture23Valide, validiteSerresRGA)

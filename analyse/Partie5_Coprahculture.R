@@ -9,10 +9,13 @@ Partie5_comptagesCocoteraies <- rga23_coprahculteurs |>
   summarize(
     NbCocoExploitees = sum(NbCocoteraies, na.rm = TRUE),
     NbCocoExploiteesPP = sum(nbCocoStatut1, na.rm = TRUE),
+    PropCocoExploiteesPP = round(sum(nbCocoStatut1, na.rm = TRUE) / NbCocoExploitees*100),
     NbCocoEntretenuesPP = sum(EntretienCoco1, na.rm = TRUE),
     NbCocoExploiteesPI = sum(nbCocoStatut2, na.rm = TRUE),
+    PropCocoExploiteesPI = round(sum(nbCocoStatut2, na.rm = TRUE) / NbCocoExploitees*100),
     NbCocoEntretenuesPI = sum(EntretienCoco2, na.rm = TRUE),
     NbCocoExploiteesE = sum(nbCocoStatut3, na.rm = TRUE),
+    PropCocoExploiteesE = round(sum(nbCocoStatut3, na.rm = TRUE) / NbCocoExploitees*100),
     NbCocoEntretenuesE = sum(EntretienCoco3, na.rm = TRUE),
     NbMoyCoco = round(mean(NbCocoteraies, na.rm = TRUE), 2),
     NbMinCoco = min(NbCocoteraies, na.rm = TRUE),

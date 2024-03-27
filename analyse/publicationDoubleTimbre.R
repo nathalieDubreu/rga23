@@ -4,8 +4,13 @@ rga23_complet <- left_join(
 ) |>
   left_join(readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite))
 
-Partie5_comptagesCoprah <- rga23_complet |> summarize(
+Partie1_comptages <- rga23_complet |> summarize(
   nombreTotalInterrogations = n(),
+  questionnairesComplets = sum(ifelse(eligibilite == 1 | (eligibiliteCoprah == 1 & (lettre_unite == "C" | lettre_unite == "X")), 1, 0), na.rm = TRUE)
+)
+writeCSV(Partie1_comptages)
+
+Partie5_comptagesCoprah <- rga23_complet |> summarize(
   coprahPlus2t7 = sum(ifelse(lettre_unite == "C" | lettre_unite == "X", 1, 0)),
   coprahInjoignablesInconnus = round(sum(ifelse((lettre_unite == "C" | lettre_unite == "X") & (statut_collecte == 4 | statut_collecte == 3 | statut_collecte == 2), 1, 0)) /
     coprahPlus2t7 * 100, 1),
