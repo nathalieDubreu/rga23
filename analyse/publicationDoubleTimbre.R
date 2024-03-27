@@ -112,6 +112,7 @@ rmarkdown::render("analyse/publicationDoubleTimbre.Rmd", encoding = "UTF-8")
 
 ## Tableaux supplémentaires pour la publication
 source("analyse/Partie1_Exploitations_moEtp.R")
+source("analyse/Partie1_MaterielUtilise.R")
 source("analyse/Partie3_ProdVegetales_destinationsParTailleExpl.R")
 source("analyse/Partie4_ProdAnimales_destinations.R")
 source("analyse/Encadre_Seuils_2012_2023.R")
@@ -121,4 +122,4 @@ source("analyse/Encadre_PointsCAPL.R")
 source("analyse/donneesCadrage2012.R")
 
 ## Pour plus tard...
-# source("analyse/surfacesBio_enAttenteExpertise.R")
+source("analyse/surfacesBio_enAttenteExpertise.R")

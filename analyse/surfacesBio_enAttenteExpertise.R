@@ -1,19 +1,8 @@
 # A reprendre avec la nouvelle variable définie pour la DAG ?!?
 
 ## Surface bio ou non / archipel
-surfacesCulturesBioNon <- left_join(rga23_surfacesCultures, rga23_exploitations) |>
-  mutate(TypeCulture = case_when(
-    (TypeCulture == 10) ~ "10 - Cultures maraîchères",
-    (TypeCulture == 20) ~ "20 - Cultures vivrières",
-    (TypeCulture == 30) ~ "30 - Cultures fruitières (hors pépinères) et bois d'oeuvre",
-    (TypeCulture == 40) ~ "40 - Feuillages et cultures florales (hors pépinières)",
-    (TypeCulture == 50) ~ "50 - Plantes aromatiques, stimulantes et médicinales",
-    (TypeCulture == 60) ~ "60 - Pépinières (plantes vendues en pot)",
-    (TypeCulture == 70) ~ "70 - Cultures fourragères",
-    (TypeCulture == 80) ~ "80 - Jachères",
-    TRUE ~ as.character(TypeCulture)
-  )) |>
-  group_by(TypeCulture) |>
+surfacesCulturesBioNon <- left_join(rga23_surfacesCultures_HC_HP, rga23_exploitations) |>
+  group_by(TypeCultureTexte) |>
   mutate(surfaceBioCult = case_when(
     SurfaceBio == 1 ~ SurfaceCult,
     TRUE ~ 0
@@ -35,7 +24,7 @@ nbExploitantsTotalClassiques <- as.integer(rga23_prodVegetales |> filter(ModesPr
 
 surfacesCulturesBioNonEtTotal <- surfacesCulturesBioNon |>
   add_row(
-    TypeCulture = "Total cultures classiques",
+    TypeCultureTexte = "Total cultures classiques",
     `Surface BIO déclarée RGA (Ha)` = surfaceTotaleBioClassiques,
     `Surface BIO validée DAG (Ha)` = surfaceTotaleBioDAGlassiques,
     `Nb Exploitants de ce type de cultures` = nbExploitantsTotalClassiques,
@@ -65,14 +54,14 @@ nbExploitantsTotal <- as.integer(rga23_prodVegetales |> filter(ModesProduction__
 
 surfacesBioParType <- surfacesCulturesBioNonEtTotal |>
   add_row(
-    TypeCulture = "Jardins Oceaniens",
+    TypeCultureTexte = "Jardins Oceaniens",
     `Surface BIO déclarée RGA (Ha)` = surfacesJardinsOceaniensBioNon$`Surface BIO déclarée RGA (Ha)`,
     `Surface BIO validée DAG (Ha)` = surfacesJardinsOceaniensBioNon$`Surface BIO validée DAG (Ha)`,
     `Nb Exploitants de ce type de cultures` = surfacesJardinsOceaniensBioNon$`Nb Exploitants de ce type de cultures`,
     `Surface (Ha)` = surfacesJardinsOceaniensBioNon$`Surface (Ha)`
   ) |>
   add_row(
-    TypeCulture = "Total",
+    TypeCultureTexte = "Total",
     `Surface BIO déclarée RGA (Ha)` = surfaceTotaleBio,
     `Surface BIO validée DAG (Ha)` = surfaceTotaleDAGBio,
     `Nb Exploitants de ce type de cultures` = nbExploitantsTotal,
