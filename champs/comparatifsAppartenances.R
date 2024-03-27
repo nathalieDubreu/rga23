@@ -24,13 +24,11 @@ rga23A <- left_join(rga23, idExploitantsDansLeChamp2012 |> mutate(Valide2012 = 1
 )
 
 # Indicatrice de respect des seuils CAPL
-rga23B <- left_join(rga23A,
-  idExploitantsPointsCAPL |> select(-Archipel_1, -indicRGA23_Coprah),
-  by = c("interview__key")
-) |> mutate(ValideCAPL_HC = case_when(
-  PointsCAPL >= 400 ~ 1,
-  TRUE ~ 0
-))
+rga23B <- rga23A |>
+  mutate(ValideCAPL_HC = case_when(
+    PointsCAPL >= 400 ~ 1,
+    TRUE ~ 0
+  ))
 
 rga23B |>
   group_by(ValideRGA, Valide2012, ValideCAPL_HC) |>
