@@ -273,44 +273,6 @@ surfacesParCultureArchipelEtTotal <- rbind(surfacesParCultureEtArchipel, surface
 
 writeCSV(surfacesParCultureArchipelEtTotal)
 
-
-## SAU moyenne par type d'exploitations
-
-sauMoyenneTypeExpl <- rga23_prodVegetales |>
-  group_by(Archipel_1, TypeExploitation) |>
-  summarize(
-    nbUnites = n(),
-    sauMoyenne = round(mean(coalesce(SurfaceTotalProdAgri, 0)))
-  ) |>
-  pivot_wider(names_from = TypeExploitation, values_from = c(nbUnites, sauMoyenne)) |>
-  select(
-    Archipel_1,
-    contains("Cultivateurs"),
-    contains("Eleveurs"),
-    contains("Producteurs"),
-    contains("Pluriactifs")
-  )
-
-Partie3_sauMoyenneTypeExpl <- rbind(
-  sauMoyenneTypeExpl,
-  rga23_prodVegetales |>
-    mutate(Archipel_1 = "Total Polynésie") |>
-    group_by(Archipel_1, TypeExploitation) |>
-    summarize(
-      nbUnites = n(),
-      sauMoyenne = round(mean(coalesce(SurfaceTotalProdAgri, 0)))
-    ) |>
-    pivot_wider(names_from = TypeExploitation, values_from = c(nbUnites, sauMoyenne)) |>
-    select(
-      Archipel_1,
-      contains("Cultivateurs"),
-      contains("Eleveurs"),
-      contains("Producteurs"),
-      contains("Pluriactifs")
-    )
-)
-writeCSV(Partie3_sauMoyenneTypeExpl)
-
 ## Tableaux pour la partie CULTURES
 
 ## Surfaces de cultures classiques par type et archipel - HORS COCOTERAIES ET HORS CULTURES FOURRAGERES

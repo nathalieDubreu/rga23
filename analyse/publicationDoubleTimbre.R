@@ -21,31 +21,22 @@ Partie5_comptagesCoprah <- rga23_complet |> summarize(
     coprahInterroges * 100, 1)
 )
 writeCSV(Partie5_comptagesCoprah)
-
-rga23_complet |> summarize(
+ 
+## Case cochée et "confirmée" i.e. répondant éligibles dans ce domaine
+Partie1_casesCochees <- rga23_complet |> summarize(
   caseCultureCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1, 1, 0)),
   caseElevageCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1, 1, 0)),
   caseCoprahCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1, 1, 0)),
-  caseCultureCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
-  caseElevageCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
-  caseCoprahCocheeUniquement = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)),
+  proportionCultureCocheeUniquement = round(sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)) / caseCultureCochee * 100),
+  proportionElevageCocheeUniquement = round(sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)) / caseElevageCochee * 100),
+  proportionCoprahCocheeUniquement = round(sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1 & (RaisonsRecensement__1 + RaisonsRecensement__2 + RaisonsRecensement__3 == 1), 1, 0)) / caseCoprahCochee * 100),
 )
+writeCSV(Partie1_casesCochees)
 
 ## Restriction au champ 23 du RGA
 rga23_champ <- rga23_complet |>
   filter(indicRGA23 == 1) |>
-  mutate(TypeExploitation = case_when(
-    RaisonsRecensement__1 == 1 & RaisonsRecensement__2 == 0 & (eligibiliteCoprah == 0 | is.na(eligibiliteCoprah)) ~ "Cultivateurs seuls",
-    RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 1 & (eligibiliteCoprah == 0 | is.na(eligibiliteCoprah)) ~ "Eleveurs seuls",
-    (eligibilite == 0 | is.na(eligibilite)) & RaisonsRecensement__3 == 1 ~ "Producteurs de coprah seuls",
-    TRUE ~ "Pluriactifs parmi cultures, élevages et coprah"
-  )) |>
   select(-eligibilite, -eligibiliteCoprah, -InterruptionTemporaireCoprah)
-
-Partie1_TypesExploitations <- rga23_champ |>
-  group_by(TypeExploitation) |>
-  count()
-writeCSV(Partie1_TypesExploitations)
 
 # Tables utiles - restreintes au champ
 rga23_parcelles <- inner_join(
@@ -54,7 +45,7 @@ rga23_parcelles <- inner_join(
 )
 rga23_prodVegetales <- inner_join(
   readCSV("rga23_prodVegetales.csv"),
-  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation, lettre_unite)
+  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, lettre_unite)
 )
 rga23_prodAnimales <- inner_join(
   readCSV("rga23_prodAnimales.csv"),
@@ -112,7 +103,7 @@ rga23_moPermanenteFam <- inner_join(
 )
 rga23_mainOeuvre <- inner_join(
   readCSV("rga23_mainOeuvre.csv"),
-  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah, TypeExploitation)
+  rga23_champ |> select(interview__key, Archipel_1, indicRGA23_Cultures, indicRGA23_Elevage, indicRGA23_Coprah)
 ) |>
   mutate(totalMAOccas = replace_na(NbFemOccasAvecLien, 0) +
     replace_na(NbFemOccasSansLien, 0) +
