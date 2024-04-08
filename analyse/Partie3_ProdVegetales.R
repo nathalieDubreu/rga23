@@ -1,7 +1,7 @@
 # Irrigation ?
 
 ## Nombre de chefs d'exploitations qui déclarent avoir irrigué
-irrigation <- rga23_prodVegetales |>
+Partie3_irrigation <- rga23_prodVegetales |>
   filter(!is.na(Irrigation)) |>
   mutate(Irrigation = case_when(
     Irrigation == 1 ~ "Oui",
@@ -12,6 +12,7 @@ irrigation <- rga23_prodVegetales |>
 # Irrigation       n
 #    Non         1178
 #    Oui         1600
+writeCSV(Partie3_irrigation)
 
 ## Surfaces irriguées parmi les surfaces classiques des exploitants qui irriguent
 surfacesClassiquesIrrigueesParExploitant <- rga23_surfacesCultures_HC_HP |>
@@ -34,7 +35,7 @@ surfacesJOIrrigueesParExploitant <- rga23_prodVegetales |>
 ## 56 exploitants ont déclaré des surfaces de JO irriguées
 
 ## Porportion de surfaces irriguées parmi les surfaces possédées par les exploitants qui irriguent
-propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent <- full_join(surfacesClassiquesIrrigueesParExploitant, surfacesJOIrrigueesParExploitant) |>
+Partie3_propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent <- full_join(surfacesClassiquesIrrigueesParExploitant, surfacesJOIrrigueesParExploitant, by = "interview__key") |>
   mutate(
     surfacesIrrigueesTotalesDeclarees = replace_na(SurfacesIrrigueesClassiques, 0) + replace_na(SurfacesIrrigueesJO, 0),
     surfacesTotalesDeclarees = replace_na(SurfacesTotalesClassiques, 0) + replace_na(SurfacesTotalesJO, 0)
@@ -42,6 +43,7 @@ propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent <- full_join(surfacesCla
   summarize(
     proportion = round(sum(surfacesIrrigueesTotalesDeclarees) / sum(surfacesTotalesDeclarees) * 100)
   )
+writeCSV(Partie3_propSurfacesIrrigueesAuSeinDesExploitationsQuiIrriguent)
 
 ## Retour à l'ensemble des surfaces déclarées
 surfacesIrrigueesCultClassiques <- rga23_surfacesCultures_HC_HP |>
@@ -63,37 +65,40 @@ surfacesIrrigueesJO <- rga23_prodVegetales |>
 
 surfacesIrrigueesParTypeCult <- rbind(surfacesIrrigueesCultClassiques, surfacesIrrigueesJO)
 
-proportionIrrigueeSurLEnsemble <- surfacesIrrigueesParTypeCult |>
+Partie3_proportionIrrigueeSurLEnsemble <- surfacesIrrigueesParTypeCult |>
   summarize(
     sommeSurfacesIrriguees = sum(SurfacesIrriguees),
     sommeSurfacesTotales = sum(SurfacesTotales),
     proportion = round(sum(SurfacesIrriguees) / sum(SurfacesTotales) * 100, 4)
   )
+writeCSV(Partie3_proportionIrrigueeSurLEnsemble)
 
-propSurfacesIrrigueesParTypeCult <- surfacesIrrigueesParTypeCult |> 
+Partie3_propSurfacesIrrigueesParTypeCult <- surfacesIrrigueesParTypeCult |>
   select(TypeCultureTexte, proportion)
-
-writeCSV(propSurfacesIrrigueesParTypeCult)
+writeCSV(Partie3_propSurfacesIrrigueesParTypeCult)
 
 # OrigineEauIrrig
 # Réseau collectif agricole.....1
 # Réseau collectif (communal)...3
 # Réseau individuel.............2
 
-reseauCollectifAgricole <- rga23_prodVegetales |>
+Partie3_reseauCollectifAgricole <- rga23_prodVegetales |>
   filter(!is.na(OrigineEauIrrig__1)) |>
   group_by(OrigineEauIrrig__1) |>
   calculPourcentage()
+writeCSV(Partie3_reseauCollectifAgricole)
 
-reseauIndividuel <- rga23_prodVegetales |>
+Partie3_reseauIndividuel <- rga23_prodVegetales |>
   filter(!is.na(OrigineEauIrrig__2)) |>
   group_by(OrigineEauIrrig__2) |>
   calculPourcentage()
+writeCSV(Partie3_reseauIndividuel)
 
-reseauCollectifCommunal <- rga23_prodVegetales |>
+Partie3_reseauCollectifCommunal <- rga23_prodVegetales |>
   filter(!is.na(OrigineEauIrrig__3)) |>
   group_by(OrigineEauIrrig__3) |>
   calculPourcentage()
+writeCSV(Partie3_reseauCollectifCommunal)
 
 # Aspersion.....................................1
 # Goutte à goutte...............................2
@@ -101,7 +106,7 @@ reseauCollectifCommunal <- rga23_prodVegetales |>
 # Manuellement (tuyau, cuve sur tracteur).......4
 # Autres canaux d'irrigation (tarodière, ...)...5
 
-modeIrrigation <- rga23_prodVegetales |>
+Partie3_modeIrrigation <- rga23_prodVegetales |>
   filter(Irrigation == 1) |>
   summarize(
     aspersion = round(sum(replace_na(ModeIrrigation__1, 0) / n() * 100)),
@@ -110,7 +115,7 @@ modeIrrigation <- rga23_prodVegetales |>
     manuellement = round(sum(replace_na(ModeIrrigation__4, 0) / n() * 100)),
     autresCanaux = round(sum(replace_na(ModeIrrigation__5, 0) / n() * 100))
   )
-writeCSV(modeIrrigation)
+writeCSV(Partie3_modeIrrigation)
 
 # Surface agricole utilisée par type de faire-valoir (parcelles)
 
@@ -253,7 +258,7 @@ autoConsoPepinieres <- calculPartsDestination(PartComPepinieres__1, Pepinieres, 
 
 ## Détail des surfaces par culture et archipel
 
-surfacesParCultureEtArchipel <- left_join(rga23_surfacesCultures, rga23_champ |> select(interview__key, Archipel_1)) |>
+surfacesParCultureEtArchipel <- left_join(rga23_surfacesCultures, rga23_champ |> select(interview__key, Archipel_1), by = "interview__key") |>
   group_by(Archipel_1, culture_id) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
@@ -279,7 +284,8 @@ writeCSV(surfacesParCultureArchipelEtTotal)
 
 surfacesParType_HC_HF_Archipel <- left_join(
   rga23_surfacesCultures_HC_HP |> filter(TypeCulture != 70),
-  rga23_champ |> select(interview__key, Archipel_1)
+  rga23_champ |> select(interview__key, Archipel_1),
+  by = "interview__key"
 ) |>
   group_by(Archipel_1, TypeCultureTexte) |>
   summarize(
@@ -311,9 +317,12 @@ writeCSV(surfacesParTypeCultureArchipelEtTotal)
 
 surfacesParType_HC_HF_Archipel_sexe <- left_join(
   rga23_surfacesCultures_HC_HP |> filter(TypeCulture != 70),
-  rga23_champ |> select(interview__key, Archipel_1)
+  rga23_champ |> select(interview__key, Archipel_1),
+  by = "interview__key"
 ) |>
-  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
+  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl),
+    by = "interview__key"
+  ) |>
   group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
     `Nb Exploitants` = n_distinct(interview__key),
@@ -323,7 +332,9 @@ surfacesParType_HC_HF_Archipel_sexe <- left_join(
 
 surfacesParType_HC_HF_sexe <- rga23_surfacesCultures_HC_HP |>
   filter(TypeCulture != 70) |>
-  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
+  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl),
+    by = "interview__key"
+  ) |>
   mutate(Archipel_1 = "Total") |>
   group_by(Archipel_1, TypeCultureTexte, SexeChefExpl) |>
   summarize(
@@ -342,10 +353,8 @@ writeCSV(Partie3_surfacesParTypeCultureArchipelEtTotalSexe)
 
 ## Jardins océaniens
 
-Partie3_surfacesJOArchipel <- left_join(
-  rga23_prodVegetales |> filter(ModesProduction__4 == 1),
-  rga23_champ |> select(interview__key, Archipel_1)
-) |>
+Partie3_surfacesJOArchipel <- rga23_prodVegetales |>
+  filter(ModesProduction__4 == 1) |>
   mutate(
     SurfaceBioJardins = case_when(
       SurfaceBioJardins == 1 ~ SurfaceJardins,
@@ -364,11 +373,11 @@ writeCSV(Partie3_surfacesJOArchipel)
 
 ensembleSurfacesTypeJoArchipel <- rbind(surfacesParType_HC_HF_Archipel, Partie3_surfacesJOArchipel)
 
-surfacesJOArchipelSexe <- left_join(
-  rga23_prodVegetales |> filter(ModesProduction__4 == 1),
-  rga23_champ |> select(interview__key, Archipel_1)
-) |>
-  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
+surfacesJOArchipelSexe <- rga23_prodVegetales |>
+  filter(ModesProduction__4 == 1) |>
+  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl),
+    by = "interview__key"
+  ) |>
   mutate(
     SurfaceBioJardins = case_when(
       SurfaceBioJardins == 1 ~ SurfaceJardins,
@@ -385,7 +394,8 @@ surfacesJOArchipelSexe <- left_join(
 
 surfacesJOSexe <- left_join(
   rga23_prodVegetales |> filter(ModesProduction__4 == 1),
-  rga23_mainOeuvre |> select(interview__key, SexeChefExpl)
+  rga23_mainOeuvre |> select(interview__key, SexeChefExpl),
+  by = "interview__key"
 ) |>
   mutate(
     TypeCultureTexte = "Jardins océaniens",
@@ -447,7 +457,8 @@ hectaresCulturesVegetales <- encadreSAUTypeTotal |>
 
 Partie3_EncadreSurfacePaturagesArchipel <- left_join(
   rga23_surfacesCultures,
-  rga23_champ |> select(interview__key, Archipel_1)
+  rga23_champ |> select(interview__key, Archipel_1),
+  by = "interview__key"
 ) |>
   filter(culture_id == 701 | culture_id == 702 | culture_id == 705) |>
   group_by(Archipel_1) |>
@@ -462,7 +473,9 @@ surfacesParArchipel <- rbind(
   Partie3_surfacesJOArchipel |>
     select(-`Surface moyenne (m2)`, `Nb Exploitants`),
   left_join(
-    rga23_surfacesCultures_HC_HP, rga23_champ |> select(interview__key, Archipel_1)
+    rga23_surfacesCultures_HC_HP,
+    rga23_champ |> select(interview__key, Archipel_1),
+    by = "interview__key"
   ) |>
     group_by(Archipel_1) |>
     summarize(
@@ -477,13 +490,15 @@ surfacesParArchipel <- rbind(
 jacheres <- left_join(
   rga23_surfacesCultures |>
     filter(TypeCulture == 80),
-  rga23_champ |> select(interview__key, Archipel_1)
+  rga23_champ |> select(interview__key, Archipel_1),
+  by = "interview__key"
 ) |>
   group_by(Archipel_1) |>
   summarize(
     `dont jachères (Ha)` = round(sum(SurfaceCult, na.rm = TRUE) / 10000)
   )
 
-avecJacheres <- left_join(surfacesParArchipel, jacheres)
-
-
+avecJacheres <- left_join(surfacesParArchipel,
+  jacheres,
+  by = "Archipel_1"
+)
