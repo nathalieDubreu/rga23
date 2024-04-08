@@ -14,10 +14,24 @@ Partie6_partExploitantsProduitsPhyto <- produitsPhyto |>
   select(`Utilisation produits phyto`, `Part des exploitants`)
 writeCSV(Partie6_partExploitantsProduitsPhyto)
 
+nbHa_JO_ExplQuiUtilisentProduitsPhyto <- inner_join(rga23_exploitations |> filter(UtilisationPhytosanit == 1),
+  rga23_prodVegetales |> filter(ModesProduction__4 == 1) |> select(interview__key, SurfaceJardins),
+  by = "interview__key"
+) |>
+  summarize(nbMetres2JO = sum(SurfaceJardins, rm.na = TRUE))
+
+Partie6_nbHa_ExplQuiUtilisentProduitsPhyto <- inner_join(rga23_exploitations |> filter(UtilisationPhytosanit == 1),
+  rga23_surfacesCultures,
+  by = "interview__key"
+) |>
+  summarize(`Nombre d'hectares de productions végétales appartenant aux exploitants qui utilisent des produits phytosanitaires` = round((sum(SurfaceCult, rm.na = TRUE) + nbHa_JO_ExplQuiUtilisentProduitsPhyto$nbMetres2JO) / 10000))
+writeCSV(Partie6_nbHa_ExplQuiUtilisentProduitsPhyto)
+
 Partie6_nbHa_HC_HP_ExplQuiUtilisentProduitsPhyto <- inner_join(rga23_exploitations |> filter(UtilisationPhytosanit == 1),
   rga23_surfacesCultures_HC_HP,
   by = "interview__key"
-) |> summarize(`Nombre d'hectares de productions végétales (hors cocoteraies, hors pâturages) appartenant aux exploitants qui utilisent des produits phytosanitaires` = round(sum(SurfaceCult, rm.na = TRUE) / 10000))
+) |>
+  summarize(`Nombre d'hectares de productions végétales (hors cocoteraies, hors pâturages) appartenant aux exploitants qui utilisent des produits phytosanitaires` = round((sum(SurfaceCult, rm.na = TRUE) + nbHa_JO_ExplQuiUtilisentProduitsPhyto$nbMetres2JO) / 10000))
 writeCSV(Partie6_nbHa_HC_HP_ExplQuiUtilisentProduitsPhyto)
 
 ## par Archipel

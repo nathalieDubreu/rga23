@@ -110,7 +110,7 @@ Le niveau moyen de satisfaction au travail des chefs d'exploitations est de <fon
 - Lien entre le type de produit et le type de circuit utilisé (court ou long)
 - Irrigation
 
-<font color="blue">`r kable(irrigation)`</font>
+<font color="blue">`r kable(Partie3_irrigation)`</font>
 
 ## Elevage (par archipel)
 

@@ -273,10 +273,9 @@ surfacesParCulture <- rga23_surfacesCultures |>
     `Surface (m2)` = sum(SurfaceCult, na.rm = TRUE)
   )
 
-surfacesParCultureArchipelEtTotal <- rbind(surfacesParCultureEtArchipel, surfacesParCulture) |>
+Partie3_surfacesParCultureArchipelEtTotal <- rbind(surfacesParCultureEtArchipel, surfacesParCulture) |>
   pivot_wider(names_from = Archipel_1, values_from = c(`Nb Exploitants`, `Surface (m2)`), values_fill = 0)
-
-writeCSV(surfacesParCultureArchipelEtTotal)
+writeCSV(Partie3_surfacesParCultureArchipelEtTotal)
 
 ## Tableaux pour la partie CULTURES
 
@@ -468,7 +467,6 @@ Partie3_EncadreSurfacePaturagesArchipel <- left_join(
 writeCSV(Partie3_EncadreSurfacePaturagesArchipel)
 
 ### Surfaces par archipel HORS paturages et hors cocoteraies
-
 
 surface_HC_HP <- round((sum(rga23_surfacesCultures_HC_HP$SurfaceCult) + sum(Partie3_surfacesJOArchipel$`Surface (m2)`)) / 10000)
 
