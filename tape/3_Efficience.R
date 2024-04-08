@@ -137,22 +137,55 @@ scoreIntrants |>
 # Engrais (ou amendements) minéraux biologiques...3
 # Engrais (ou amendements) organiques.............2
 
-scoreEngrais <- rga23_exploitations |>
-  mutate(score = case_when(
-    ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse -> 0"
-    is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0) ~ 0,
-    ## Engrais de synthèse + engrais minéraux bio + engrais organiques avec engrais organiques présents utilisés à plus de 75% -> 3
-    (TypeEngrais__1 == 1 & TypeEngrais__2 == 1 & TypeEngrais__3 == 1 & PropRecyclEngraisOrga == 4) ~ 3,
-    ## Engrais de synthèse + engrais minéraux bio + engrais organiques -> 2
-    (TypeEngrais__1 == 1 & TypeEngrais__2 == 1 & TypeEngrais__3 == 1) ~ 2,
-    ## Engrais de synthèse + engrais minéraux bio -> 1
-    (TypeEngrais__1 == 1 & TypeEngrais__2 == 1 & TypeEngrais__3 == 0) ~ 1,
-    ## Engrais de synthèse + engrais organiques -> 1
-    (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 1) ~ 1,
-    ## Aucun engrais de synthèse -> 4
-    (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) ~ 4,
-    TRUE ~ 55
-  ))
+# Ajout 08/04/2024 : Discrimination entre les catégories 0 et 1 et entre les catégories 3 et 4 si l'une au moins des pratiques est utilisée
+# Utilisation de plantes de services.............1
+# Intercultures..................................2
+# Amendements calciques..........................6
+# Utilisation de micro-organismes du sol.........7
+# OU jardins océaniens
+# Ou agroforesterie
+
+# + Ajout cultures concernées par le chimique
+
+scoreEngrais <- left_join(rga23_exploitations,
+  rga23_prodVegetales |> select(interview__key, SurfaceJardins, SurfaceAgroF),
+  by = "interview__key"
+) |>
+  left_join(rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__6, PratiquesCulturales__7),
+    by = "interview__key"
+  ) |>
+  mutate(
+    auMoinsUnePratique = case_when(
+      replace_na(SurfaceJardins, 0) > 0 ~ 1,
+      replace_na(SurfaceAgroF, 0) > 0 ~ 1,
+      PratiquesCulturales__1 == 1 ~ 1,
+      PratiquesCulturales__2 == 1 ~ 1,
+      PratiquesCulturales__6 == 1 ~ 1,
+      PratiquesCulturales__7 == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    score = case_when(
+      ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse" ET aucune des pratiques considérées -> 0"
+      (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & auMoinsUnePratique == 0 ~ 0,
+      
+      ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse" mais au moins une des pratiques considérées -> 1"
+      (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & auMoinsUnePratique == 1 ~ 1,
+      
+      ## Engrais de synthèse + engrais minéraux bio + engrais organiques avec au moins une pratique utilisée ou chimique sur une seule espèce -> 3
+      (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) == 1 & (auMoinsUnePratique == 1 | NbCultEspPhytoChim == 3)) ~ 3,
+      
+      ## Engrais de synthèse + engrais minéraux bio et/ou engrais organiques sur une partie des espèces/cultures -> 2
+      (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) & NbCultEspPhytoChim == 2) ~ 2,
+       
+      ## Engrais de synthèse + engrais minéraux bio et/ou engrais organiques sur toutes les espèces/cultures -> 1
+      (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) & (NbCultEspPhytoChim == 1 | is.na(NbCultEspPhytoChim))) ~ 1,
+      
+      ## Aucun engrais de synthèse -> 4
+      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) ~ 4,
+      
+      TRUE ~ 55
+    )
+  )
 
 scoreEngrais |>
   group_by(score) |>
