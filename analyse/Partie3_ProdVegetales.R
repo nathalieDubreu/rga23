@@ -469,7 +469,10 @@ writeCSV(Partie3_EncadreSurfacePaturagesArchipel)
 
 ### Surfaces par archipel HORS paturages et hors cocoteraies
 
-surfacesParArchipel <- rbind(
+
+surface_HC_HP <- round((sum(rga23_surfacesCultures_HC_HP$SurfaceCult) + sum(Partie3_surfacesJOArchipel$`Surface (m2)`)) / 10000)
+
+Partie3_surfacesParArchipel <- rbind(
   Partie3_surfacesJOArchipel |>
     select(-`Surface moyenne (m2)`, `Nb Exploitants`),
   left_join(
@@ -484,8 +487,10 @@ surfacesParArchipel <- rbind(
 ) |>
   group_by(Archipel_1) |>
   summarize(
-    `Surface de productions végétales (Ha)` = round(sum(`Surface (m2)`) / 10000)
+    `Surface de productions végétales (Ha)` = round(sum(`Surface (m2)`) / 10000),
+    Part = round(`Surface de productions végétales (Ha)` / surface_HC_HP * 100, 1)
   )
+writeCSV(Partie3_surfacesParArchipel)
 
 jacheres <- left_join(
   rga23_surfacesCultures |>
@@ -498,7 +503,7 @@ jacheres <- left_join(
     `dont jachères (Ha)` = round(sum(SurfaceCult, na.rm = TRUE) / 10000)
   )
 
-avecJacheres <- left_join(surfacesParArchipel,
+avecJacheres <- left_join(Partie3_surfacesParArchipel |> select(-Part),
   jacheres,
   by = "Archipel_1"
 )
