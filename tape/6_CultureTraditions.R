@@ -25,7 +25,7 @@ score_1_regimeAlimentaire <- rga23_tape |> mutate(
     FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 12 ~ 2,
     # Les 4 types d'aliments sont consommés en moyenne une fois par mois
     FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 16 ~ 1,
-    # Les 4 types d'aliments sont consommés moins d'une fois par mois
+    # Les 4 types d'aliments sont consommés moins d'une fois par mois en moyenne
     FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux > 16 ~ 0,
     TRUE ~ 55
   )
