@@ -19,7 +19,7 @@ rga23_surfacesCultures_avecPratiques <- inner_join(
 nbCulturesDeclarees <- rga23_surfacesCultures_avecPratiques |>
   count(interview__key, name = "nbCultures")
 
-scoreCultures <- left_join(rga23_surfacesCultures_avecPratiques, nbCulturesDeclarees, by = "interview__key") |>
+score_1_Cultures <- left_join(rga23_surfacesCultures_avecPratiques, nbCulturesDeclarees, by = "interview__key") |>
   mutate(score = case_when(
     RaisonsRecensement__1 == 0 ~ 0,
     (nbCultures > 3 & PratiquesCulturales__2 == 1) | ModesProduction__4 == 1 ~ 4,
@@ -31,7 +31,7 @@ scoreCultures <- left_join(rga23_surfacesCultures_avecPratiques, nbCulturesDecla
   group_by(interview__key, SurfaceTotalProdAgri, SurfaceJardins, nbCultures) |>
   summarize(score = min(score))
 
-scoreCultures |>
+score_1_Cultures |>
   group_by(score) |>
   count()
 
@@ -85,7 +85,7 @@ jointuresArbres <- left_join(
     PartSurfaceArbres = surfaceTotalArbres / SurfaceTotalProdAgri * 100
   )
 
-scoreArbres <- jointuresArbres |> mutate(score = case_when(
+score_2_Arbres <- jointuresArbres |> mutate(score = case_when(
   # PREMIER SET DE CONDITIONS
   # Absence de cultures du tout + Absence d'arbres hors rente
   RaisonsRecensement__1 == 0 & (PsceArbresHorsRente__3 == 1 | is.na(PsceArbresHorsRente__3)) ~ 0,
@@ -113,7 +113,7 @@ scoreArbres <- jointuresArbres |> mutate(score = case_when(
   TRUE ~ 55
 ))
 
-scoreArbres |>
+score_2_Arbres |>
   group_by(score) |>
   count()
 
@@ -128,7 +128,7 @@ transformationsPossibles <- paste0("TransformationPA__", 1:16)
 
 typesCultHorsJacheres <- paste0("CulturesPresentes__", 1:7, "0")
 
-scoreActivites <- left_join(rga23_tapeAvecVentes,
+score_3_Activites <- left_join(rga23_tapeAvecVentes,
   rga23_mainOeuvre |> mutate(
     nbTransformations = rowSums(across(
       all_of(transformationsPossibles),
@@ -178,6 +178,6 @@ scoreActivites <- left_join(rga23_tapeAvecVentes,
     TRUE ~ 55
   ))
 
-scoreActivites |>
+score_3_Activites |>
   group_by(score) |>
   count()
