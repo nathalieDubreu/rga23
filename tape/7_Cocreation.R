@@ -25,17 +25,22 @@ ilesAvecPresenceAveree <- left_join(rga23_tape,
 # Visité par des techniciens agricoles pour du conseil..................................................5
 
 score_1_Plateformes <- left_join(rga23_tape,
-  rga23_exploitations |> select(interview__key, IleExploitation),
+  rga23_exploitations |> select(interview__key, IleExploitation, AgriBio_DAG),
   by = "interview__key"
 ) |>
   left_join(ilesAvecPresenceAveree, by = "IleExploitation") |>
   mutate(score = case_when(
-    # ISOLE + pas de plateforme OU Ne sait pas s'il existe des plateformes et AUCUN autre exploitant de l'île a répondu OUI
-    EnvProLocalExpl__1 == 1 & (EvenComLocale == 2 | EvenComLocale == 3) & is.na(presenceAveree)  ~ 0,
-    # ISOLE + Ne sait pas s'il existe des plateformes mais un autre exploitant de l'île a répondu OUI
-    EnvProLocalExpl__1 == 1 & (EvenComLocale == 2 | EvenComLocale == 3) & presenceAveree == 1 ~ 1,
-    # Adhérent d’une structure agricole (association, coopérative) OU  facebook
-    EnvProLocalExpl__2 == 1 | EnvProLocalExpl__4 == 1 ~ 2,
+    # Bio validé par la DAG
+    AgriBio_DAG == 1 | AgriBio_DAG == 3 ~ 4,
+    # ISOLE mais pourrait ne pas l'être car habitant à Tahiti, Moorea, Raiatea, Nuku Hiva, Tubuai (donc présence sûre de plateforme)
+    EnvProLocalExpl__1 == 1 & EnvProLocalExpl__2 == 0 & EnvProLocalExpl__3 == 0 & EnvProLocalExpl__4 == 0 & EnvProLocalExpl__5 == 0 &
+      (IleExploitation == "Tahiti" | IleExploitation == "Moorea" | IleExploitation == "Raiatea" | IleExploitation == "Nuku Hiva" | IleExploitation == "Tubuai") ~ 1,
+    # ISOLE 
+    EnvProLocalExpl__1 == 1 & EnvProLocalExpl__2 == 0 & EnvProLocalExpl__3 == 0 & EnvProLocalExpl__4 == 0 & EnvProLocalExpl__5 == 0 ~ 0,
+    # Visité par des techniciens agricoles pour du conseil -> 3
+    EnvProLocalExpl__5 == 1 ~ 3,
+    # Adhérent d’une structure agricole (association, coopérative) OU Engagé dans des instances décisionnaires OU facebook
+    EnvProLocalExpl__2 == 1 | EnvProLocalExpl__3 == 1 | EnvProLocalExpl__4 == 1 ~ 2,
     TRUE ~ 55
   ))
 
@@ -45,7 +50,7 @@ score_1_Plateformes |>
 
 score_1_Plateformes |>
   filter(score == 55) |>
-  group_by(EnvProLocalExpl__1, EvenComLocale) |>
+  group_by(EnvProLocalExpl__1, EvenComLocale, FreqEvenComLocale) |>
   count()
 
 # ACCÈS AUX CONNAISSANCES AGROÉCOLOGIQUES ET INTÉRÊT DES PRODUCTEURS À L’AGROÈCOLOGIE
@@ -62,7 +67,7 @@ score_2_AccesConnaissances <- left_join(rga23_tape,
 ) |>
   mutate(score = case_when(
     # Bio_DAG -> 4
-    AgriBio_DAG == 1 ~ 4,
+    AgriBio_DAG == 1 | AgriBio_DAG == 3 ~ 4,
     # Que chimique + ne connait pas les pratiques (ConnaissPratiques) -> 0
     ConnaissPratiques == 2 ~ 0,
     # Que chimique + connait les pratiques -> 1

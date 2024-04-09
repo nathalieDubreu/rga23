@@ -33,6 +33,21 @@ scoreIntrants <- left_join(rga23_tape,
     by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
   ) |>
   mutate(
+    MaterielNecessitantEnergie = case_when(
+      MaterielTransport__1 == 1 ~ 1,
+      MaterielTransport__2 == 1 ~ 1,
+      MaterielTransport__3 == 1 ~ 1,
+      MaterielTransport__4 == 1 ~ 1,
+      MaterielTransport__5 == 1 ~ 1,
+      MaterielTransport__6 == 1 ~ 1,
+      MaterielTransport__7 == 1 ~ 1,
+      MaterielTransport__8 == 1 ~ 1,
+      MaterielTransport__9 == 1 ~ 1,
+      MaterielTransport__10 == 1 ~ 1,
+      MaterielTransport__11 == 1 ~ 1,
+      MaterielTraitRecolte__6 == 1 ~ 1,
+      TRUE ~ 0
+    ),
     PartSemencesAutoP_Ech = case_when(
       ## Uniquement de l'auto-production ou de l'échange -> part réévaluée à 5
       (ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0 ~ 5,
@@ -71,7 +86,7 @@ scoreIntrants <- left_join(rga23_tape,
       ## Autonomie alimentaire des animaux calculée = 35% de la note
       ## Part d'auto-production des plants et semences = 65% de la note
       ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
-      EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.35 * niveauAutonomieInv + 0.65 * PartAutoproduction) - 1,
+      EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) & !is.na(PartAutoproduction) ~ trunc(0.35 * niveauAutonomieInv + 0.65 * PartAutoproduction) - MaterielNecessitantEnergie,
       # Pas d'animaux dont on contrôle l'autonomie alimentaire
       ## Part d'auto-production des plants et semences = 65% de la note
       ## Niveau d'énergie renouvelable (+ 1 pour replacer l'échelle des notes jusque 5) = 35% de la note
@@ -83,11 +98,11 @@ scoreIntrants <- left_join(rga23_tape,
       # Pas de semences ni plants + pas d'énergie renouvelable produite
       ## Autonomie alimentaire des animaux calculée
       ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
-      is.na(PartAutoproduction) & EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) ~ niveauAutonomieInv - 1,
+      is.na(PartAutoproduction) & EnergiesRenouv == 2 & !is.na(niveauAutonomieInv) ~ niveauAutonomieInv - MaterielNecessitantEnergie,
       # Pas d'animaux dont on contrôle l'autonomie alimentaire + pas d'énergie renouvelable produite
       ## Part d'auto-production des plants et semences
       ## =====> Déclassement d'une catégorie à cause de l'absence d'énergie ???
-      !is.na(PartAutoproduction) & EnergiesRenouv == 2 & is.na(niveauAutonomie) ~ PartAutoproduction - 1,
+      !is.na(PartAutoproduction) & EnergiesRenouv == 2 & is.na(niveauAutonomie) ~ PartAutoproduction - MaterielNecessitantEnergie,
       TRUE ~ 55
     )
   ) |>
@@ -167,22 +182,21 @@ scoreEngrais <- left_join(rga23_exploitations,
     score = case_when(
       ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse" ET aucune des pratiques considérées -> 0"
       (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & auMoinsUnePratique == 0 ~ 0,
-      
+
       ## Pas d'engrais ou uniquement "Engrais (ou amendements) de synthèse" mais au moins une des pratiques considérées -> 1"
       (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & auMoinsUnePratique == 1 ~ 1,
-      
+
       ## Engrais de synthèse + engrais minéraux bio + engrais organiques avec au moins une pratique utilisée ou chimique sur une seule espèce -> 3
       (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) == 1 & (auMoinsUnePratique == 1 | NbCultEspPhytoChim == 3)) ~ 3,
-      
+
       ## Engrais de synthèse + engrais minéraux bio et/ou engrais organiques sur une partie des espèces/cultures -> 2
       (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) & NbCultEspPhytoChim == 2) ~ 2,
-       
+
       ## Engrais de synthèse + engrais minéraux bio et/ou engrais organiques sur toutes les espèces/cultures -> 1
       (TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3) & (NbCultEspPhytoChim == 1 | is.na(NbCultEspPhytoChim))) ~ 1,
-      
+
       ## Aucun engrais de synthèse -> 4
       (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) ~ 4,
-      
       TRUE ~ 55
     )
   )
@@ -212,11 +226,12 @@ scoreEngrais |>
 
 scorePesticides <- rga23_exploitations |> mutate(
   score = case_when(
-    TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 ~ 3,
-    UtilisationPhytosanit == 2 ~ 4,
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
+    UtilisationGlyphosate == 1 ~ 1,
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 2 ~ 1,
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 3 ~ 2,
+    TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 ~ 3,
+    UtilisationPhytosanit == 2 ~ 4,
     TRUE ~ 55
   )
 )
