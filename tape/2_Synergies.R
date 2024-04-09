@@ -249,3 +249,46 @@ score_3_IntegrationArbres |>
 # > 3 - Connectivité importante: plusieurs éléments peuvent être trouvés entre des parcelles de cultures et/ou des pâturages ou plusieurs zones de compensation écologique (arbres, arbustes, végétation naturelle, pâturages, haies, canaux, etc.).
 # > 4 - Connectivité élevée: l’agroécosystème présente une mosaïque et un paysage diversifié, de nombreux éléments tels que des arbres, des arbustes, des clôtures ou des étangs peuvent être trouvés entre chaque parcelle de terrain ou pâturage, ou plusieurs zones de compensation écologique.
 #
+
+## Elements pris en compte
+# Présence de zones humides : Y-a-t-il une zone humide (étang naturel, réserve d’eau, rivière, source…) dans votre exploitation ?
+# Présence d'arbres et/ou haies : Hors cultures de rente, des arbres ou des haies sont-ils présents sur votre exploitation ?
+# Surface de végétation naturelle
+# Jachères
+# Bio validé par la DAG
+# Jardins océaniens
+
+score_4_Connectivite <- left_join(rga23_tape,
+  rga23_exploitations |> select(interview__key, AgriBio_DAG),
+  by = "interview__key"
+) |>
+  left_join(rga23_prodVegetales |> select(interview__key, SurfaceVegeNatur, ModesProduction__4, SurfaceJardins, totalSurfaceJacheres),
+    by = "interview__key"
+  ) |>
+  mutate(
+    scoreIndex1 = ifelse(PsceArbresHorsRente__3 == 0, 1, 0) +
+      ifelse(ZoneHumide == 1, 1, 0) +
+      ifelse(is.na(SurfaceVegeNatur) | SurfaceVegeNatur == 0, 0, 1) +
+      ifelse(is.na(totalSurfaceJacheres), 0, 1),
+    scoreIndex345 = scoreIndex1 + ifelse(AgriBio_DAG == 1 | AgriBio_DAG == 3, 1, 0)
+  ) |>
+  mutate(score = case_when(
+    # Pas de surface de végétation naturelle, ni zone humide, ni jachères, ni jardins océaniens, ni arbres hors rente
+    (is.na(ModesProduction__4) | ModesProduction__4 == 0) & (is.na(SurfaceVegeNatur) | SurfaceVegeNatur == 0) & ZoneHumide == 2 & is.na(totalSurfaceJacheres) & PsceArbresHorsRente__3 == 1 ~ 0,
+    # arbres hors rente OU zone humide OU jachères OU surface de végétation naturelle (OU exclusif) - Pas bio validés dag
+    (is.na(ModesProduction__4) | ModesProduction__4 == 0) & scoreIndex1 == 1 & AgriBio_DAG == 2 ~ 1,
+    # arbres hors rente + zone humide + jachères + bioDAG + surface Végétation naturelle -> 2 parmi les 5
+    (is.na(ModesProduction__4) | ModesProduction__4 == 0) & scoreIndex345 == 2 ~ 2,
+    # arbres hors rente + zone humide + jachères + bioDAG + surface Végétation naturelle -> 3 parmi les 5 //// OU JO mais pas de zone humide
+    ModesProduction__4 == 1 & ZoneHumide == 2 ~ 3,
+    (is.na(ModesProduction__4) | ModesProduction__4 == 0) & scoreIndex345 == 3 ~ 3,
+    # arbres hors rente + zone humide + jachères + bioDAG + surface Végétation naturelle  >= 4 parmi les 5 // OU JO + Zone humide
+    ModesProduction__4 == 1 & ZoneHumide == 1 ~ 4,
+    (is.na(ModesProduction__4) | ModesProduction__4 == 0) & scoreIndex345 >= 4 ~ 4,
+    TRUE ~ 55
+  ))
+
+score_4_Connectivite |>
+  group_by(score) |>
+  count()
+
