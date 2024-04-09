@@ -42,7 +42,7 @@ score_1_Cultures |>
 # > 3 – Plus de 3 espèces avec un nombre significatif d’animaux.
 # > 4 - Plus de 3 espèces de races différentes bien adaptées aux conditions climatiques locales et changeantes.
 
-scoreAnimaux <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, indicRGA23_Elevage), by = "interview__key") |>
+score_2_Animaux <- left_join(rga23_prodAnimales, rga23_general |> select(interview__key, indicRGA23_Elevage), by = "interview__key") |>
   mutate(score = case_when(
     nbEspeces == 0 ~ 0,
     nbEspeces == 1 ~ 1,
@@ -51,7 +51,7 @@ scoreAnimaux <- left_join(rga23_prodAnimales, rga23_general |> select(interview_
     nbEspeces > 3 ~ 3
   ))
 
-scoreAnimaux |>
+score_2_Animaux |>
   group_by(score) |>
   count()
 
@@ -85,7 +85,7 @@ jointuresArbres <- left_join(
     PartSurfaceArbres = surfaceTotalArbres / SurfaceTotalProdAgri * 100
   )
 
-score_2_Arbres <- jointuresArbres |> mutate(score = case_when(
+score_3_Arbres <- jointuresArbres |> mutate(score = case_when(
   # PREMIER SET DE CONDITIONS
   # Absence de cultures du tout + Absence d'arbres hors rente
   RaisonsRecensement__1 == 0 & (PsceArbresHorsRente__3 == 1 | is.na(PsceArbresHorsRente__3)) ~ 0,
@@ -113,7 +113,7 @@ score_2_Arbres <- jointuresArbres |> mutate(score = case_when(
   TRUE ~ 55
 ))
 
-score_2_Arbres |>
+score_3_Arbres |>
   group_by(score) |>
   count()
 
@@ -128,7 +128,7 @@ transformationsPossibles <- paste0("TransformationPA__", 1:16)
 
 typesCultHorsJacheres <- paste0("CulturesPresentes__", 1:7, "0")
 
-score_3_Activites <- left_join(rga23_tapeAvecVentes,
+score_4_Activites <- left_join(rga23_tapeAvecVentes,
   rga23_mainOeuvre |> mutate(
     nbTransformations = rowSums(across(
       all_of(transformationsPossibles),
@@ -178,6 +178,6 @@ score_3_Activites <- left_join(rga23_tapeAvecVentes,
     TRUE ~ 55
   ))
 
-score_3_Activites |>
+score_4_Activites |>
   group_by(score) |>
   count()
