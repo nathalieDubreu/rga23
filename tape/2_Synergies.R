@@ -200,14 +200,39 @@ score_2_SolPlantes |>
 # > 3 - Intégration élevée: un nombre important d’arbres (et autres plantes vivaces) fournissent plusieurs produits et services.
 # > 4 - Intégration complète: de nombreux arbres (et autres vivaces) fournissent plusieurs produits et services.
 
+# PsceArbresHorsRente__1 == 1 ~ "Présents en bord de parcelle",
+# PsceArbresHorsRente__2 == 1 ~ "Présents dans la parcelle",
+# PsceArbresHorsRente__3 == 1 ~ "Absents",
+
+# RaisonsArbresHorsR__1
+# Biodiversité................................1
+# Biomasse (bois-énergie, bois d’oeuvre, …)...2
+# Ombrage.....................................3
+# Alimentation animale........................4
+# Fertilisation...............................5
+# Sans raison particulière....................6
+
 score_3_IntegrationArbres <- left_join(rga23_tape,
   nbCulturesArbresDeclarees,
   by = "interview__key"
 ) |>
+  left_join(rga23_prodVegetales |> select(interview__key, PartComFruit__13), by = "interview__key") |>
   mutate(score = case_when(
+    ## Pas d'arbres, ni cultivés, ni hors rente
     is.na(nbCulturesArbres) & PsceArbresHorsRente__3 == 1 ~ 0,
+    ## Uniquement des arbres hors rente en bord de parcelle pour de la biomasse ou sans raison
     is.na(nbCulturesArbres) & PsceArbresHorsRente__1 == 1 & PsceArbresHorsRente__2 == 0 &
-      (replace_na(RaisonsArbresHorsR__1, 0) == 0 & replace_na(RaisonsArbresHorsR__3, 0) == 0 & replace_na(RaisonsArbresHorsR__4, 0) == 0 & replace_na(RaisonsArbresHorsR__5, 0) == 0) ~ 1,
+      (RaisonsArbresHorsR__1 + RaisonsArbresHorsR__3 + RaisonsArbresHorsR__4 + RaisonsArbresHorsR__5 == 0) ~ 1,
+    # Cultures d'arbre mais pas d'arbre hors rente -> 2
+    nbCulturesArbres > 0 & PsceArbresHorsRente__3 == 1 ~ 2,
+    # Pas de cultures d'arbres mais arbres hors rente présents dans la parcelle et/ou en bord de parcelle mais avec un service hors biomasse
+    is.na(nbCulturesArbres) & (PsceArbresHorsRente__2 == 1 | (PsceArbresHorsRente__1 == 1 & (RaisonsArbresHorsR__1 + RaisonsArbresHorsR__3 + RaisonsArbresHorsR__4 + RaisonsArbresHorsR__5 > 0))) ~ 2,
+    # Cultures d'arbre + arbres hors rente avec 1 ou 2 services
+    nbCulturesArbres > 0 & PsceArbresHorsRente__3 == 0 &
+      (RaisonsArbresHorsR__1 + RaisonsArbresHorsR__2 + RaisonsArbresHorsR__3 + RaisonsArbresHorsR__4 + RaisonsArbresHorsR__5 + ifelse((PartComFruit__13 == 0 | is.na(PartComFruit__13)), 1, 0) <= 2) ~ 3,
+    # Cultures d'arbre + arbres hors rente avec au moins 3 services
+    nbCulturesArbres > 0 & PsceArbresHorsRente__3 == 0 &
+      (RaisonsArbresHorsR__1 + RaisonsArbresHorsR__2 + RaisonsArbresHorsR__3 + RaisonsArbresHorsR__4 + RaisonsArbresHorsR__5 + ifelse((PartComFruit__13 == 0 | is.na(PartComFruit__13)), 1, 0) >= 3) ~ 4,
     TRUE ~ 55
   ))
 

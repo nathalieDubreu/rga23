@@ -24,7 +24,7 @@
 # 75%....3
 # 100%...4
 
-scoreIntrants <- left_join(rga23_tape,
+score_1_Intrants <- left_join(rga23_tape,
   rga23_prodAnimales_alimentation,
   by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
 ) |>
@@ -137,7 +137,7 @@ scoreIntrants <- left_join(rga23_tape,
     TRUE ~ 55
   ))
 
-scoreIntrants |>
+score_1_Intrants |>
   group_by(score) |>
   count()
 
@@ -162,7 +162,7 @@ scoreIntrants |>
 
 # + Ajout cultures concernées par le chimique
 
-scoreEngrais <- left_join(rga23_exploitations,
+score_2_Engrais <- left_join(rga23_exploitations,
   rga23_prodVegetales |> select(interview__key, SurfaceJardins, SurfaceAgroF),
   by = "interview__key"
 ) |>
@@ -201,7 +201,7 @@ scoreEngrais <- left_join(rga23_exploitations,
     )
   )
 
-scoreEngrais |>
+score_2_Engrais |>
   group_by(score) |>
   count()
 
@@ -224,7 +224,7 @@ scoreEngrais |>
 # Une partie de vos cultures/espèces...2
 # Une seule culture/espèce.............3
 
-scorePesticides <- rga23_exploitations |> mutate(
+score_3_Pesticides <- rga23_exploitations |> mutate(
   score = case_when(
     TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
     UtilisationGlyphosate == 1 ~ 1,
@@ -236,7 +236,7 @@ scorePesticides <- rga23_exploitations |> mutate(
   )
 )
 
-scorePesticides |>
+score_3_Pesticides |>
   group_by(score) |>
   count()
 
@@ -249,7 +249,7 @@ scorePesticides |>
 # > 3 - La production couvre les besoins alimentaires du ménage et les excédents génèrent des liquidités pour acheter les produits essentiels et réaliser des économies sporadiques.
 # > 4 - Tous les besoins du ménage sont satisfaits, à la fois en nourriture et en espèces, pour acheter tous les produits nécessaires et pour avoir des économies régulières.
 
-scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
+score_4_ProductiviteBesoins <- rga23_tapeAvecVentes |>
   mutate(score = case_when(
     BesoinsSatisf == 2 ~ 0,
     (Economies == 3 & venteTypeProduits == 0) ~ 1,
@@ -259,6 +259,6 @@ scoreProductiviteBesoins <- rga23_tapeAvecVentes |>
     TRUE ~ 55
   ))
 
-scoreProductiviteBesoins |>
+score_4_ProductiviteBesoins |>
   group_by(score) |>
   count()
