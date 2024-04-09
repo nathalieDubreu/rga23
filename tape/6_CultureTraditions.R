@@ -35,15 +35,7 @@ score_1_regimeAlimentaire |>
   group_by(score) |>
   count()
 
-# > 0 - L’alimentation est systématiquement insuffisante pour répondre aux besoins nutritionnels et méconnaissance des bonnes pratiques nutritionnelles.
 
-# > 1 - L’alimentation est périodiquement insuffisante pour répondre aux besoins nutritionnels et ou le régime alimentaire est basée sur un nombre limité de groupes alimentaires. Manque de sensibilisation aux bonnes pratiques nutritionnelles.
-# > 2 - Sécurité alimentaire globale au fil du temps, mais diversité insuffisante des groupes alimentaires. De bonnes pratiques nutritionnelles sont connues mais pas toujours appliquées.
-# > 3 - La nourriture est suffisante et variée. De bonnes pratiques nutritionnelles sont connues mais pas toujours appliquées.
-# > 4 - Alimentation saine, nutritive et diversifiée. Les bonnes pratiques nutritionnelles sont bien connues et appliquées.
-
-
-#
 # IDENTITÉ ET CONSCIENCE LOCALES OU TRADITIONNELLES (PAYSANNES/INDIGÈNES)
 # > 0 - Aucune identité locale ou traditionnelle (paysanne / indigène) n’est ressentie.
 # > 1 - Peu de conscience de l’identité locale ou traditionnelle.

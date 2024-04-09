@@ -35,7 +35,7 @@ score_1_Plateformes <- left_join(rga23_tape,
     # ISOLE mais pourrait ne pas l'être car habitant à Tahiti, Moorea, Raiatea, Nuku Hiva, Tubuai (donc présence sûre de plateforme)
     EnvProLocalExpl__1 == 1 & EnvProLocalExpl__2 == 0 & EnvProLocalExpl__3 == 0 & EnvProLocalExpl__4 == 0 & EnvProLocalExpl__5 == 0 &
       (IleExploitation == "Tahiti" | IleExploitation == "Moorea" | IleExploitation == "Raiatea" | IleExploitation == "Nuku Hiva" | IleExploitation == "Tubuai") ~ 1,
-    # ISOLE 
+    # ISOLE
     EnvProLocalExpl__1 == 1 & EnvProLocalExpl__2 == 0 & EnvProLocalExpl__3 == 0 & EnvProLocalExpl__4 == 0 & EnvProLocalExpl__5 == 0 ~ 0,
     # Visité par des techniciens agricoles pour du conseil -> 3
     EnvProLocalExpl__5 == 1 ~ 3,
@@ -46,11 +46,6 @@ score_1_Plateformes <- left_join(rga23_tape,
 
 score_1_Plateformes |>
   group_by(score) |>
-  count()
-
-score_1_Plateformes |>
-  filter(score == 55) |>
-  group_by(EnvProLocalExpl__1, EvenComLocale, FreqEvenComLocale) |>
   count()
 
 # ACCÈS AUX CONNAISSANCES AGROÉCOLOGIQUES ET INTÉRÊT DES PRODUCTEURS À L’AGROÈCOLOGIE
@@ -70,8 +65,8 @@ score_2_AccesConnaissances <- left_join(rga23_tape,
     AgriBio_DAG == 1 | AgriBio_DAG == 3 ~ 4,
     # Que chimique + ne connait pas les pratiques (ConnaissPratiques) -> 0
     ConnaissPratiques == 2 ~ 0,
-    # Que chimique + connait les pratiques -> 1
-    ConnaissPratiques == 1 ~ 1,
+    # Que chimique + connait les pratiques OU pas de produits phyto, uniquement engrais chimiques -> 1
+    ConnaissPratiques == 1 | (is.na(TypePhytosanit__1) & TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0) ~ 1,
     # Mixte chimique et bio -> 2
     (replace_na(TypePhytosanit__1, 0) + replace_na(TypeEngrais__1, 0) >= 1) &
       (replace_na(TypePhytosanit__2, 0) + replace_na(TypeEngrais__2, 0) + replace_na(TypeEngrais__3, 0) >= 1) ~ 2,
@@ -83,9 +78,6 @@ score_2_AccesConnaissances <- left_join(rga23_tape,
 score_2_AccesConnaissances |>
   group_by(score) |>
   count()
-
-restent <- score_2_AccesConnaissances |> filter(score == 55) |> group_by(TypePhytosanit__1, TypeEngrais__1)  |>count()
-
 
 # PARTICIPATION DES PRODUCTEURS AUX RÉSEAUX ET AUX ORGANISATIONS DE BASE
 # Avec perspective de genre.
@@ -101,8 +93,8 @@ score_3_Participation <- left_join(rga23_tape,
 ) |>
   left_join(ilesAvecPresenceAveree, by = "IleExploitation") |>
   mutate(score = case_when(
-    # Existence de plateformes + il y participe jamais OU pas de plateforme sur l'île et il se sent isolé
-    (presenceAveree == 1 & (is.na(FreqEvenComLocale) | FreqEvenComLocale == 1)) | (is.na(presenceAveree) & EnvProLocalExpl__1 == 1) ~ 0,
+    # Existence de plateformes + il y participe jamais OU pas de plateforme sur l'île
+    (presenceAveree == 1 & (is.na(FreqEvenComLocale) | FreqEvenComLocale == 1)) | is.na(presenceAveree)  ~ 0,
     # Existence de plateformes + il y participe rarement
     presenceAveree == 1 & FreqEvenComLocale == 2 ~ 1,
     # Existence de plateformes + il y participe parfois
@@ -117,9 +109,3 @@ score_3_Participation <- left_join(rga23_tape,
 score_3_Participation |>
   group_by(score) |>
   count()
-
-score_3_Participation |>
-  filter(score == 55) |>
-  group_by(EnvProLocalExpl__2, EnvProLocalExpl__3, EnvProLocalExpl__4, EnvProLocalExpl__5) |>
-  count()
-
