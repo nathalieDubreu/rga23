@@ -6,7 +6,41 @@
 # > 2 - Plus de la moitié des résidus et sous-produits sont recyclés. Certains déchets sont déversés ou brûlés.
 # > 3 - La plupart des résidus et sous-produits sont recyclés. Seuls quelques déchets sont déversés ou brûlés.
 # > 4 - Tous les résidus et sous-produits sont recyclés. Aucun déchet n’est déversé ou brûlé.
-#
+
+## Déchets non organiques
+# RecyclDechets : Est-ce que vous recyclez les déchets non organiques en fin de vie (plastiques, ...) générés dans l'exploitation ? OUI/NON/EN PARTIE
+
+## Engrais organiques
+# PropRecyclEngraisOrga : Quelle proportion de ces engrais organiques et amendements valorisez-vous (vente, épandage...) en volume ?
+# 0 à 25%.......1
+# 25 à 50%......2
+# 50 à 75%......3
+# Plus de 75%...4
+
+score_1_BiomasseDechets <- left_join(rga23_tape,
+  rga23_exploitations |> select(interview__key, PropRecyclEngraisOrga),
+  by = "interview__key"
+) |>
+  mutate(score = case_when(
+    # 0 à 25% de recyclage des déchets organiques (ou pas d'engrais organiques utilisé) et pas de recyclage du non organique
+    (PropRecyclEngraisOrga == 1 | is.na(PropRecyclEngraisOrga)) & RecyclDechets == 2 ~ 0,
+    # 0% à 50% de recyclage des déchets organiques OU pas d'engrais organiques mais recyclage d'au moins une partie du non organique
+    (PropRecyclEngraisOrga == 1 | PropRecyclEngraisOrga == 2) ~ 1,
+    is.na(PropRecyclEngraisOrga) & (RecyclDechets == 1 | RecyclDechets == 3) ~ 1,
+    # Recyclage de 50 à 75% des engrais organiques mais pas de recyclage du non organique (ou seulement en partie)
+    PropRecyclEngraisOrga == 3 & (RecyclDechets == 2 | RecyclDechets == 3) ~ 2,
+    # Recyclage de 50 à 75% des engrais organiques et recyclage de tout le non organique OU recyclage de plus de 75% de l'organique mais pas de recyclage du non organique (ou seulement en partie)
+    PropRecyclEngraisOrga == 3 & RecyclDechets == 1 ~ 3,
+    PropRecyclEngraisOrga == 4 & (RecyclDechets == 2 | RecyclDechets == 3) ~ 3,
+    # Recyclage de plus de 75% des engrais organiques et de tout le non organique
+    PropRecyclEngraisOrga == 4 & RecyclDechets == 1 ~ 4,
+    TRUE ~ 55
+  ))
+
+score_1_BiomasseDechets |>
+  group_by(score) |>
+  count()
+
 # 4.2 PRÉSERVATION ET CONSERVATION DE L’EAU
 # > 0 - Aucune installation ni technique de préservation et conservation de l’eau.
 # > 1 - Un type d’installation pour la collecte ou la préservation de l’eau (par ex. irrigation goutte à goutte, réservoir).
@@ -84,7 +118,19 @@ score_2_Eau |>
 # > 2 - Environ la moitié des graines sont autoproduites ou échangées, l’autre moitié est achetée au marché. Environ la moitié de l’élevage se fait dans les fermes voisines.
 # > 3 - La majorité des graines/ressources génétiques animales sont autoproduites ou échangées. Certaines graines spécifiques sont achetées sur le marché.
 # > 4 - Toutes les graines/ressources génétiques animales sont autoproduites, échangées avec d’autres agriculteurs ou gérées collectivement, assurant suffisamment de renouvellement et de diversité.
-#
+
+score_3_GrainesRaces <- left_join(rga23_tape,
+  rga23_prodVegetales |> select(interview__key, PresSurfIrrigables, OrigineEauIrrig__1, OrigineEauIrrig__2, OrigineEauIrrig__3, OrigineEauIndivIrrig__2, OrigineEauIndivIrrig__3, OrigineEauIndivIrrig__4, OrigineEauIndivIrrig__5, ModeIrrigation__2, ModeIrrigation__3),
+  by = "interview__key"
+) |>
+  mutate(score = case_when(
+    TRUE ~ 55
+  ))
+
+score_3_GrainesRaces |>
+  group_by(score) |>
+  count()
+
 # 4.4 ENERGIE RENOUVELABLE (UTILISATION ET PRODUCTION)
 # > 0 - Aucune énergie renouvelable est utilisée ou produite.
 # > 1 - La grande partie de l’énergie provient de l’extérieur, mais une partie est produite dans l’agroécosystème (traction animale, vent, eau, biogaz, etc.).

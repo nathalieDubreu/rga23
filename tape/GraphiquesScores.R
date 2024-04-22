@@ -23,5 +23,6 @@ plot_diversity_scores <- function(scores, scoreSousCategorie) {
 plot_diversity_scores(scoresDiversite, c("Diversite_1_Culture", "Diversite_2_Animaux", "Diversite_3_Arbres", "Diversite_4_Activite"))
 plot_diversity_scores(scoresSynergies, c("Synergies_1_Integration", "Synergies_2_SolPlantes", "Synergies_3_IntegrationArbres", "Synergies_4_Connectivite"))
 plot_diversity_scores(scoresEfficience, c("Efficience_1_Intrants", "Efficience_2_Engrais", "Efficience_3_Pesticides", "Efficience_4_ProductiviteBesoins"))
+plot_diversity_scores(scoresRecyclage, c("Recyclage_1_BiomasseDechets", "Recyclage_2_Eau", "Recyclage_3_GrainesRaces", "Recyclage_4_Energie"))
 plot_diversity_scores(scoresCocreation, c("Cocreation_1_Plateformes", "Cocreation_2_AccesConnaissances", "Cocreation_3_Participation"))
 
