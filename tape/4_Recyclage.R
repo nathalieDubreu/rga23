@@ -119,16 +119,41 @@ score_2_Eau |>
 # > 3 - La majorité des graines/ressources génétiques animales sont autoproduites ou échangées. Certaines graines spécifiques sont achetées sur le marché.
 # > 4 - Toutes les graines/ressources génétiques animales sont autoproduites, échangées avec d’autres agriculteurs ou gérées collectivement, assurant suffisamment de renouvellement et de diversité.
 
-score_3_GrainesRaces <- left_join(rga23_tape,
-  rga23_prodVegetales |> select(interview__key, PresSurfIrrigables, OrigineEauIrrig__1, OrigineEauIrrig__2, OrigineEauIrrig__3, OrigineEauIndivIrrig__2, OrigineEauIndivIrrig__3, OrigineEauIndivIrrig__4, OrigineEauIndivIrrig__5, ModeIrrigation__2, ModeIrrigation__3),
-  by = "interview__key"
+score_3_GrainesRaces <- left_join(rga23_prodAnimales,
+  rga23_exploitations,
+  by = c("interview__key", "RaisonsRecensement__1", "RaisonsRecensement__2", "RaisonsRecensement__3")
 ) |>
+  mutate(PartSemencesAutoP_Ech = case_when(
+    ## Uniquement de l'auto-production ou de l'échange -> part réévaluée à 5
+    (ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0 ~ 5,
+    TRUE ~ PartSemencesAutoP
+  )) |>
   mutate(score = case_when(
+    ## Pas d'animaux et pas d'utilisation de graines (semences)
+    RaisonsRecensement__2 == 0 & UtilisationGraines == 2 ~ 99,
+    # Si animaux : renouvellement au moins en partie Importé ou Produit localement à l'extérieur de la ferme (en Polynésie) / Si graines : Commercialisées localement et/ ou Importées
+    (RaisonsRecensement__2 == 0 | RenouvAnimaux__2 == 1 | RenouvAnimaux__3 == 1) &
+      (is.na(UtilisationGraines) | UtilisationGraines == 2 | (ProvenanceSemences__2 == 0 & ProvenanceSemences__3 == 0)) ~ 0,
+    # Auto-production graines : 0 à 25% du volume utilisé
+    PartSemencesAutoP_Ech == 1 | PartSemencesAutoP_Ech == 2 ~ 1,
+    # Auto-production graines : 25 à 50% du volume utilisé
+    PartSemencesAutoP_Ech == 3 ~ 2,
+    # Auto-production graines : 50 à 75% du volume utilisé OU graines auto-produites à plus de 75% mais renouvellement des animaux hors de la ferme
+    PartSemencesAutoP_Ech == 4 ~ 3,
+    PartSemencesAutoP_Ech == 5 & (RenouvAnimaux__2 == 1 | RenouvAnimaux__3 == 1) ~ 3,
+    # Si animaux : renouvellement assuré sur la ferme / Si graines : auto produites et/ou données à plus de 75%
+    (RaisonsRecensement__2 == 0 | (RenouvAnimaux__1 == 1 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 0)) &
+      (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP_Ech == 5) ~ 4,
     TRUE ~ 55
   ))
 
 score_3_GrainesRaces |>
   group_by(score) |>
+  count()
+
+score_3_GrainesRaces |>
+  filter(score == 55) |>
+  group_by(PartSemencesAutoP_Ech, UtilisationGraines, RenouvAnimaux__1, RenouvAnimaux__2, RenouvAnimaux__3) |>
   count()
 
 # 4.4 ENERGIE RENOUVELABLE (UTILISATION ET PRODUCTION)
