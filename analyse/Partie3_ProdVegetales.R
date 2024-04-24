@@ -505,3 +505,29 @@ avecJacheres <- left_join(Partie3_surfacesParArchipel |> select(-Part),
   jacheres,
   by = "Archipel_1"
 )
+
+
+## Ajout répartition exploitations par classe de taille
+
+Partie3_nbExploitationsClasse <- full_join(
+  rga23_prodVegetales |>
+    select(interview__key, Archipel_1, SurfaceJardins, SurfaceTotalProdAgri),
+  left_join(
+    rga23_surfacesCultures_HC_HP |>
+      group_by(interview__key) |>
+      summarize(surface = sum(SurfaceCult, 0)),
+    rga23_champ |> select(interview__key, Archipel_1),
+    by = "interview__key"
+  ),
+  by = c("interview__key", "Archipel_1")
+) |>
+  group_by(Archipel_1) |>
+  summarize(
+    `Nombre d'exploitations <= 5000m² de SAU` = sum(ifelse(SurfaceTotalProdAgri <= 5000, 1, 0), na.rm = TRUE),
+    `Nombre d'exploitations de 5000m² à 1 Ha de SAU` = sum(ifelse(SurfaceTotalProdAgri > 5000 & SurfaceTotalProdAgri <= 10000, 1, 0), na.rm = TRUE),
+    `Nombre d'exploitations de 1 à 5Ha de SAU` = sum(ifelse(SurfaceTotalProdAgri > 10000 & SurfaceTotalProdAgri <= 50000, 1, 0), na.rm = TRUE),
+    `Nombre d'exploitations de plus de 5 Ha de SAU` = sum(ifelse(SurfaceTotalProdAgri > 50000, 1, 0), na.rm = TRUE),
+    `SAU déclarée cumulée` = round(sum(SurfaceTotalProdAgri, na.rm = TRUE) / 10000),
+    `Surface de productions végétales (hors pâturages et hors cocoteraies)` = round((sum(surface, na.rm = TRUE) + sum(SurfaceJardins, na.rm = TRUE))/10000)
+  )
+writeCSV(Partie3_nbExploitationsClasse)
