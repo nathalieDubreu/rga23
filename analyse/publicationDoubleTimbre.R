@@ -4,11 +4,33 @@ rga23_complet <- left_join(
 ) |>
   left_join(readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite))
 
-Partie1_comptages <- rga23_complet |> summarize(
-  nombreTotalInterrogations = n(),
-  questionnairesComplets = sum(ifelse(eligibilite == 1 | (eligibiliteCoprah == 1 & (lettre_unite == "C" | lettre_unite == "X")), 1, 0), na.rm = TRUE)
-)
+Partie1_comptages <- left_join(
+  rga23_complet,
+  readCSV("rga23_exploitations.csv"),
+  by = c("interview__key", "eligibilite")
+) |>
+  summarize(
+    nombreTotalInterrogations = n(),
+    injoignablesRefus = sum(ifelse(statut_collecte == 3 | statut_collecte == 4, 1, 0), na.rm = TRUE),
+    doublons = sum(ifelse(statut_collecte == 5, 1, 0), na.rm = TRUE),
+    finActivite = sum(ifelse(statut_collecte == 2 |
+      (ArretActivite == 1 & lettre_unite != "C") |
+      (InterruptionTemporaireCoprah == 2 & (lettre_unite == "C" | (lettre_unite == "X") & RaisonsRecensement__1 == 0 & RaisonsRecensement__2 == 0)), 1, 0), na.rm = TRUE),
+    autoconsommation = sum(ifelse(AutoConsommation == 1 & lettre_unite != "C", 1, 0), na.rm = TRUE),
+    installationRecente = sum(ifelse(InstallationRecente == 1 & lettre_unite != "C", 1, 0), na.rm = TRUE),
+    autreRaison = sum(ifelse(!is.na(RaisonNonProduction) | (ConsommationStockNonFamilial == 2 & lettre_unite != "C"), 1, 0), na.rm = TRUE),
+    autreActivite = sum(ifelse(!is.na(ActiviteEnquete), 1, 0), na.rm = TRUE),
+    questionnairesComplets = sum(ifelse((eligibilite == 1 & lettre_unite != "C") | (eligibiliteCoprah == 1 & (lettre_unite == "C" | lettre_unite == "X")), 1, 0), na.rm = TRUE),
+    # verif = replace_na(injoignablesRefus, 0) + replace_na(doublons, 0) + replace_na(finActivite, 0) + replace_na(autoconsommation, 0) + replace_na(installationRecente, 0) + replace_na(autreRaison, 0) + replace_na(autreActivite, 0) + replace_na(questionnairesComplets, 0)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Valeur")
 writeCSV(Partie1_comptages)
+
+Partie1_completsNonEligibles <- rga23_complet |> filter((eligibilite == 1 & lettre_unite != "C") | (eligibiliteCoprah == 1 & (lettre_unite == "C" | lettre_unite == "X"))) |> 
+  filter(indicRGA23 == 0) |>
+  group_by(RaisonsRecensement__1, RaisonsRecensement__2, RaisonsRecensement__3) |>
+  count()
+writeCSV(Partie1_completsNonEligibles)
 
 Partie5_comptagesCoprah <- rga23_complet |> summarize(
   coprahPlus2t7 = sum(ifelse(lettre_unite == "C" | lettre_unite == "X", 1, 0)),
@@ -21,7 +43,7 @@ Partie5_comptagesCoprah <- rga23_complet |> summarize(
     coprahInterroges * 100, 1)
 )
 writeCSV(Partie5_comptagesCoprah)
- 
+
 ## Case cochée et "confirmée" i.e. répondant éligibles dans ce domaine
 Partie1_casesCochees <- rga23_complet |> summarize(
   caseCultureCochee = sum(ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1, 1, 0)),
