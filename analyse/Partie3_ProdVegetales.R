@@ -303,13 +303,13 @@ surfacesParType_HC_HF <- rga23_surfacesCultures_HC_HP |>
     `Surface moyenne (m2)` = round(`Surface (m2)` / `Nb Exploitants`)
   )
 
-surfacesParTypeCultureArchipelEtTotal <- rbind(
+Partie3_surfacesParTypeCultureArchipelEtTotal <- rbind(
   surfacesParType_HC_HF_Archipel,
   surfacesParType_HC_HF
 ) |>
   pivot_wider(names_from = c(Archipel_1), values_from = c(`Nb Exploitants`, `Surface (m2)`, `Surface moyenne (m2)`), values_fill = 0)
 
-writeCSV(surfacesParTypeCultureArchipelEtTotal)
+writeCSV(Partie3_surfacesParTypeCultureArchipelEtTotal)
 
 
 ## Surfaces de cultures classiques par type, sexe de l'exploitant et archipel
