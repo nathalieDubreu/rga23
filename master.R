@@ -8,6 +8,8 @@ source("fonctions.R")
 # Analyse
 source("analyse/publicationDoubleTimbre.R")
 source("analyse/2024-03-27_DemandeBSE_Apiculture.R")
+source("analyse/2024-04-25_DemandeISPF_PoulesPondeusesPouletsChair.R")
+source("analyse/2024-04-29_BSE_ComparaisonDonneesMaraichage.R")
 
 # Tape
 source("tape/tape.R")
