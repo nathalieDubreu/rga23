@@ -140,16 +140,7 @@ scoresGouvernance <- score_1_Emancipation |>
   mutate(Gouvernance_1_Emancipation = case_when(score <= 4 ~ score, TRUE ~ NA)) |>
   select(-score)
 
-print(scoresDiversite)
-print(scoresSynergies)
-print(scoresEfficience)
-print(scoresRecyclage)
 
-print(scoresCultureTraditions)
-print(scoresCocreation)
-
-print(scoresEcoCirculaire)
-print(scoresGouvernance)
 
 
 moyenneParArchipel <- function(data, categories) {
@@ -173,35 +164,52 @@ moyenneParArchipel <- function(data, categories) {
 resultatsDiversiteParArchipel <- moyenneParArchipel(scoresDiversite, c("Diversite_1_Culture", "Diversite_2_Animaux", "Diversite_3_Arbres", "Diversite_4_Activite"))
 resultatsSynergiesParArchipel <- moyenneParArchipel(scoresSynergies, c("Synergies_1_Integration", "Synergies_2_SolPlantes", "Synergies_3_IntegrationArbres", "Synergies_4_Connectivite"))
 
+# Fonctions pour récupérer max et min
 
-### WIP
+recuperationMax <- function(data, prefixeCategorie) {
+  summarise(
+    data,
+    Archipel_1 = "Max",
+    across(starts_with(prefixeCategorie), ~ max(.))
+  )
+}
 
-install.packages("fmsb")
-library(fmsb)
+recuperationMin <- function(data, prefixeCategorie) {
+  summarise(
+    data,
+    Archipel_1 = "Min",
+    across(starts_with(prefixeCategorie), ~ min(.))
+  )
+}
+# DIVERSITE
 
-resultatsDiversiteParArchipel <- resultatsDiversiteParArchipel |>
+moyennesDiversiteParArchipel <- resultatsDiversiteParArchipel |>
   select(Archipel_1, ends_with("_mean"))
 
-max <- resultatsDiversiteParArchipel |>
-  summarize(
-    Archipel_1 = "Max",
-    Diversite_1_Culture_mean = max(Diversite_1_Culture_mean),
-    Diversite_2_Animaux_mean = max(Diversite_2_Animaux_mean),
-    Diversite_3_Arbres_mean = max(Diversite_3_Arbres_mean),
-    Diversite_4_Activite_mean = max(Diversite_4_Activite_mean)
-  )
+max <- moyennesDiversiteParArchipel |> recuperationMax(prefixeCategorie = "Diversite_")
+min <- moyennesDiversiteParArchipel |> recuperationMin(prefixeCategorie = "Diversite_")
 
-min <- resultatsDiversiteParArchipel |>
-  summarize(
-    Archipel_1 = "Min",
-    Diversite_1_Culture_mean = min(Diversite_1_Culture_mean),
-    Diversite_2_Animaux_mean = min(Diversite_2_Animaux_mean),
-    Diversite_3_Arbres_mean = min(Diversite_3_Arbres_mean),
-    Diversite_4_Activite_mean = min(Diversite_4_Activite_mean)
-  )
+df <- rbind(max , min, moyennesDiversiteParArchipel) |>
+  rename_with(~gsub("_mean$", "", .), everything())
 
-df <- rbind(max , min, resultatsDiversiteParArchipel)
+diversiteSansArchipel <- df |> select(-Archipel_1)
 
-test <- df |> filter(Archipel_1 %in% c("Max", "Min", "Australes")) |> select(-Archipel_1)
+# SYNERGIE
 
-radarchart(test)
+moyennesSynergiesParArchipel <- resultatsSynergiesParArchipel |>
+  select(Archipel_1, ends_with("_mean"))
+
+max <- moyennesSynergiesParArchipel |> recuperationMax(prefixeCategorie = "Synergies_")
+min <- moyennesSynergiesParArchipel |> recuperationMin(prefixeCategorie = "Synergies_")
+  
+df <- rbind(max , min, moyennesSynergiesParArchipel) |>
+  rename_with(~gsub("_mean$", "", .), everything())
+
+synergieSansArchipel <- df |> select(-Archipel_1)
+
+
+library(rmarkdown)
+library(knitr)
+library(fmsb)
+
+rmarkdown::render("tape/graphiquesRadars.Rmd")
