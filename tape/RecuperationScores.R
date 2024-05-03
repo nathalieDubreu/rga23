@@ -1,4 +1,8 @@
-# Bilan des classements
+library(rmarkdown)
+library(knitr)
+library(fmsb)
+
+# Récupération des scores
 
 ## 1 - Diversité
 
@@ -141,7 +145,7 @@ scoresGouvernance <- score_1_Emancipation |>
   select(-score)
 
 
-
+## Calculs des moyennes par archipel
 
 moyenneParArchipel <- function(data, categories) {
   resultats <- data |>
@@ -189,8 +193,8 @@ moyennesDiversiteParArchipel <- resultatsDiversiteParArchipel |>
 max <- moyennesDiversiteParArchipel |> recuperationMax(prefixeCategorie = "Diversite_")
 min <- moyennesDiversiteParArchipel |> recuperationMin(prefixeCategorie = "Diversite_")
 
-df <- rbind(max , min, moyennesDiversiteParArchipel) |>
-  rename_with(~gsub("_mean$", "", .), everything())
+df <- rbind(max, min, moyennesDiversiteParArchipel) |>
+  rename_with(~ gsub("_mean$", "", .), everything())
 
 diversiteSansArchipel <- df |> select(-Archipel_1)
 
@@ -201,15 +205,10 @@ moyennesSynergiesParArchipel <- resultatsSynergiesParArchipel |>
 
 max <- moyennesSynergiesParArchipel |> recuperationMax(prefixeCategorie = "Synergies_")
 min <- moyennesSynergiesParArchipel |> recuperationMin(prefixeCategorie = "Synergies_")
-  
-df <- rbind(max , min, moyennesSynergiesParArchipel) |>
-  rename_with(~gsub("_mean$", "", .), everything())
+
+df <- rbind(max, min, moyennesSynergiesParArchipel) |>
+  rename_with(~ gsub("_mean$", "", .), everything())
 
 synergieSansArchipel <- df |> select(-Archipel_1)
-
-
-library(rmarkdown)
-library(knitr)
-library(fmsb)
 
 rmarkdown::render("tape/graphiquesRadars.Rmd")

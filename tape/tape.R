@@ -56,3 +56,5 @@ source("tape/9_EconomieCirculaire.R")
 source("tape/10_Gouvernance.R")
 
 source("tape/ClassementsExploitations.R")
+
+source("tape/RecuperationScores.R")
