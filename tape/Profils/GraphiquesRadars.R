@@ -1,36 +1,30 @@
-library(rmarkdown)
-library(knitr)
 library(fmsb)
 
-## Calculs des moyennes par archipel
+## Calculs des moyennes par profil
 
-moyenneParArchipel <- function(data, categories) {
+moyenneParProfil <- function(data, sousCategories, variableProfil) {
   resultats <- data |>
-    left_join(rga23_general |> select(interview__key, Archipel_1), by = "interview__key") |>
-    group_by(Archipel_1) |>
+    left_join(rga23_general |> select(interview__key, {{ variableProfil }}), by = "interview__key") |>
+    group_by({{ variableProfil }}) |>
     summarize(
       nbExploitations = n(),
-      across(all_of(categories),
-        .names = "{.col}_{.fn}",
-        .fns = list(
-          nbExploitations = ~ if (any(is.na(.))) sum(ifelse(!is.na(.), 1, 0)) else NULL,
-          mean = ~ round(mean(., na.rm = TRUE), 2)
-        )
+      across(all_of(sousCategories),
+             .names = "{.col}_{.fn}",
+             .fns = list(
+               nbExploitations = ~ if (any(is.na(.))) sum(ifelse(!is.na(.), 1, 0)) else NULL,
+               mean = ~ round(mean(., na.rm = TRUE), 2)
+             )
       )
     ) |>
     filter(if_any(everything(), ~ !all(is.na(.))))
   return(resultats)
 }
 
-resultatsDiversiteParArchipel <- moyenneParArchipel(scoresDiversite, c("Diversite_1_Culture", "Diversite_2_Animaux", "Diversite_3_Arbres", "Diversite_4_Activite"))
-resultatsSynergiesParArchipel <- moyenneParArchipel(scoresSynergies, c("Synergies_1_Integration", "Synergies_2_SolPlantes", "Synergies_3_IntegrationArbres", "Synergies_4_Connectivite"))
-
-# Fonctions pour récupérer max et min
+# Fonctions pour récupérer max et min et les ajouter à la table de résultats pour interprétation dans les graphiques radar
 
 recuperationMax <- function(data, prefixeCategorie) {
   summarise(
     data,
-    Archipel_1 = "Max",
     across(starts_with(prefixeCategorie), ~ max(.))
   )
 }
@@ -38,34 +32,41 @@ recuperationMax <- function(data, prefixeCategorie) {
 recuperationMin <- function(data, prefixeCategorie) {
   summarise(
     data,
-    Archipel_1 = "Min",
     across(starts_with(prefixeCategorie), ~ min(.))
   )
 }
+
+ajoutMaxMinTable <- function(data, prefixeCategorie, variableProfil) {
+  
+  data <- data |>
+    select({{ variableProfil }}, ends_with("_mean")) |>
+    rename_with(~ gsub("_mean$", "", .), everything())
+  
+  max <- recuperationMax(data, prefixeCategorie)
+  min <- recuperationMin(data, prefixeCategorie)
+  
+  return(rbind(max, min, data |> select(-{{ variableProfil }})))
+}
+
+
 # DIVERSITE
 
-moyennesDiversiteParArchipel <- resultatsDiversiteParArchipel |>
-  select(Archipel_1, ends_with("_mean"))
+resultatsDiversiteParArchipel <- moyenneParProfil(
+  scoresDiversite,
+  c("Diversite_1_Culture", "Diversite_2_Animaux", "Diversite_3_Arbres", "Diversite_4_Activite"),
+  Archipel_1
+)
 
-max <- moyennesDiversiteParArchipel |> recuperationMax(prefixeCategorie = "Diversite_")
-min <- moyennesDiversiteParArchipel |> recuperationMin(prefixeCategorie = "Diversite_")
-
-df <- rbind(max, min, moyennesDiversiteParArchipel) |>
-  rename_with(~ gsub("_mean$", "", .), everything())
-
-diversiteSansArchipel <- df |> select(-Archipel_1)
+diversiteSansArchipel <- ajoutMaxMinTable(resultatsDiversiteParArchipel, "Diversite_", Archipel_1)
 
 # SYNERGIE
 
-moyennesSynergiesParArchipel <- resultatsSynergiesParArchipel |>
-  select(Archipel_1, ends_with("_mean"))
+resultatsSynergiesParArchipel <- moyenneParProfil(
+  scoresSynergies,
+  c("Synergies_1_Integration", "Synergies_2_SolPlantes", "Synergies_3_IntegrationArbres", "Synergies_4_Connectivite"),
+  Archipel_1
+)
 
-max <- moyennesSynergiesParArchipel |> recuperationMax(prefixeCategorie = "Synergies_")
-min <- moyennesSynergiesParArchipel |> recuperationMin(prefixeCategorie = "Synergies_")
-
-df <- rbind(max, min, moyennesSynergiesParArchipel) |>
-  rename_with(~ gsub("_mean$", "", .), everything())
-
-synergieSansArchipel <- df |> select(-Archipel_1)
+synergieSansArchipel <- ajoutMaxMinTable(resultatsSynergiesParArchipel, "Synergies_", Archipel_1)
 
 rmarkdown::render("tape/Profils/graphiquesRadars.Rmd")

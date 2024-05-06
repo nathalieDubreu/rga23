@@ -25,7 +25,7 @@ radarchart(
 
 legend(
   x = 0.8,  
-  legend = df$Archipel_1[-c(1,2)], 
+  legend = resultatsDiversiteParArchipel$Archipel_1, 
   bty = "n", 
   pch = 20 , 
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
@@ -51,7 +51,7 @@ radarchart(
 
 legend(
   x = 0.8,  
-  legend = df$Archipel_1[-c(1,2)], 
+  legend = resultatsSynergiesParArchipel$Archipel_1, 
   bty = "n", 
   pch = 20 , 
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
