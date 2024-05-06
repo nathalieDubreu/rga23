@@ -102,6 +102,18 @@ scoresRecyclage <- full_join(
     by = "interview__key"
   )
 
+# 5 - Resilience
+
+scoresResilience <- full_join(
+  score_1_StabiliteProduction |>
+    select(interview__key, score) |>
+    mutate(Resilience_1_StabiliteProduction = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
+   score_2_ReductionVulnerabilite |>
+    select(interview__key, score) |>
+    mutate(Resilience_2_ReductionVulnerabilite = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
+  by = "interview__key"
+)
+
 # 6 - Culture et traditions alimentaires
 
 scoresCultureTraditions <- score_1_regimeAlimentaire |>
@@ -129,6 +141,18 @@ scoresCocreation <- full_join(
       select(-score),
     by = "interview__key"
   )
+
+# 8 - Valeurs humaines et sociales
+
+scoresValeursHumaines <- full_join(
+  score_2_Travail |>
+    select(interview__key, score) |>
+    mutate(ValeursHumaines_2_Travail = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
+  score_4_BienEtreAnimal |>
+    select(interview__key, score) |>
+    mutate(ValeursHumaines_4_BienEtreAnimal = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
+  by = "interview__key"
+)
 
 # 9 - Economie circulaire
 
