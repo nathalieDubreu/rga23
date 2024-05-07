@@ -34,19 +34,34 @@
 # Oui, de façon occasionnelle...2
 # Non...........................3
 
+# TpsTravailChefExpl
+# Moins de 1/2 temps.................1/1
+# 1/2 temps..........................2/2
+# Entre 1/2 temps et temps complet...3/3
+# Temps complet......................4/4
+
 score_2_Travail <- left_join(rga23_tape,
   rga23_exploitations |> select(interview__key, TypePhytosanit__1, FormationPhytosanit, UtilisationGlyphosate),
   by = "interview__key"
 ) |>
+  left_join(rga23_mainOeuvre |> select(interview__key, TpsTravailChefExpl),
+    by = "interview__key"
+  ) |>
   mutate(
     score = case_when(
-      # Plus de 50% du temps = travail pénible ET utilisation de produits phyto chimiques OU glyphosate ET revenu ne couvre pas les besoins essentiels
+      # 0
       PropTravailPenibleExpl == 3 & (TypePhytosanit__1 == 1 | UtilisationGlyphosate == 1) & BesoinsSatisf == 2 ~ 0,
-      # Plus de 25% du temps = travail pénible ET utilisation de produits phyto chimiques OU glyphosate ET Besoins non satisfaits ou en tout cas pas d'économies réalisées
+      TpsTravailChefExpl <= 2 & NoteSatisfactionExpl <= 4 & BesoinsSatisf == 2 ~ 0,
+      # 1
       PropTravailPenibleExpl >= 2 & (TypePhytosanit__1 == 1 | UtilisationGlyphosate == 1) & (BesoinsSatisf == 2 | Economies == 3) ~ 1,
-      # Moins de 50 % ET Les revenus de votre production agricole vous permettent-ils de réaliser des économies ? = NON ET si produits phyto, il a eu la formation
+      TpsTravailChefExpl <= 2 & (NoteSatisfactionExpl == 5 | NoteSatisfactionExpl == 6) & BesoinsSatisf == 2 ~ 1,
+      PropTravailPenibleExpl <= 2 & NoteSatisfactionExpl >= 7 & BesoinsSatisf == 2 ~ 1,
+      PropTravailPenibleExpl == 3 & BesoinsSatisf == 2 & is.na(TypePhytosanit__1) ~ 1,
+      # 2
       PropTravailPenibleExpl < 3 & (is.na(FormationPhytosanit) | FormationPhytosanit == 1) & Economies == 3 ~ 2,
-      # Moins de 50 % ET Les revenus de votre production agricole vous permettent-ils de réaliser des économies ? = OUI ET si produits phyto, il a eu la formation
+      PropTravailPenibleExpl == 3 & NoteSatisfactionExpl >= 7 ~ 2,
+      TpsTravailChefExpl <= 2 & NoteSatisfactionExpl >= 7 & BesoinsSatisf == 2 ~ 2,
+      # 3
       PropTravailPenibleExpl < 3 & (is.na(FormationPhytosanit) | FormationPhytosanit == 1) & Economies < 3 ~ 3,
       TRUE ~ 55
     )
@@ -55,12 +70,6 @@ score_2_Travail <- left_join(rga23_tape,
 score_2_Travail |>
   group_by(score) |>
   count()
-
-restent <- score_2_Travail |>
-  filter(score == 55) |>
-  group_by(PropTravailPenibleExpl, UtilisationGlyphosate, TypePhytosanit__1, FormationPhytosanit, BesoinsSatisf, Economies) |>
-  summarize(nombre = n()) |>
-  arrange(desc(nombre))
 
 # ÉMANCIPATION DE LA JEUNESSE ET ÉMIGRATION
 # > 0 - Les jeunes ne voient aucun avenir dans l’agriculture et sont impatients d’émigrer.
@@ -92,7 +101,7 @@ restent <- score_2_Travail |>
 # Aucun de ces visiteurs...4
 
 score_4_BienEtreAnimal <- left_join(rga23_tape,
-  rga23_exploitations |> select(interview__key, IleExploitation),
+  rga23_exploitations |> select(interview__key, ArchipelExploitation, IleExploitation),
   by = "interview__key"
 ) |>
   mutate(
@@ -121,15 +130,10 @@ score_4_BienEtreAnimal |>
   group_by(score) |>
   count()
 
-restent <- score_4_BienEtreAnimal |>
+nonClasses <- score_4_BienEtreAnimal |>
   filter(score == 55) |>
   mutate(
-    TahitiOrNot = case_when(
-      IleExploitation == "Tahiti" ~ "Tahiti",
-      TRUE ~ "Autre île"
-    ),
     nombreRaisonsManque = RaisonsManque__1 + RaisonsManque__2 + RaisonsManque__3 + RaisonsManque__4 + RaisonsManque__5
   ) |>
-  group_by(VisiteursElevages__1, VisiteursElevages__2, VisiteursElevages__4, nombreRaisonsManque, TahitiOrNot) |>
-  summarize(nombre = n()) |>
-  arrange(desc(nombre))
+  group_by(RaisonsRecensement__1, VisiteursElevages__4, nombreRaisonsManque, ArchipelExploitation) |>
+  count()

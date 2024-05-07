@@ -85,12 +85,13 @@ score_2_ReductionVulnerabilite <- rga23_tape |>
       AideProjets__8 == 1 ~ 0,
       # Accès uniquement au 2
       AideProjets__2 == 1 & (nombreAidesProjets == 1) ~ 1,
-      # Accès uniquement aux 3 et/ou 7 (+ éventuellement le 2)
+      # Accès uniquement aux 3 et/ou 7 (+ éventuellement le 2) OU accès uniquement au 5 (aide de pays) OU accès uniquement au 6 (défiscalisation) OU accès uniquement au 1 (Crédits (accès facile))
       (AideProjets__3 == 1 | AideProjets__7 == 1) &
         (nombreAidesProjets == (AideProjets__2 + AideProjets__3 + AideProjets__7)) ~ 2,
-      # Au moins deux parmi 1, 3, 5 et 6 mais pas 4
+      (AideProjets__1 == 1 | AideProjets__5 == 1 | AideProjets__6 == 1) & (nombreAidesProjets == 1) ~ 2,
+      # Au moins deux parmi 1, 2, 3, 5 et 6 mais pas 4
       AideProjets__4 == 0 &
-        ((AideProjets__1 + AideProjets__3 + AideProjets__5 + AideProjets__6) >= 2) ~ 3,
+        ((AideProjets__1 + AideProjets__2 + AideProjets__3 + AideProjets__5 + AideProjets__6) >= 2) ~ 3,
       # Au moins le 4
       AideProjets__4 == 1 ~ 4,
       TRUE ~ 55
