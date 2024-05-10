@@ -95,29 +95,29 @@ score_2_ReseauxProducteurs <- full_join(rga23_prodVegetales,
   mutate(
     score = case_when(
       # Ni 5 ni 10 ET part des intermédiaires (7,8,9) >= 75% pour au moins un type de vente
-      eval(parse(text = partParticuliersCooperatives_Vegetaux(0))) &
-        eval(parse(text = partParticuliersCooperatives_Animaux(0))) &
-        (eval(parse(text = partIntermediaires_Vegetaux(75))) |
-          eval(parse(text = partIntermediaires_Animaux(75))))
+      eval(parse(text = partMaxParticuliersCooperatives_Vegetaux(0))) &
+        eval(parse(text = partMaxParticuliersCooperatives_Animaux(0))) &
+        (eval(parse(text = partMinIntermediaires_Vegetaux(75))) |
+          eval(parse(text = partMinIntermediaires_Animaux(75))))
       ~ 0,
       # Si 5 ou 10 : <= 40 % de sa production ET part des intermédiaires (7,8,9) >= 50% pour au moins un type de vente
-      eval(parse(text = partParticuliersCooperatives_Vegetaux(40))) &
-        eval(parse(text = partParticuliersCooperatives_Animaux(40))) &
-        (eval(parse(text = partIntermediaires_Vegetaux(50))) |
-          eval(parse(text = partIntermediaires_Animaux(50))))
+      eval(parse(text = partMaxParticuliersCooperatives_Vegetaux(40))) &
+        eval(parse(text = partMaxParticuliersCooperatives_Animaux(40))) &
+        (eval(parse(text = partMinIntermediaires_Vegetaux(50))) |
+          eval(parse(text = partMinIntermediaires_Animaux(50))))
       ~ 1,
-      # Si 5 ou 10 : <= 80 % de sa production  ET part des intermédiaires (7,8,9) >= 25% pour au moins un type de vente ET chef d'exploitation est un homme
-      eval(parse(text = partParticuliersCooperatives_Vegetaux(80))) &
-        eval(parse(text = partParticuliersCooperatives_Animaux(80))) &
-        (eval(parse(text = partIntermediaires_Vegetaux(25))) |
-          eval(parse(text = partIntermediaires_Animaux(25)))) &
+      # Si 5 ou 10 : au moins une fois >= 50 % de sa production ET part des intermédiaires (7,8,9) >= 20% pour au moins un type de vente ET chef d'exploitation est un homme
+      (eval(parse(text = partMinParticuliersCooperatives_Vegetaux(50))) |
+        eval(parse(text = partMinParticuliersCooperatives_Animaux(50)))) &
+        (eval(parse(text = partMinIntermediaires_Vegetaux(20))) |
+          eval(parse(text = partMinIntermediaires_Animaux(20)))) &
         SexeChefExpl == 2
       ~ 2,
-      # Si 5 ou 10 : <= 80 % de sa production ET part des intermédiaires (7,8,9) >= 25% pour au moins un type de vente ET chef d'exploitation est un femme
-      eval(parse(text = partParticuliersCooperatives_Vegetaux(80))) &
-        eval(parse(text = partParticuliersCooperatives_Animaux(80))) &
-        (eval(parse(text = partIntermediaires_Vegetaux(25))) |
-          eval(parse(text = partIntermediaires_Animaux(25)))) &
+      # Si 5 ou 10 : au moins une fois >= 50 % de sa production ET part des intermédiaires (7,8,9) >= 20% pour au moins un type de vente ET chef d'exploitation est un femme
+      (eval(parse(text = partMinParticuliersCooperatives_Vegetaux(50))) |
+        eval(parse(text = partMinParticuliersCooperatives_Animaux(50)))) &
+        (eval(parse(text = partMinIntermediaires_Vegetaux(20))) |
+          eval(parse(text = partMinIntermediaires_Animaux(20)))) &
         SexeChefExpl == 1
       ~ 3,
       # Pas de 7 ni 8 ni 9

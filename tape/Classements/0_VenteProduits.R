@@ -94,7 +94,7 @@ rga23_tapeAvecVentes <- left_join(
 ## Fonction part pour les particuliers (5) et coopératives (10) dans le végétal (en paramètre la part MAX)
 ## Aucun dépassement
 
-partParticuliersCooperatives_Vegetaux <- function(partMax) {
+partMaxParticuliersCooperatives_Vegetaux <- function(partMax) {
   variables <- c(
     "PartComMaraic__",
     "PartComVivri__",
@@ -116,10 +116,35 @@ partParticuliersCooperatives_Vegetaux <- function(partMax) {
   return(condition)
 }
 
+## Fonction part pour les particuliers (5) et coopératives (10) dans le végétal (en paramètre la part MIN)
+## Au moins un dépassement
+
+partMinParticuliersCooperatives_Vegetaux <- function(partMin) {
+  variables <- c(
+    "PartComMaraic__",
+    "PartComVivri__",
+    "PartComFruit__",
+    "PartComPlantes__",
+    "PartComFlorale__",
+    "PartComPepinieres__",
+    "PartComFourrages__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodVegetales$", col, "5,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "10,0) >= ",
+      partMin,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " | "), ")")
+  return(condition)
+}
+
 ## Fonction part pour les intermédiaires (7,8,9) dans le végétal (en paramètre la part MIN)
 ### Dépassement au moins une fois
 
-partIntermediaires_Vegetaux <- function(partMin) {
+partMinIntermediaires_Vegetaux <- function(partMin) {
   variables <- c(
     "PartComMaraic__",
     "PartComVivri__",
@@ -167,7 +192,7 @@ aucunIntermediaire_Vegetaux <- function() {
 ## Fonction part pour les particuliers (5) et coopératives (10) dans l'animal (en paramètre la part MAX)
 ## Aucun dépassement
 
-partParticuliersCooperatives_Animaux <- function(partMax) {
+partMaxParticuliersCooperatives_Animaux <- function(partMax) {
   variables <- c(
     "PartComOeufs__",
     "PartComMiel__",
@@ -185,10 +210,31 @@ partParticuliersCooperatives_Animaux <- function(partMax) {
   return(condition)
 }
 
+## Fonction part pour les particuliers (5) et coopératives (10) dans l'animal (en paramètre la part MIN)
+## Au moins une fois dépassement
+
+partMinParticuliersCooperatives_Animaux <- function(partMin) {
+  variables <- c(
+    "PartComOeufs__",
+    "PartComMiel__",
+    "PartComViande__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodAnimales$", col, "5,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "10,0) >= ",
+      partMin,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " | "), ")")
+  return(condition)
+}
+
 ## Fonction part pour les intermédiaires (7,8,9) dans le végétal (en paramètre la part MIN)
 ### Dépassement au moins une fois
 
-partIntermediaires_Animaux <- function(partMin) {
+partMinIntermediaires_Animaux <- function(partMin) {
   variables <- c(
     "PartComOeufs__",
     "PartComMiel__",
