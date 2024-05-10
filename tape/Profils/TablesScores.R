@@ -104,7 +104,7 @@ scoresResilience <- full_join(
   score_1_StabiliteProduction |>
     select(interview__key, score) |>
     mutate(Resilience_1_StabiliteProduction = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
-   score_2_ReductionVulnerabilite |>
+  score_2_ReductionVulnerabilite |>
     select(interview__key, score) |>
     mutate(Resilience_2_ReductionVulnerabilite = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
   by = "interview__key"
@@ -152,10 +152,23 @@ scoresValeursHumaines <- full_join(
 
 # 9 - Economie circulaire
 
-scoresEcoCirculaire <- score_1_MarchesLocaux |>
-  select(interview__key, score) |>
-  mutate(EcoCirculaire_1_MarchesLocaux = case_when(score <= 4 ~ score, TRUE ~ NA)) |>
-  select(-score)
+scoresEcoCirculaire <- full_join(
+  score_1_MarchesLocaux |>
+    select(interview__key, score) |>
+    mutate(EcoCirculaire_1_MarchesLocaux = case_when(score <= 4 ~ score, TRUE ~ NA)) |>
+    select(-score),
+  score_2_ReseauxProducteurs |>
+    select(interview__key, score) |>
+    mutate(EcoCirculaire_2_ReseauxProducteurs = case_when(score <= 4 ~ score, TRUE ~ NA)) |> select(-score),
+  by = "interview__key"
+) |>
+  full_join(
+    score_3_SystAlimLocal |>
+      select(interview__key, score) |>
+      mutate(EcoCirculaire_3_SystAlimLocal = case_when(score <= 4 ~ score, TRUE ~ NA)) |>
+      select(-score),
+    by = "interview__key"
+  )
 
 # 10 - Gouvernance
 

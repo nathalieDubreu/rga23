@@ -150,9 +150,21 @@ groupesScoresValeursHumaines <- full_join(
 
 # 9 - Economie circulaire
 
-groupesScoresEcoCirculaire <- score_1_MarchesLocaux |>
-  group_by(score) |>
-  summarize(EcoCirculaire_1_MarchesLocaux = n())
+groupesScoresEcoCirculaire <- full_join(
+  score_1_MarchesLocaux |>
+    group_by(score) |>
+    summarize(EcoCirculaire_1_MarchesLocaux = n()),
+  score_2_ReseauxProducteurs |>
+    group_by(score) |>
+    summarize(EcoCirculaire_2_ReseauxProducteurs = n()),
+  by = c("score")
+) |>
+  full_join(
+    score_3_SystAlimLocal |>
+      group_by(score) |>
+      summarize(EcoCirculaire_3_SystAlimLocal = n()),
+    by = c("score")
+  )
 
 # 10 - Gouvernance
 

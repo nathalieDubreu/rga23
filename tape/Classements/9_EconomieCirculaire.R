@@ -136,3 +136,14 @@ score_2_ReseauxProducteurs |>
 # > 2 – L’approvisionnement alimentaire et les intrants sont achetés à l’extérieur de la communauté et/ou les produits sont transformés localement. Certains biens et services sont échangés/ vendus entre producteurs locaux.
 # > 3 – Des parts égales de l’approvisionnement alimentaire et des intrants sont disponibles localement et achetés à l’extérieur de la communauté et les produits sont transformés localement. Les échanges/le commerce entre producteurs sont réguliers.
 # > 4 - La communauté est presque entièrement autosuffisante pour la production agricole et alimentaire. Haut niveau d’échange/commerce de produits et services entre producteurs.
+
+score_3_SystAlimLocal <- rga23_tape |>
+  mutate(
+    score = case_when(
+      TRUE ~ 55
+    )
+  )
+
+score_3_SystAlimLocal |>
+  group_by(score) |>
+  count()
