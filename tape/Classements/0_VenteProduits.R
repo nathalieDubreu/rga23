@@ -89,3 +89,137 @@ rga23_tapeAvecVentes <- left_join(
     venteTypeProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(venteProduitsVegetaux), 0, venteProduitsVegetaux),
     venteNbProduits = ifelse(is.na(venteProduitsAnimaux), 0, venteProduitsAnimaux) + ifelse(is.na(nbProduitsVegetauxVendus), 0, nbProduitsVegetauxVendus)
   )
+
+
+## Fonction part pour les particuliers (5) et coopératives (10) dans le végétal (en paramètre la part MAX)
+## Aucun dépassement
+
+partParticuliersCooperatives_Vegetaux <- function(partMax) {
+  variables <- c(
+    "PartComMaraic__",
+    "PartComVivri__",
+    "PartComFruit__",
+    "PartComPlantes__",
+    "PartComFlorale__",
+    "PartComPepinieres__",
+    "PartComFourrages__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodVegetales$", col, "5,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "10,0) <= ",
+      partMax,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
+  return(condition)
+}
+
+## Fonction part pour les intermédiaires (7,8,9) dans le végétal (en paramètre la part MIN)
+### Dépassement au moins une fois
+
+partIntermediaires_Vegetaux <- function(partMin) {
+  variables <- c(
+    "PartComMaraic__",
+    "PartComVivri__",
+    "PartComFruit__",
+    "PartComPlantes__",
+    "PartComFlorale__",
+    "PartComPepinieres__",
+    "PartComFourrages__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodVegetales$", col, "7,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "8,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "9,0) >= ",
+      partMin,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " | "), ")")
+  return(condition)
+}
+
+aucunIntermediaire_Vegetaux <- function() {
+  variables <- c(
+    "PartComMaraic__",
+    "PartComVivri__",
+    "PartComFruit__",
+    "PartComPlantes__",
+    "PartComFlorale__",
+    "PartComPepinieres__",
+    "PartComFourrages__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodVegetales$", col, "7,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "8,0) + ",
+      "replace_na(rga23_prodVegetales$", col, "9,0) == 0)"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
+  return(condition)
+}
+
+
+## Fonction part pour les particuliers (5) et coopératives (10) dans l'animal (en paramètre la part MAX)
+## Aucun dépassement
+
+partParticuliersCooperatives_Animaux <- function(partMax) {
+  variables <- c(
+    "PartComOeufs__",
+    "PartComMiel__",
+    "PartComViande__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodAnimales$", col, "5,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "10,0) <= ",
+      partMax,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
+  return(condition)
+}
+
+## Fonction part pour les intermédiaires (7,8,9) dans le végétal (en paramètre la part MIN)
+### Dépassement au moins une fois
+
+partIntermediaires_Animaux <- function(partMin) {
+  variables <- c(
+    "PartComOeufs__",
+    "PartComMiel__",
+    "PartComViande__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodAnimales$", col, "7,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "8,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "9,0) >= ",
+      partMin,
+      ")"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " | "), ")")
+  return(condition)
+}
+
+aucunIntermediaire_Animaux <- function() {
+  variables <- c(
+    "PartComOeufs__",
+    "PartComMiel__",
+    "PartComViande__"
+  )
+  conditions <- lapply(variables, function(col) {
+    paste0(
+      "(replace_na(rga23_prodAnimales$", col, "7,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "8,0) + ",
+      "replace_na(rga23_prodAnimales$", col, "9,0) == 0)"
+    )
+  })
+  condition <- paste0("(", paste(conditions, collapse = " & "), ")")
+  return(condition)
+}

@@ -16,11 +16,11 @@
 
 ## Récupération des points liés spécifiquement à l'élevage
 source("champs/champCAPL.R")
-rga23_prodAnimales <- calculPointsCAPLElevage(rga23_prodAnimales)
+rga23_prodAnimales_avecPointsElevages <- calculPointsCAPLElevage(rga23_prodAnimales)
 
 score_1_MarchesLocaux <- left_join(
   left_join(rga23_tapeAvecVentes,
-    rga23_prodAnimales,
+    rga23_prodAnimales_avecPointsElevages,
     by = "interview__key"
   ),
   rga23_prodVegetales,
@@ -71,7 +71,65 @@ score_1_MarchesLocaux |>
 # Il existe une relation directe avec les consommateurs. Les intermédiaires gèrent une partie du processus de commercialisation.
 # > 4 - Des réseaux bien établis et opérationnels existent avec une participation égale des femmes.
 # Relation solide et stable avec les consommateurs. Pas d’intermédiaires.
-#
+
+# Destination des types de produits
+# Auto-consommation familiale.....................................1/1
+# Alimentation des animaux .......................................2/2
+# Dons (à la famille, des amis)...................................3/3
+# Echange.........................................................4/4
+# Vente directe au particulier ...................................5/5
+# Vente par internet (Facebook ou autre site).....................6/6
+# Vente à un commerçant, artisan ou revendeur.....................7/7
+# Vente à un grossiste............................................8/8
+# Vente à un transformateur ou préparateur (y compris abattoir)...9/9
+# Vente à la coopérative ou au syndicat...........................10/10
+# Vente à la restauration collective..............................11/11
+# Vente aux restaurants (hors collectifs) / hôtels................12/12
+# Sans objet (pas de production de ce type).......................13/13
+
+score_2_ReseauxProducteurs <- full_join(rga23_prodVegetales,
+  rga23_prodAnimales,
+  by = "interview__key"
+) |>
+  left_join(rga23_mainOeuvre |> select(interview__key, SexeChefExpl)) |>
+  mutate(
+    score = case_when(
+      # Ni 5 ni 10 ET part des intermédiaires (7,8,9) >= 75% pour au moins un type de vente
+      eval(parse(text = partParticuliersCooperatives_Vegetaux(0))) &
+        eval(parse(text = partParticuliersCooperatives_Animaux(0))) &
+        (eval(parse(text = partIntermediaires_Vegetaux(75))) |
+          eval(parse(text = partIntermediaires_Animaux(75))))
+      ~ 0,
+      # Si 5 ou 10 : <= 40 % de sa production ET part des intermédiaires (7,8,9) >= 50% pour au moins un type de vente
+      eval(parse(text = partParticuliersCooperatives_Vegetaux(40))) &
+        eval(parse(text = partParticuliersCooperatives_Animaux(40))) &
+        (eval(parse(text = partIntermediaires_Vegetaux(50))) |
+          eval(parse(text = partIntermediaires_Animaux(50))))
+      ~ 1,
+      # Si 5 ou 10 : <= 80 % de sa production  ET part des intermédiaires (7,8,9) >= 25% pour au moins un type de vente ET chef d'exploitation est un homme
+      eval(parse(text = partParticuliersCooperatives_Vegetaux(80))) &
+        eval(parse(text = partParticuliersCooperatives_Animaux(80))) &
+        (eval(parse(text = partIntermediaires_Vegetaux(25))) |
+          eval(parse(text = partIntermediaires_Animaux(25)))) &
+        SexeChefExpl == 2
+      ~ 2,
+      # Si 5 ou 10 : <= 80 % de sa production ET part des intermédiaires (7,8,9) >= 25% pour au moins un type de vente ET chef d'exploitation est un femme
+      eval(parse(text = partParticuliersCooperatives_Vegetaux(80))) &
+        eval(parse(text = partParticuliersCooperatives_Animaux(80))) &
+        (eval(parse(text = partIntermediaires_Vegetaux(25))) |
+          eval(parse(text = partIntermediaires_Animaux(25)))) &
+        SexeChefExpl == 1
+      ~ 3,
+      # Pas de 7 ni 8 ni 9
+      eval(parse(text = aucunIntermediaire_Vegetaux())) & eval(parse(text = aucunIntermediaire_Animaux())) ~ 4,
+      TRUE ~ 55
+    )
+  )
+
+score_2_ReseauxProducteurs |>
+  group_by(score) |>
+  count()
+
 # SYSTÈME ALIMENTAIRE LOCAL
 # > 0 - La communauté est totalement dépendante de l’extérieur pour l’achat de produits alimentaires et d’intrants agricoles et pour la commercialisation et la transformation des produits.
 # > 1 - La majorité des approvisionnements alimentaires et des intrants agricoles sont achetés de l’extérieur et les produits sont transformés et commercialisés en dehors de la communauté locale. Très peu de biens et services sont échangés/vendus entre producteurs locaux.
