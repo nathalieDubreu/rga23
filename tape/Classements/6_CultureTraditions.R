@@ -18,15 +18,15 @@
 score_1_regimeAlimentaire <- rga23_tape |> mutate(
   score = case_when(
     # 3 des 4 types sont consommés quotidiennement et le dernier au moins plusieurs fois par semaine
-    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 5 ~ 4,
+    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 5 ~ 0,
     # Les 4 types d'aliments sont consommés en moyenne plusieurs fois par semaine
-    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 8 ~ 3,
+    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 8 ~ 1,
     # Les 4 types d'aliments sont consommés en moyenne une fois par semaine
     FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 12 ~ 2,
     # Les 4 types d'aliments sont consommés en moyenne une fois par mois
-    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 16 ~ 1,
+    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux <= 16 ~ 3,
     # Les 4 types d'aliments sont consommés moins d'une fois par mois en moyenne
-    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux > 16 ~ 0,
+    FruitsLocaux + PoissonsLocaux + LegumesLocaux + VivriLocaux > 16 ~ 4,
     TRUE ~ 55
   )
 )
