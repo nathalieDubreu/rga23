@@ -137,13 +137,92 @@ score_2_ReseauxProducteurs |>
 # > 3 – Des parts égales de l’approvisionnement alimentaire et des intrants sont disponibles localement et achetés à l’extérieur de la communauté et les produits sont transformés localement. Les échanges/le commerce entre producteurs sont réguliers.
 # > 4 - La communauté est presque entièrement autosuffisante pour la production agricole et alimentaire. Haut niveau d’échange/commerce de produits et services entre producteurs.
 
-score_3_SystAlimLocal <- rga23_tape |>
+# - Provenance semences :
+# Commercialisées localement..................1
+# Auto-produites..............................2
+# Fournies par d'autres agriculteurs (dons)...3
+# Importées par vous-même.....................4
+
+#  - Part d'autoproduction des semences
+# 0 à 10% du volume utilisé.......1
+# 10 à 25% du volume utilisé......2
+# 25 à 50% du volume utilisé......3
+# 50 à 75% du volume utilisé......4
+# Plus de 75% du volume utilisé...5
+
+# - RenouvAnimaux :
+# Assuré sur la ferme...........................................1
+# Produit localement à l'extérieur de la ferme (en Polynésie)...2
+# Importé.......................................................3
+
+# - TransformationPA : Réalisez-vous la transformation de produits agricoles (y compris si la matière première est achetée ailleurs) ?
+# Transformation d’oléagineux (huiles de consommation ou pour combustible…).......................1/1
+# Production d’huiles essentielles et hydrolats...................................................2/2
+# Epluchage, découpe, conditionnement, 4ème gamme, ...............................................3/3
+# Transformation de légumes (soupe, conserves…)...................................................4/4
+# Transformation de racines ou tubercules (farine de manioc, kwak...).............................5/5
+# Production issue de canne à sucre (jus de canne, rhum...).......................................6/6
+# Transformation de vanille.......................................................................7/7
+# Transformation de produits du cocotier (coprah, niau, lait de coco, …)..........................8/8
+# Transformation de fruits (confitures, sirops, liqueurs, jus de fruits…).........................9/9
+# Transformation de lait (beurre, yaourts, fromages, crème...)....................................10/10
+# Abattage à la ferme.............................................................................11/11
+# Transformation de viandes (pâtés, salaisons, conserves…)........................................12/12
+# Découpe de viandes, caissettes….................................................................13/13
+# Production de produits à base de miel...........................................................14/14
+# Transformation d’autres produits agricoles (hors aliments pour les animaux de l’exploitation)...15/15
+# Préparation de plats cuisinés...................................................................16/16
+# Aucune transformation réalisée sur l'exploitation...............................................17/17
+
+transformationsPossibles <- paste0("TransformationPA__", 1:16)
+
+score_3_SystAlimLocal <- rga23_exploitations |>
+  left_join(
+    rga23_mainOeuvre |>
+      mutate(nbTransformations = rowSums(across(
+        all_of(transformationsPossibles),
+        ~ coalesce(., 0)
+      ))) |> select(interview__key, nbTransformations),
+    by = "interview__key"
+  ) |>
+  left_join(
+    rga23_prodAnimales |>
+      mutate(presencePoulesPondeuses = case_when(
+        TypeVolailles__1 == 1 ~ 1,
+        TypeVolailles__3 == 1 ~ 1,
+        TypeVolailles__4 == 1 ~ 1,
+        TRUE ~ 0
+      )) |> select(interview__key, RenouvAnimaux__1, RenouvAnimaux__2, RenouvAnimaux__3, presencePoulesPondeuses),
+    by = "interview__key"
+  ) |>
   mutate(
     score = case_when(
+      # Aucune transformation réalisée sur l'exploitation + Provenance semences uniquement Importées et/ou commercialisés localement + Renouvellement animaux importé
+      nbTransformations == 0 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 |
+          (ProvenanceSemences__1 == 1 | ProvenanceSemences__4 == 1) & ProvenanceSemences__2 == 0 & ProvenanceSemences__3 == 0) &
+        (RaisonsRecensement__2 == 0 | (RenouvAnimaux__1 == 0 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 1)) ~ 0,
+      # Aucune transformation réalisée sur l'exploitation + Provenance semences en partie Importées et/ou commercialisés localement + Renouvellement animaux en partie importé
+      nbTransformations == 0 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__1 == 1 | ProvenanceSemences__4 == 1) &
+        (RaisonsRecensement__2 == 0 | RenouvAnimaux__3 == 1) ~ 1,
+      # 1 seule transformation / provenances semences fournies par d'autres agriculteurs ou renouv animaux produit localement
+      nbTransformations == 1 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__3 == 1) &
+        (RaisonsRecensement__2 == 0 | RenouvAnimaux__2 == 1) ~ 2,
+      # Au moins une transformation + part d'autoproduction des semences entre 50 et 75% + si élevage, pas de poules pondeuses
+      nbTransformations >= 1 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 4) &
+        (RaisonsRecensement__2 == 0 | presencePoulesPondeuses == 0) ~ 3,
+      # Au moins une transformation + part d'autoproduction des semences > 75% + si élevage, pas de poules pondeuses
+      nbTransformations >= 1 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 5) &
+        (RaisonsRecensement__2 == 0 | presencePoulesPondeuses == 0) ~ 4,
       TRUE ~ 55
     )
   )
 
-score_3_SystAlimLocal |>
-  group_by(score) |>
+restent <- score_3_SystAlimLocal |>
+  filter(score == 55) |>
+  group_by(score, ProvenanceSemences__1, UtilisationGraines, nbTransformations, RaisonsRecensement__2) |>
   count()

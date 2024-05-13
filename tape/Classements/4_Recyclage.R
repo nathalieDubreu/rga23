@@ -125,7 +125,7 @@ score_3_GrainesRaces <- left_join(rga23_prodAnimales,
 ) |>
   mutate(PartSemencesAutoP_Ech = case_when(
     ## Uniquement de l'auto-production ou de l'échange -> part réévaluée à 5
-    (ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 2) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0 ~ 5,
+    (ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 1) & ProvenanceSemences__1 == 0 & ProvenanceSemences__4 == 0 ~ 5,
     TRUE ~ PartSemencesAutoP
   )) |>
   mutate(score = case_when(
