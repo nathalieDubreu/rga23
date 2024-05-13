@@ -43,7 +43,9 @@ rga23_transfCoco_Archipel <- rga23_transfCoco |>
   summarize(
     NombreExploitationsSeuilsRGA3 = n(),
     TransformationProduitsCocotiersPourVente = sum(ifelse(nombreTransfPourVente > 0, 1, 0), na.rm = TRUE),
-    TransformationProduitsCocotiersPourVenteHorsCoprah = sum(ifelse(nombreTransfPourVenteHorsCoprah > 0, 1, 0), na.rm = TRUE)
+    TransformationProduitsCocotiersPourVente_UniquementCoprah = sum(ifelse(nombreTransfPourVente == 1 & TransformationCoco__1 == 1, 1, 0), na.rm = TRUE),
+    TransformationProduitsCocotiersPourVente_PasDeCoprah = sum(ifelse(nombreTransfPourVente >= 1 & TransformationCoco__1 == 0, 1, 0), na.rm = TRUE),
+    TransformationProduitsCocotiersPourVente_CoprahEtAutreChose = sum(ifelse(nombreTransfPourVenteHorsCoprah >= 1 & TransformationCoco__1 == 1, 1, 0), na.rm = TRUE)
   )
 
 rga23_transfCoco_Total <- rga23_transfCoco |>
@@ -52,7 +54,9 @@ rga23_transfCoco_Total <- rga23_transfCoco |>
   summarize(
     NombreExploitationsSeuilsRGA3 = n(),
     TransformationProduitsCocotiersPourVente = sum(ifelse(nombreTransfPourVente > 0, 1, 0), na.rm = TRUE),
-    TransformationProduitsCocotiersPourVenteHorsCoprah = sum(ifelse(nombreTransfPourVenteHorsCoprah > 0, 1, 0), na.rm = TRUE)
+    TransformationProduitsCocotiersPourVente_UniquementCoprah = sum(ifelse(nombreTransfPourVente == 1 & TransformationCoco__1 == 1, 1, 0), na.rm = TRUE),
+    TransformationProduitsCocotiersPourVente_PasDeCoprah = sum(ifelse(nombreTransfPourVente >= 1 & TransformationCoco__1 == 0, 1, 0), na.rm = TRUE),
+    TransformationProduitsCocotiersPourVente_CoprahEtAutreChose = sum(ifelse(nombreTransfPourVenteHorsCoprah >= 1 & TransformationCoco__1 == 1, 1, 0), na.rm = TRUE)
   )
 
 BSE_rga23_transfCoco <- rbind(rga23_transfCoco_Archipel, rga23_transfCoco_Total)
