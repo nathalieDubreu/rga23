@@ -197,32 +197,51 @@ score_3_SystAlimLocal <- rga23_exploitations |>
   ) |>
   mutate(
     score = case_when(
-      # Aucune transformation réalisée sur l'exploitation + Provenance semences uniquement Importées et/ou commercialisés localement + Renouvellement animaux importé
+
+      # Aucune transformation réalisée sur l'exploitation + 
+      # Provenance semences uniquement Importées et/ou commercialisés localement + 
+      # Renouvellement animaux importé
       nbTransformations == 0 &
         (is.na(UtilisationGraines) | UtilisationGraines == 2 |
           (ProvenanceSemences__1 == 1 | ProvenanceSemences__4 == 1) & ProvenanceSemences__2 == 0 & ProvenanceSemences__3 == 0) &
         (RaisonsRecensement__2 == 0 | (RenouvAnimaux__1 == 0 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 1)) ~ 0,
-      # Aucune transformation réalisée sur l'exploitation + Provenance semences en partie Importées et/ou commercialisés localement + Renouvellement animaux en partie importé
-      nbTransformations == 0 &
-        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__1 == 1 | ProvenanceSemences__4 == 1) &
-        (RaisonsRecensement__2 == 0 | RenouvAnimaux__3 == 1) ~ 1,
-      # 1 seule transformation / provenances semences fournies par d'autres agriculteurs ou renouv animaux produit localement
-      nbTransformations == 1 &
-        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__3 == 1) &
-        (RaisonsRecensement__2 == 0 | RenouvAnimaux__2 == 1) ~ 2,
-      # Au moins une transformation + part d'autoproduction des semences entre 50 et 75% + si élevage, pas de poules pondeuses
+      
+      # Aucune transformation réalisée sur l'exploitation 
+      nbTransformations == 0 ~ 1,
+      
+      # Au moins une transformation + 
+      # part d'autoproduction des semences entre 50 et 75% + 
+      # si élevage, pas de poules pondeuses et renouvellement uniquement assuré sur la ferme
       nbTransformations >= 1 &
         (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 4) &
-        (RaisonsRecensement__2 == 0 | presencePoulesPondeuses == 0) ~ 3,
-      # Au moins une transformation + part d'autoproduction des semences > 75% + si élevage, pas de poules pondeuses
+        (RaisonsRecensement__2 == 0 | (presencePoulesPondeuses == 0 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 0)) ~ 3,
+      
+      # Au moins une transformation + 
+      # part d'autoproduction des semences > 75% + 
+      # si élevage, pas de poules pondeuses et renouvellement uniquement assuré sur la ferme
       nbTransformations >= 1 &
         (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 5) &
-        (RaisonsRecensement__2 == 0 | presencePoulesPondeuses == 0) ~ 4,
+        (RaisonsRecensement__2 == 0 | (presencePoulesPondeuses == 0 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 0)) ~ 4,
+      
+      # Au moins une transformation + 
+      # provenances semences en partie auto-produites ou fournies par d'autres agriculteurs +
+      # renouv animaux en partie assuré par la ferme ou produit localement
+      nbTransformations >= 1 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 1) &
+        (RaisonsRecensement__2 == 0 | RenouvAnimaux__1 == 1 | RenouvAnimaux__2 == 1) ~ 2,
+
       TRUE ~ 55
     )
   )
 
+score_3_SystAlimLocal |>
+  group_by(score) |>
+  count()
+
 restent <- score_3_SystAlimLocal |>
   filter(score == 55) |>
-  group_by(score, ProvenanceSemences__1, UtilisationGraines, nbTransformations, RaisonsRecensement__2) |>
+  group_by(score, ProvenanceSemences__1, ProvenanceSemences__2, UtilisationGraines, nbTransformations, RaisonsRecensement__2, presencePoulesPondeuses,
+           RenouvAnimaux__1,
+           RenouvAnimaux__2,
+           RenouvAnimaux__3) |>
   count()
