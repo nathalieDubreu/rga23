@@ -20,7 +20,7 @@ kable(resultatsDiversiteParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = diversiteSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -28,7 +28,7 @@ legend(
   legend = resultatsDiversiteParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5
@@ -45,7 +45,7 @@ kable(resultatsSynergiesParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = synergieSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -53,7 +53,7 @@ legend(
   legend = resultatsSynergiesParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5
@@ -71,7 +71,7 @@ kable(resultatsEfficienceParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = efficienceSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -79,7 +79,7 @@ legend(
   legend = resultatsEfficienceParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5
@@ -97,7 +97,7 @@ kable(resultatsRecyclageParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = recyclageSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -105,7 +105,7 @@ legend(
   legend = resultatsRecyclageParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5
@@ -125,7 +125,7 @@ kable(resultatsDivers1BParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = divers1SansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -133,7 +133,7 @@ legend(
   legend = resultatsDivers1ParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5
@@ -153,7 +153,7 @@ kable(resultatsEcoCirculaireParProfil)
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = divers2SansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
 )
 
 legend(
@@ -161,7 +161,7 @@ legend(
   legend = resultatsDivers2ParProfil$Profil,
   bty = "n",
   pch = 20,
-  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
   text.col = "black",
   cex = 1.4,
   pt.cex = 1.5

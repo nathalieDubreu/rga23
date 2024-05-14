@@ -1,5 +1,4 @@
 library("tinytex")
-library("kableExtra")
 
 ## Etape 0 : copier ce programme et le renommer
 
