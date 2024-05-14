@@ -11,7 +11,14 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
       across(all_of(sousCategories),
         .names = "{.col}_{.fn}",
         .fns = list(
-          nbExploitations = ~ if (any(is.na(.)) | cur_column() == "Efficience_1_Intrants") sum(ifelse(!is.na(.), 1, 0)) else NULL,
+          nbExploitations = ~ if (any(is.na(.)) |
+            cur_column() == "Efficience_1_Intrants" |
+            cur_column() == "Resilience_2_ReductionVulnerabilite" |
+            cur_column() == "Gouvernance_1_Emancipation") {
+            sum(ifelse(!is.na(.), 1, 0))
+          } else {
+            NULL
+          },
           mean = ~ round(mean(., na.rm = TRUE), 2)
         )
       )
@@ -24,27 +31,27 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
 
 # Fonctions pour récupérer max et min et les ajouter à la table de résultats pour interprétation dans les graphiques radar
 
-recuperationMax <- function(data, prefixeCategorie) {
+recuperationMax <- function(data) {
   summarise(
     data,
-    across(starts_with(prefixeCategorie), ~ max(.))
+    across(where(is.numeric), ~ max(.))
   )
 }
 
-recuperationMin <- function(data, prefixeCategorie) {
+recuperationMin <- function(data) {
   summarise(
     data,
-    across(starts_with(prefixeCategorie), ~ min(.))
+    across(where(is.numeric), ~ min(.))
   )
 }
 
-ajoutMaxMinTable <- function(data, prefixeCategorie, variableProfil) {
+ajoutMaxMinTable <- function(data, variableProfil) {
   data <- data |>
     select({{ variableProfil }}, ends_with(" mean")) |>
     rename_with(~ gsub(" mean$", "", .), everything())
 
-  max <- recuperationMax(data, prefixeCategorie)
-  min <- recuperationMin(data, prefixeCategorie)
+  max <- recuperationMax(data)
+  min <- recuperationMin(data)
 
   return(rbind(max, min, data |> select(-{{ variableProfil }})))
 }

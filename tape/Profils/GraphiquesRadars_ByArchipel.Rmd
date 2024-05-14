@@ -8,111 +8,162 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
-
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-# Diversite
+## Diversite
 
 ```{r, echo=FALSE}
-kable(resultatsDiversiteParProfil) 
+kable(resultatsDiversiteParProfil)
 ```
         
-```{r, echo=FALSE, fig.width=10, fig.height=10}
+```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = diversiteSansVariableProfil,
-  caxislabels = c(0, 1, 2, 3, 4),
   pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
 )
 
 legend(
-  x = 0.8,  
-  legend = resultatsDiversiteParProfil$Profil, 
-  bty = "n", 
-  pch = 20 , 
+  x = 0.8,
+  legend = resultatsDiversiteParProfil$Profil,
+  bty = "n",
+  pch = 20,
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
-  text.col = "black", 
-  cex = 1, 
+  text.col = "black",
+  cex = 1.4,
   pt.cex = 1.5
 )
 ```
 
 
-# Synergie
+## Synergie
 
 ```{r, echo=FALSE}
 kable(resultatsSynergiesParProfil)
 ```
 
-```{r, echo=FALSE, fig.width=10, fig.height=10}
+```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = synergieSansVariableProfil,
-  caxislabels = c(0, 1, 2, 3, 4),
   pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
 )
 
 legend(
-  x = 0.8,  
-  legend = resultatsSynergiesParProfil$Profil, 
-  bty = "n", 
-  pch = 20 , 
+  x = 0.8,
+  legend = resultatsSynergiesParProfil$Profil,
+  bty = "n",
+  pch = 20,
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
-  text.col = "black", 
-  cex = 1, 
+  text.col = "black",
+  cex = 1.4,
   pt.cex = 1.5
 )
 ```
 
 
 
-# Efficience
+## Efficience
 
 ```{r, echo=FALSE}
 kable(resultatsEfficienceParProfil)
 ```
 
-```{r, echo=FALSE, fig.width=10, fig.height=10}
+```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = efficienceSansVariableProfil,
-  caxislabels = c(0, 1, 2, 3, 4),
   pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
 )
 
 legend(
-  x = 0.8,  
-  legend = resultatsEfficienceParProfil$Profil, 
-  bty = "n", 
-  pch = 20 , 
+  x = 0.8,
+  legend = resultatsEfficienceParProfil$Profil,
+  bty = "n",
+  pch = 20,
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
-  text.col = "black", 
-  cex = 1, 
+  text.col = "black",
+  cex = 1.4,
   pt.cex = 1.5
 )
 ```
 
 
 
-# Recyclage
+## Recyclage
 
 ```{r, echo=FALSE}
 kable(resultatsRecyclageParProfil)
 ```
 
-```{r, echo=FALSE, fig.width=10, fig.height=10}
+```{r, echo=FALSE, fig.width=14, fig.height=12}
 radarchart(
   df = recyclageSansVariableProfil,
-  caxislabels = c(0, 1, 2, 3, 4),
   pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
 )
 
 legend(
-  x = 0.8,  
-  legend = resultatsRecyclageParProfil$Profil, 
-  bty = "n", 
-  pch = 20 , 
+  x = 0.8,
+  legend = resultatsRecyclageParProfil$Profil,
+  bty = "n",
+  pch = 20,
   col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
-  text.col = "black", 
-  cex = 1, 
+  text.col = "black",
+  cex = 1.4,
+  pt.cex = 1.5
+)
+```
+
+## DIVERS 1 - Résilience / Culture et traditions / Valeurs Humaines / Gouvernance
+
+```{r, echo=FALSE}
+kable(resultatsDivers1AParProfil)
+```
+
+```{r, echo=FALSE}
+kable(resultatsDivers1BParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+radarchart(
+  df = divers1SansVariableProfil,
+  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+)
+
+legend(
+  x = 0.8,
+  legend = resultatsDivers1ParProfil$Profil,
+  bty = "n",
+  pch = 20,
+  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  text.col = "black",
+  cex = 1.4,
+  pt.cex = 1.5
+)
+```
+
+## DIVERS 2 - Co-création / Economie circulaire
+
+```{r, echo=FALSE}
+kable(resultatsCocreationParProfil)
+```
+
+```{r, echo=FALSE}
+kable(resultatsEcoCirculaireParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+radarchart(
+  df = divers2SansVariableProfil,
+  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+)
+
+legend(
+  x = 0.8,
+  legend = resultatsDivers2ParProfil$Profil,
+  bty = "n",
+  pch = 20,
+  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  text.col = "black",
+  cex = 1.4,
   pt.cex = 1.5
 )
 ```
