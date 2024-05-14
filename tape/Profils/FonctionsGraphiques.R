@@ -11,7 +11,7 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
       across(all_of(sousCategories),
         .names = "{.col}_{.fn}",
         .fns = list(
-          nbExploitations = ~ if (any(is.na(.))) sum(ifelse(!is.na(.), 1, 0)) else NULL,
+          nbExploitations = ~ if (any(is.na(.)) | cur_column() == "Efficience_1_Intrants") sum(ifelse(!is.na(.), 1, 0)) else NULL,
           mean = ~ round(mean(., na.rm = TRUE), 2)
         )
       )
