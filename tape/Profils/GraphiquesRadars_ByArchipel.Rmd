@@ -1,0 +1,64 @@
+---
+title: "Graphiques Radars par archipel"
+author: "NDubreu"
+date: '2024-05-13'
+output: 
+  pdf_document:
+    latex_engine: pdflatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE)
+
+```
+
+# Diversite
+
+```{r, echo=FALSE}
+kable(resultatsDiversiteParProfil) 
+```
+        
+```{r, echo=FALSE, fig.width=10, fig.height=10}
+radarchart(
+  df = diversiteSansVariableProfil,
+  caxislabels = c(0, 1, 2, 3, 4),
+  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+)
+
+legend(
+  x = 0.8,  
+  legend = resultatsDiversiteParProfil$Profil, 
+  bty = "n", 
+  pch = 20 , 
+  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  text.col = "black", 
+  cex = 1, 
+  pt.cex = 1.5
+)
+```
+
+
+# Synergie
+
+```{r, echo=FALSE}
+kable(resultatsSynergiesParProfil)
+```
+
+```{r, echo=FALSE, fig.width=10, fig.height=10}
+radarchart(
+  df = synergieSansVariableProfil,
+  caxislabels = c(0, 1, 2, 3, 4),
+  pcol = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00")
+)
+
+legend(
+  x = 0.8,  
+  legend = resultatsSynergiesParProfil$Profil, 
+  bty = "n", 
+  pch = 20 , 
+  col = c("#00AFBB", "#E7B800", "#00008B", "#FF3300", "#7FFF00"),
+  text.col = "black", 
+  cex = 1, 
+  pt.cex = 1.5
+)
+```
