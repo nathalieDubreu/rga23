@@ -31,18 +31,34 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
 
 # Fonctions pour récupérer max et min et les ajouter à la table de résultats pour interprétation dans les graphiques radar
 
-recuperationMax <- function(data) {
-  summarise(
-    data,
-    across(where(is.numeric), ~ max(.))
-  )
-}
+## "vrais" minimum et maximum
+# recuperationMin <- function(data) {
+#   summarise(
+#     data,
+#     across(where(is.numeric), ~ min(.))
+#   )
+# }
+# recuperationMax <- function(data) {
+#   summarise(
+#     data,
+#     across(where(is.numeric), ~ max(.))
+#   )
+# }
 
+## Scores possibles de 0 à 4
 recuperationMin <- function(data) {
-  summarise(
-    data,
-    across(where(is.numeric), ~ min(.))
-  )
+  data |>
+    summarise(
+      across(where(is.numeric), ~ 0),
+      .groups = "drop"
+    )
+}
+recuperationMax <- function(data) {
+  data |>
+    summarise(
+      across(where(is.numeric), ~ 4),
+      .groups = "drop"
+    )
 }
 
 ajoutMaxMinTable <- function(data, variableProfil) {

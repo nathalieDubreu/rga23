@@ -1,7 +1,6 @@
 ---
-title: "Graphiques Radars par archipel"
+title: "`r titreDocument`"
 author: "NDubreu"
-date: '2024-05-13'
 output: 
   pdf_document:
     latex_engine: pdflatex
@@ -9,6 +8,26 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+
+genererGraphiqueRadar <- function(data, labels) {
+  colors <- c("#7FFF00", "#FF3300", "#800080", "#00AFBB", "#E7B800")
+  radarchart(
+    df = data,
+    pcol = colors,
+    plwd = 3
+  )
+
+  legend(
+    x = 0.8,
+    legend = labels,
+    bty = "n",
+    pch = 20,
+    col = colors,
+    text.col = "black",
+    cex = 1.4,
+    pt.cex = 1.5
+  )
+}
 ```
 
 ## Diversite
@@ -18,23 +37,8 @@ kable(resultatsDiversiteParProfil)
 ```
         
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = diversiteSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsDiversiteParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(diversiteSansVariableProfil, resultatsDiversiteParProfil$Profil)
 ```
-
 
 ## Synergie
 
@@ -43,24 +47,8 @@ kable(resultatsSynergiesParProfil)
 ```
 
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = synergieSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsSynergiesParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(synergieSansVariableProfil, resultatsSynergiesParProfil$Profil)
 ```
-
-
 
 ## Efficience
 
@@ -69,24 +57,8 @@ kable(resultatsEfficienceParProfil)
 ```
 
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = efficienceSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsEfficienceParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(efficienceSansVariableProfil, resultatsEfficienceParProfil$Profil)
 ```
-
-
 
 ## Recyclage
 
@@ -95,21 +67,7 @@ kable(resultatsRecyclageParProfil)
 ```
 
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = recyclageSansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsRecyclageParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(recyclageSansVariableProfil, resultatsRecyclageParProfil$Profil)
 ```
 
 ## DIVERS 1 - Résilience / Culture et traditions / Valeurs Humaines / Gouvernance
@@ -123,21 +81,7 @@ kable(resultatsDivers1BParProfil)
 ```
 
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = divers1SansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsDivers1ParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(divers1SansVariableProfil, resultatsDivers1ParProfil$Profil)
 ```
 
 ## DIVERS 2 - Co-création / Economie circulaire
@@ -151,19 +95,5 @@ kable(resultatsEcoCirculaireParProfil)
 ```
 
 ```{r, echo=FALSE, fig.width=14, fig.height=12}
-radarchart(
-  df = divers2SansVariableProfil,
-  pcol = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00")
-)
-
-legend(
-  x = 0.8,
-  legend = resultatsDivers2ParProfil$Profil,
-  bty = "n",
-  pch = 20,
-  col = c("#00AFBB", "#E7B800", "#FF3300", "#7FFF00"),
-  text.col = "black",
-  cex = 1.4,
-  pt.cex = 1.5
-)
+genererGraphiqueRadar(divers2SansVariableProfil, resultatsDivers2ParProfil$Profil)
 ```
