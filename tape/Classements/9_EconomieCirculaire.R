@@ -209,6 +209,13 @@ score_3_SystAlimLocal <- rga23_exploitations |>
       # Aucune transformation réalisée sur l'exploitation 
       nbTransformations == 0 ~ 1,
       
+      # Exactement une transformation + 
+      # provenances semences en partie auto-produites (entre 10 et 50%) ou fournies par d'autres agriculteurs +
+      # renouv animaux en partie assuré par la ferme ou produit localement
+      nbTransformations == 1 &
+        (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 2 | PartSemencesAutoP == 3 | ProvenanceSemences__3 == 1) &
+        (RaisonsRecensement__2 == 0 | RenouvAnimaux__1 == 1 | RenouvAnimaux__2 == 1) ~ 2,
+      
       # Au moins une transformation + 
       # part d'autoproduction des semences entre 50 et 75% + 
       # si élevage, pas de poules pondeuses et renouvellement uniquement assuré sur la ferme
@@ -223,13 +230,6 @@ score_3_SystAlimLocal <- rga23_exploitations |>
         (is.na(UtilisationGraines) | UtilisationGraines == 2 | PartSemencesAutoP == 5) &
         (RaisonsRecensement__2 == 0 | (presencePoulesPondeuses == 0 & RenouvAnimaux__2 == 0 & RenouvAnimaux__3 == 0)) ~ 4,
       
-      # Au moins une transformation + 
-      # provenances semences en partie auto-produites ou fournies par d'autres agriculteurs +
-      # renouv animaux en partie assuré par la ferme ou produit localement
-      nbTransformations >= 1 &
-        (is.na(UtilisationGraines) | UtilisationGraines == 2 | ProvenanceSemences__2 == 1 | ProvenanceSemences__3 == 1) &
-        (RaisonsRecensement__2 == 0 | RenouvAnimaux__1 == 1 | RenouvAnimaux__2 == 1) ~ 2,
-
       TRUE ~ 55
     )
   )

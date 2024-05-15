@@ -86,8 +86,9 @@ score_2_Eau <- left_join(rga23_tape,
         ifelse(OrigineEauIrrig__1 == 1 & OrigineEauIrrig__2 == 0 & OrigineEauIrrig__3 == 0, 1, 0)
   ) |>
   mutate(score = case_when(
-    # Pas de surfaces irrigables OU aucune installation de la liste, ni Paillage ni Goutte à goutte ni Micro-asperseurs
-    PresSurfIrrigables == 2 ~ 0,
+    # Pas de surfaces irrigables (en considérant que ces exploitations connaissent une pluviométrie suffisante)-> non concernés
+    PresSurfIrrigables == 2 ~ 99,
+    # aucune installation de la liste, ni Paillage ni Goutte à goutte ni Micro-asperseurs
     nbTypesInstallations == 0 & replace_na(PratiquesCulturales__5, 0) == 0 & replace_na(ModeIrrigation__2, 0) == 0 & replace_na(ModeIrrigation__3, 0) == 0 ~ 0,
     # 1 seul type d'installation parmi la liste précédente + ni Paillage ni Goutte à goutte ni Micro-asperseurs OU aucun type d'installation mais une seule de ces 3 techniques de préservation
     nbTypesInstallations == 1 & replace_na(PratiquesCulturales__5, 0) == 0 & replace_na(ModeIrrigation__2, 0) == 0 & replace_na(ModeIrrigation__3, 0) == 0 ~ 1,
