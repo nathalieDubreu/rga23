@@ -24,5 +24,4 @@ source("tape/Classements/GraphiquesScores.R")
 # PROFILS
 
 source("tape/Profils/TablesScores.R")
-source("tape/Profils/FonctionsGraphiques.R")
 source("tape/Profils/GraphiquesRadars_Archipel.R")
