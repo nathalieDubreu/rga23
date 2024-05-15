@@ -7,11 +7,11 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
     left_join(rga23_profil |> select(interview__key, {{ variableProfil }}), by = "interview__key") |>
     group_by({{ variableProfil }}) |>
     summarize(
-      nbExploitations = n(),
+      Nombre_Exploitations = n(),
       across(all_of(sousCategories),
         .names = "{.col}_{.fn}",
         .fns = list(
-          nbExploitations = ~ if (any(is.na(.)) |
+          Nombre_Exploitations = ~ if (any(is.na(.)) |
             cur_column() == "Efficience_1_Intrants" |
             cur_column() == "Resilience_2_ReductionVulnerabilite" |
             cur_column() == "Gouvernance_1_Emancipation") {

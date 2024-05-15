@@ -17,7 +17,12 @@ source("tape/Profils/FonctionsGraphiques.R")
 source("tape/Profils/PreparationTablesGraphiquesRadar.R")
 
 # Etape 2 : 
-## Changer le titre du document pour le rendre cohérent avec la variable de profil
-titreDocument <- "Graphiques Radars par Archipel"
-## Copier-coller le Rmd et le renommer
-rmarkdown::render("tape/Profils/GraphiquesRadars_ByArchipel.Rmd")
+## Changer le titre du document pour le rendre cohérent avec la variable de profil + le nom du fichier pdf à exporter
+titreDansLeDocument <- "Graphiques Radars par Archipel"
+nomFichierPDF <- "GraphiquesRadars_ByArchipel.pdf"
+
+# Création du fichier contenant les graphiques 
+rmarkdown::render(
+  input = "tape/Profils/GraphiquesRadars.Rmd",
+  output_file = nomFichierPDF
+)

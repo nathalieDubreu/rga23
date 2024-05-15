@@ -68,16 +68,16 @@ gouvernanceSansVariableProfil <- ajoutMaxMinTable(resultatsGouvernanceParProfil,
 
 resultatsDivers1AParProfil <- left_join(resultatsResilienceParProfil,
   resultatsCultureTradParProfil,
-  by = c("Profil", "nbExploitations")
+  by = c("Profil", "Nombre Exploitations")
 )
 
 resultatsDivers1BParProfil <- left_join(resultatsValeursHumainesParProfil, resultatsGouvernanceParProfil,
-  by = c("Profil", "nbExploitations")
+  by = c("Profil", "Nombre Exploitations")
 )
 
 resultatsDivers1ParProfil <- left_join(resultatsDivers1AParProfil,
   resultatsDivers1BParProfil,
-  by = c("Profil", "nbExploitations")
+  by = c("Profil", "Nombre Exploitations")
 )
 
 divers1SansVariableProfil <- ajoutMaxMinTable(resultatsDivers1ParProfil, Profil)
@@ -101,6 +101,6 @@ ecoCirculaireSansVariableProfil <- ajoutMaxMinTable(resultatsEcoCirculaireParPro
 
 resultatsDivers2ParProfil <- left_join(resultatsCocreationParProfil,
   resultatsEcoCirculaireParProfil,
-  by = c("Profil", "nbExploitations")
+  by = c("Profil", "Nombre Exploitations")
 )
 divers2SansVariableProfil <- ajoutMaxMinTable(resultatsDivers2ParProfil, Profil)

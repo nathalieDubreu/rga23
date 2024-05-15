@@ -1,0 +1,116 @@
+---
+title: "`r titreDansLeDocument`"
+author: "NDubreu"
+output: 
+  pdf_document:
+    latex_engine: pdflatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+
+genererGraphiqueRadar <- function(data, labels) {
+  colors <- c("#7FFF00", "#FF3300", "#800080", "#00AFBB", "#E7B800")
+  radarchart(
+    df = data,
+    pcol = colors,
+    plwd = 3
+  )
+
+  legend(
+    x = 0.8,
+    legend = labels,
+    bty = "n",
+    pch = 20,
+    col = colors,
+    text.col = "black",
+    cex = 1.4,
+    pt.cex = 1.5
+  )
+}
+```
+
+## Diversite
+
+```{r, echo=FALSE}
+kable(resultatsDiversiteParProfil)
+```
+
+- Note de lecture (commune à tous les tableaux) :
+  - Colonne 1 : profil des exploitations
+  - Colonne 2 : nombre d'exploitations par profil
+  - Ensuite, pour chaque sous catégorie :
+      - (Optionnel) Nombre d'exploitations concernées spécifiquement pour cette sous-catégorie (hors non concernés ou d'exploitations non classées)
+      - Score moyen des exploitations du profil considéré 
+        
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(diversiteSansVariableProfil, resultatsDiversiteParProfil$Profil)
+```
+
+\newpage
+
+## Synergie
+
+```{r, echo=FALSE}
+kable(resultatsSynergiesParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(synergieSansVariableProfil, resultatsSynergiesParProfil$Profil)
+```
+
+\newpage
+
+## Efficience
+
+```{r, echo=FALSE}
+kable(resultatsEfficienceParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(efficienceSansVariableProfil, resultatsEfficienceParProfil$Profil)
+```
+
+\newpage
+
+## Recyclage
+
+```{r, echo=FALSE}
+kable(resultatsRecyclageParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(recyclageSansVariableProfil, resultatsRecyclageParProfil$Profil)
+```
+
+\newpage
+
+## DIVERS 1 - Résilience / Culture et traditions / Valeurs Humaines / Gouvernance
+
+```{r, echo=FALSE}
+kable(resultatsDivers1AParProfil)
+```
+
+```{r, echo=FALSE}
+kable(resultatsDivers1BParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(divers1SansVariableProfil, resultatsDivers1ParProfil$Profil)
+```
+
+\newpage
+
+## DIVERS 2 - Co-création / Economie circulaire
+
+```{r, echo=FALSE}
+kable(resultatsCocreationParProfil)
+```
+
+```{r, echo=FALSE}
+kable(resultatsEcoCirculaireParProfil)
+```
+
+```{r, echo=FALSE, fig.width=14, fig.height=12}
+genererGraphiqueRadar(divers2SansVariableProfil, resultatsDivers2ParProfil$Profil)
+```
