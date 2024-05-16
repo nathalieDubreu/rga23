@@ -25,8 +25,6 @@ resultatsEfficienceParProfil <- moyenneParProfil(
 )
 efficienceSansVariableProfil <- ajoutMaxMinTable(resultatsEfficienceParProfil, Profil)
 
-head(scoresEfficience)
-
 # RECYCLAGE
 
 resultatsRecyclageParProfil <- moyenneParProfil(

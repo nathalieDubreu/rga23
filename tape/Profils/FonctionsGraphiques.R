@@ -3,7 +3,7 @@ library(fmsb)
 ## Calculs des moyennes par profil
 
 moyenneParProfil <- function(data, sousCategories, variableProfil) {
-  resultats <- data |>
+  resultats1 <- data |>
     inner_join(rga23_profil |> select(interview__key, {{ variableProfil }}), by = "interview__key") |>
     group_by({{ variableProfil }}) |>
     summarize(
@@ -11,22 +11,21 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
       across(all_of(sousCategories),
         .names = "{.col}_{.fn}",
         .fns = list(
-          Nombre_Exploitations = ~ if (any(is.na(.)) |
-            cur_column() == "Efficience_1_Intrants" |
-            cur_column() == "Resilience_2_ReductionVulnerabilite" |
-            cur_column() == "Gouvernance_1_Emancipation") {
-            sum(ifelse(!is.na(.), 1, 0))
-          } else {
-            NULL
-          },
-          mean = ~ round(mean(., na.rm = TRUE), 2)
+          Nb_Exploitations = ~ sum(!is.na(.)),
+          Moyenne = ~ round(mean(., na.rm = TRUE), 2)
         )
       )
     ) |>
     filter(if_any(everything(), ~ !all(is.na(.))))
-  col_names <- gsub("_", " ", names(resultats))
-  colnames(resultats) <- col_names
-  return(resultats)
+
+  cols_to_remove <- sapply(resultats1[, -1], function(col) !identical(col, resultats1$Nombre_Exploitations))
+  resultats2 <- resultats1[, c(TRUE, cols_to_remove)]
+
+  resultats2 <- cbind(resultats2[, 1], Nombre_Exploitations = resultats$Nombre_Exploitations, resultats2[, -1])
+
+  col_names <- gsub("_", " ", names(resultats2))
+  colnames(resultats2) <- col_names
+  return(resultats2)
 }
 
 # Fonctions pour récupérer max et min et les ajouter à la table de résultats pour interprétation dans les graphiques radar
@@ -49,22 +48,22 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
 recuperationMin <- function(data) {
   data |>
     summarise(
-      across(where(is.numeric), ~ 0),
+      across(where(is.numeric), ~0),
       .groups = "drop"
     )
 }
 recuperationMax <- function(data) {
   data |>
     summarise(
-      across(where(is.numeric), ~ 4),
+      across(where(is.numeric), ~4),
       .groups = "drop"
     )
 }
 
 ajoutMaxMinTable <- function(data, variableProfil) {
   data <- data |>
-    select({{ variableProfil }}, ends_with(" mean")) |>
-    rename_with(~ gsub(" mean$", "", .), everything())
+    select({{ variableProfil }}, ends_with(" Moyenne")) |>
+    rename_with(~ gsub(" Moyenne$", "", .), everything())
 
   max <- recuperationMax(data)
   min <- recuperationMin(data)
