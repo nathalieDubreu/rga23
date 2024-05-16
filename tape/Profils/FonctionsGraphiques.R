@@ -21,7 +21,7 @@ moyenneParProfil <- function(data, sousCategories, variableProfil) {
   cols_to_remove <- sapply(resultats1[, -1], function(col) !identical(col, resultats1$Nombre_Exploitations))
   resultats2 <- resultats1[, c(TRUE, cols_to_remove)]
 
-  resultats2 <- cbind(resultats2[, 1], Nombre_Exploitations = resultats$Nombre_Exploitations, resultats2[, -1])
+  resultats2 <- cbind(resultats2[, 1], Nombre_Exploitations = resultats1$Nombre_Exploitations, resultats2[, -1])
 
   col_names <- gsub("_", " ", names(resultats2))
   colnames(resultats2) <- col_names

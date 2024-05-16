@@ -39,10 +39,10 @@ rga23_profil <- left_join(
   ) |>
   mutate(Profil = case_when(
     PresenceAnimauxPleinAir == 1 ~ "Pluriactifs",
-    totalSurfaceMarai / SurfaceTotalProdAgri >= 0.7 ~ "Maj maraîchers",
-    totalSurfaceVivri / SurfaceTotalProdAgri >= 0.7 ~ "Maj vivriers",
-    totalSurfaceFruit / SurfaceTotalProdAgri >= 0.7 ~ "Maj fruitiers",
-    totalSurfacePlantes / SurfaceTotalProdAgri >= 0.7 ~ "Maj plantes aromatiques, stimulantes et médicinales",
+    totalSurfaceMarai / SurfaceTotalProdAgri >= 0.8 ~ "Maj maraîchers",
+    totalSurfaceVivri / SurfaceTotalProdAgri >= 0.8 ~ "Maj vivriers",
+    totalSurfaceFruit / SurfaceTotalProdAgri >= 0.8 ~ "Maj fruitiers",
+    totalSurfacePlantes / SurfaceTotalProdAgri >= 0.8 ~ "Maj plantes aromatiques, stimulantes et médicinales",
     TRUE ~ "AUTRE"
   )) |>
   select(interview__key, Profil)
