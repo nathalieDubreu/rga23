@@ -4,7 +4,7 @@ library(fmsb)
 
 moyenneParProfil <- function(data, sousCategories, variableProfil) {
   resultats <- data |>
-    left_join(rga23_profil |> select(interview__key, {{ variableProfil }}), by = "interview__key") |>
+    inner_join(rga23_profil |> select(interview__key, {{ variableProfil }}), by = "interview__key") |>
     group_by({{ variableProfil }}) |>
     summarize(
       Nombre_Exploitations = n(),

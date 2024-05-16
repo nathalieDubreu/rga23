@@ -10,7 +10,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 genererGraphiqueRadar <- function(data, labels) {
-  colors <- c("#7FFF00", "#FF3300", "#800080", "#00AFBB", "#E7B800")
+  colors <- c("#FF5733", "#33FF57", "#5733FF", "#FF33C7", "#E7B800","#33C7FF")
   radarchart(
     df = data,
     pcol = colors,
