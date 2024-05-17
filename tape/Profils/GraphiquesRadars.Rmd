@@ -30,6 +30,8 @@ genererGraphiqueRadar <- function(data, labels) {
 }
 ```
 
+`r descriptionProfils`
+
 ## Diversite
 
 ```{r, echo=FALSE}

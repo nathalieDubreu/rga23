@@ -25,3 +25,6 @@ source("tape/Classements/GraphiquesScores.R")
 
 source("tape/Profils/TablesScores.R")
 source("tape/Profils/GraphiquesRadars_Archipel.R")
+source("tape/Profils/GraphiquesRadars_CulturesSpecialisees_Pluriactifs.R")
+
+

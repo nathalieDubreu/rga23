@@ -2,8 +2,11 @@ library("tinytex")
 
 ## Etape 0 : copier ce programme et le renommer
 
-# Etape 1 : créér la variable utilisée pour grouper les exploitations (variable de profil) 
-## Ici : regroupement des Iles du Vent et Iles sous le Vent en Iles de la société dans la variable Archipel_1
+# Etape 1 : décrire les profils et créér la variable utilisée pour grouper les exploitations (variable de profil)
+
+descriptionProfils <- "**Profils considérés :** 4 archipels\\
+*(Regroupement des Iles du vent et Iles sous le Vent au sein des Iles de la Société)*\\"
+
 rga23_profil <- 
   rga23_general |>
   mutate(Profil = case_when( 

@@ -2,9 +2,22 @@ library("tinytex")
 
 ## Etape 0 : copier ce programme et le renommer
 
-# Etape 1 : créér la variable utilisée pour grouper les exploitations (variable de profil)
-## Ici 5 profils :
-###
+# Etape 1 : décrire les profils et créér la variable utilisée pour grouper les exploitations (variable de profil)
+descriptionProfils <- "**6 profils distincts :**\\
+- Pluriactifs : exploitations qui font de la culture ET de l'élevage avec au moins une de ces espèces au moins en partie en plein air\\
+- Maj fruitiers : Cultures fruitières majoritaires i.e. sur au moins 2/3 de la SAU déclarée\\
+- Maj maraîchers : idem pour ces cultures\\
+- Maj plantes aromatiques, stimulantes et médicinales : idem pour ces cultures\\
+- Maj vivriers : idem pour ces cultures\\
+- AUTRE : ceux qui ne correspondent à aucun de ces 4 profils\\
+\\
+**Espèces considérées pour les pluriactifs** : \\
+- Accès au plein air pour au moins une partie des bovins OU  au moins une partie des caprins OU  au moins une partie des ovins OU  au moins une partie des équidés\\
+- Accès à un parcours pour au moins une partie des  porcins OU  au moins une partie des volailles hors poules pondeuses\\
+- Surface de parcours pour les poules pondeuses (code 0, 1, 2) supérieur à 0\\
+\\
+**Les exploitations qui ne font pas de cultures sont exclues de l'analyse.**"
+
 rga23_profil <- left_join(
   rga23_general |>
     filter(RaisonsRecensement__1 == 1),
@@ -39,10 +52,10 @@ rga23_profil <- left_join(
   ) |>
   mutate(Profil = case_when(
     PresenceAnimauxPleinAir == 1 ~ "Pluriactifs",
-    totalSurfaceMarai / SurfaceTotalProdAgri >= 0.8 ~ "Maj maraîchers",
-    totalSurfaceVivri / SurfaceTotalProdAgri >= 0.8 ~ "Maj vivriers",
-    totalSurfaceFruit / SurfaceTotalProdAgri >= 0.8 ~ "Maj fruitiers",
-    totalSurfacePlantes / SurfaceTotalProdAgri >= 0.8 ~ "Maj plantes aromatiques, stimulantes et médicinales",
+    totalSurfaceMarai / SurfaceTotalProdAgri >= 2/3 ~ "Maj maraîchers",
+    totalSurfaceVivri / SurfaceTotalProdAgri >= 2/3 ~ "Maj vivriers",
+    totalSurfaceFruit / SurfaceTotalProdAgri >= 2/3 ~ "Maj fruitiers",
+    totalSurfacePlantes / SurfaceTotalProdAgri >= 2/3 ~ "Maj plantes aromatiques, stimulantes et médicinales",
     TRUE ~ "AUTRE"
   )) |>
   select(interview__key, Profil)
@@ -53,7 +66,7 @@ source("tape/Profils/PreparationTablesGraphiquesRadar.R")
 
 # Etape 2 :
 ## Changer le titre du document pour le rendre cohérent avec la variable de profil + le nom du fichier pdf à exporter
-titreDansLeDocument <- "Graphiques Radars par type d'exploitations : par culture spécialisée vs. pluriactifs (y compris élevage)"
+titreDansLeDocument <- "Graphiques Radars par type d'exploitations (cultures spécialisées vs. pluriactifs - y compris élevage)"
 nomFichierPDF <- "GraphiquesRadars_ByCultSpecOuPluri.pdf"
 
 # Création du fichier contenant les graphiques
