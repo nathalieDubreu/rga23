@@ -13,6 +13,9 @@ source("analyse/2024-04-29_BSE_ComparaisonDonneesMaraichage.R")
 source("analyse/2024-05-13_BSE_TransformationProduitsCoco.R")
 source("analyse/2024-05-14_Ministere_ProportionSurfacesDispoCannabis.R")
 
+# TCD
+source("analyse/PreparationExportPourTCD.R")
+
 # Tape
 source("tape/tape.R")
 
