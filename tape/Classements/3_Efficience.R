@@ -219,17 +219,47 @@ score_2_Engrais |>
 # Une partie de vos cultures/espèces...2
 # Une seule culture/espèce.............3
 
-score_3_Pesticides <- rga23_exploitations |> mutate(
-  score = case_when(
-    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
-    UtilisationGlyphosate == 1 ~ 1,
-    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 2 ~ 1,
-    TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 3 ~ 2,
-    TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 ~ 3,
-    UtilisationPhytosanit == 2 ~ 4,
-    TRUE ~ 55
+# Pratiques agro-écologiques
+# Utilisation de plantes de services.............1
+# Intercultures..................................2
+# Paillage (plastique ou naturel)................5
+# Jardins océaniens
+# Agroforesterie
+# Présence d'autres cultures maraîchères dans l'année
+# Présence d'autres feuillages et cultures florales dans l'année
+
+
+score_3_Pesticides <- left_join(rga23_exploitations,
+  rga23_prodVegetales |> select(interview__key, SurfaceJardins, SurfaceAgroF, PresenceAutreMaraiAnnee, PresenceAutreFloraAnnee),
+  by = "interview__key"
+) |>
+  left_join(rga23_tape |> select(interview__key, PratiquesCulturales__1, PratiquesCulturales__2, PratiquesCulturales__5),
+    by = "interview__key"
+  ) |>
+  mutate(
+    nombrePratiques =
+      replace_na(SurfaceJardins, 0) +
+        replace_na(SurfaceAgroF, 0) +
+        replace_na(PratiquesCulturales__1, 0) +
+        replace_na(PratiquesCulturales__2, 0) +
+        replace_na(PratiquesCulturales__5, 0) +
+        ifelse(!is.na(PresenceAutreMaraiAnnee) & PresenceAutreMaraiAnnee == 1, 1, 0) +
+        ifelse(!is.na(PresenceAutreFloraAnnee) & PresenceAutreFloraAnnee == 1, 1, 0),
+    score = case_when(
+      TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 1 ~ 0,
+      UtilisationGlyphosate == 1 ~ 0,
+      TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 2 ~ 1,
+      TypePhytosanit__1 == 1 & NbCultEspPhytoChim == 3 ~ 2,
+      ## Cas de ceux qui n'utilisent que des produits phyto bio (pas de produits phyto chimiques)
+      TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 & nombrePratiques <= 1 ~ 3,
+      TypePhytosanit__1 == 0 & TypePhytosanit__2 == 1 & nombrePratiques >= 2 ~ 4,
+      ## Cas de ceux qui n'utilisent aucun produit phyto (ni chimiques, ni bio)
+      UtilisationPhytosanit == 2 & nombrePratiques == 0 ~ 2,
+      UtilisationPhytosanit == 2 & nombrePratiques <= 2 ~ 3,
+      UtilisationPhytosanit == 2 & nombrePratiques >= 3 ~ 4,
+      TRUE ~ 55
+    )
   )
-)
 
 score_3_Pesticides |>
   group_by(score) |>
