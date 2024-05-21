@@ -4,17 +4,12 @@ library("tinytex")
 
 # Etape 1 : décrire les profils et créér la variable utilisée pour grouper les exploitations (variable de profil)
 descriptionProfils <- "**6 profils distincts :**\\
-- Pluriactifs : exploitations qui font de la culture ET de l'élevage avec au moins une de ces espèces au moins en partie en plein air\\
-- Maj fruitiers : Cultures fruitières majoritaires i.e. sur au moins 2/3 de la SAU déclarée\\
+- Cultures - élevage : exploitations qui font de la culture ET de l'élevage\\
+- Maj fruitiers : Cultures fruitières majoritaires i.e. sur au moins 2/3 de la SAU déclarée et aucun élevage\\
 - Maj maraîchers : idem pour ces cultures\\
 - Maj plantes aromatiques, stimulantes et médicinales : idem pour ces cultures\\
 - Maj vivriers : idem pour ces cultures\\
-- AUTRE : ceux qui ne correspondent à aucun de ces 4 profils\\
-\\
-**Espèces considérées pour les pluriactifs** : \\
-- Accès au plein air pour au moins une partie des bovins OU  au moins une partie des caprins OU  au moins une partie des ovins OU  au moins une partie des équidés\\
-- Accès à un parcours pour au moins une partie des  porcins OU  au moins une partie des volailles hors poules pondeuses\\
-- Surface de parcours pour les poules pondeuses (code 0, 1, 2) supérieur à 0\\
+- Cultures : Autres exploitations qui font de la culture ET pas d'élevage\\
 \\
 **Les exploitations qui ne font pas de cultures sont exclues de l'analyse.**"
 
@@ -51,11 +46,12 @@ rga23_profil <- left_join(
     by = "interview__key"
   ) |>
   mutate(Profil = case_when(
-    PresenceAnimauxPleinAir == 1 ~ "Pluriactifs",
-    totalSurfaceMarai / SurfaceTotalProdAgri >= 2/3 ~ "Maj maraîchers",
-    totalSurfaceVivri / SurfaceTotalProdAgri >= 2/3 ~ "Maj vivriers",
-    totalSurfaceFruit / SurfaceTotalProdAgri >= 2/3 ~ "Maj fruitiers",
-    totalSurfacePlantes / SurfaceTotalProdAgri >= 2/3 ~ "Maj plantes aromatiques, stimulantes et médicinales",
+    RaisonsRecensement__2 == 0 & totalSurfaceMarai / SurfaceTotalProdAgri >= 2 / 3 ~ "Maj maraîchers",
+    RaisonsRecensement__2 == 0 & totalSurfaceVivri / SurfaceTotalProdAgri >= 2 / 3 ~ "Maj vivriers",
+    RaisonsRecensement__2 == 0 & totalSurfaceFruit / SurfaceTotalProdAgri >= 2 / 3 ~ "Maj fruitiers",
+    RaisonsRecensement__2 == 0 & totalSurfacePlantes / SurfaceTotalProdAgri >= 2 / 3 ~ "Maj plantes aromatiques, stimulantes et médicinales",
+    RaisonsRecensement__2 == 1 ~ "Cultures + élevage",
+    RaisonsRecensement__2 == 0 ~ "Cultures seules",
     TRUE ~ "AUTRE"
   )) |>
   select(interview__key, Profil)
