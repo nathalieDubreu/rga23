@@ -248,3 +248,36 @@ TCD9 <- inner_join(
   ) |>
   mutate(across(where(is.numeric), ~ coalesce(., 0)))
 writeCSV(TCD9)
+
+# TCD 10 : Zoom sur les éleveurs porcins
+TCD10 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_prodAnimales.csv"),
+  by = "interview__key"
+) |>
+  filter(PresenceAnimaux__3 == 1) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    nbTotalPorcs,
+    NbTruiesMaternite,
+    NbPorceletsNonSevres,
+    NbTruiesGestVides,
+    NbCochettes,
+    NbPorceletsPostSevrage,
+    NbPorcsEngraissement,
+    NbVerrats,
+    NbAutresPorcs,
+    AccesBatimentPorcins,
+    starts_with("TypeBatimentPorcins"),
+    AccesParcoursPorcins
+  ) |>
+  mutate(across(where(is.numeric), ~ coalesce(., 0)),
+    AccesParcoursTous = ifelse(AccesParcoursPorcins == 1, 1, 0),
+    AccesParcoursUneParite = ifelse(AccesParcoursPorcins == 3, 1, 0),
+    PasAccesParcous = ifelse(AccesParcoursPorcins == 2, 1, 0)
+  ) |>
+  select(-AccesParcoursPorcins)
+writeCSV(TCD10)
