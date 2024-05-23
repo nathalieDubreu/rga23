@@ -369,7 +369,8 @@ TCD11 <- left_join(rga23_mainOeuvreETP,
     MoPermNonFamETP,
     NbMOOccasionnelle,
     MOOccasionnelleETP
-  )
+  ) |>
+  mutate(across(where(is.numeric), ~ coalesce(., 0)))
 writeCSV(TCD11)
 # aVerifier <- TCD11 |> summarize(
 #   TotalChefETP = sum(ChefETP, na.rm = TRUE),
