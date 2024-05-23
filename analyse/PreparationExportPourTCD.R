@@ -1,3 +1,5 @@
+library(testthat)
+
 ## Champ : 4080 exploitations au sens du RGA 2023
 
 ## Récupération des variables Ile et Commune
@@ -320,7 +322,7 @@ rga23_mainOeuvreETP <- inner_join(rga23_champ_Ile_Commune,
 
 ## ETP des coexploitants
 rga23_coexploitantsETP <- readCSV("rga23_coexploitants.csv") |>
-  mutate(CoexpoitantsETP = case_when(
+  mutate(CoexploitantsETP = case_when(
     (TempsTravailCoExploit == 1) ~ 0.25,
     (TempsTravailCoExploit == 2) ~ 0.5,
     (TempsTravailCoExploit == 3) ~ 0.75,
@@ -329,8 +331,8 @@ rga23_coexploitantsETP <- readCSV("rga23_coexploitants.csv") |>
   )) |>
   group_by(interview__key) |>
   summarize(
-    NbCoexpoitants = n(),
-    CoexpoitantsETP = sum(CoexpoitantsETP)
+    NbCoexploitants = n(),
+    CoexploitantsETP = sum(CoexploitantsETP)
   )
 
 ## ETP MO Permanente familiale
@@ -345,7 +347,7 @@ rga23_moPermanenteFamETP <- readCSV("rga23_moPermanenteFam.csv") |>
   )) |>
   group_by(interview__key) |>
   summarize(
-    NbMOPermFamETP = n(),
+    NbMOPermFam = n(),
     MOPermFamETP = sum(MOPermFamETP)
   )
 
@@ -362,9 +364,9 @@ TCD11 <- left_join(rga23_mainOeuvreETP,
     Ile,
     Commune,
     ChefETP,
-    NbCoexpoitants,
-    CoexpoitantsETP,
-    NbMOPermFamETP,
+    NbCoexploitants,
+    CoexploitantsETP,
+    NbMOPermFam,
     MOPermFamETP,
     NbMoPermNonFam,
     MoPermNonFamETP,
@@ -373,14 +375,41 @@ TCD11 <- left_join(rga23_mainOeuvreETP,
   ) |>
   mutate(across(where(is.numeric), ~ coalesce(., 0)))
 writeCSV(TCD11)
-# aVerifier <- TCD11 |> summarize(
-#   TotalChefETP = sum(ChefETP, na.rm = TRUE),
-#   TotalNbCoexploitants = sum(NbCoexpoitants, na.rm = TRUE),
-#   TotalCoexploitantsETP = sum(CoexpoitantsETP, na.rm = TRUE),
-#   TotalNbMOPermFamETP = sum(NbMOPermFamETP, na.rm = TRUE),
-#   TotalMOPermFamETP = sum(MOPermFamETP, na.rm = TRUE),
-#   TotallMoPermNonFam = sum(NbMoPermNonFam, na.rm = TRUE),
-#   TotalMoPermNonFamETP = sum(MoPermNonFamETP, na.rm = TRUE),
-#   TotalNbMOOccasionnelle = sum(NbMOOccasionnelle, na.rm = TRUE),
-#   TotalNbMOOccasionnelleETP = sum(MOOccasionnelleETP, na.rm = TRUE)
-# )
+
+aVerifier <- TCD11 |> summarize(
+  TotalChefETP = sum(ChefETP, na.rm = TRUE),
+  TotalNbCoexploitants = sum(NbCoexploitants, na.rm = TRUE),
+  TotalCoexploitantsETP = sum(CoexploitantsETP, na.rm = TRUE),
+  TotalNbMOPermFam = sum(NbMOPermFam, na.rm = TRUE),
+  TotalMOPermFamETP = sum(MOPermFamETP, na.rm = TRUE),
+  TotallMoPermNonFam = sum(NbMoPermNonFam, na.rm = TRUE),
+  TotalMoPermNonFamETP = sum(MoPermNonFamETP, na.rm = TRUE),
+  TotalNbMOOccasionnelle = sum(NbMOOccasionnelle, na.rm = TRUE),
+  TotalMOOccasionnelleETP = sum(MOOccasionnelleETP, na.rm = TRUE)
+)
+
+expected_values <- c(
+  TotalChefETP = 2628,
+  TotalNbCoexploitants = 802,
+  TotalCoexploitantsETP = 460,
+  TotalNbMOPermFam = 1753,
+  TotalMOPermFamETP = 1052,
+  TotalNbMoPermNonFam = 935,
+  TotalMoPermNonFamETP = 729,
+  TotalNbMOOccasionnelle = 1998,
+  TotalMOOccasionnelleETP = 182
+)
+
+cols <- c("ChefETP", 
+          "NbCoexploitants", "CoexploitantsETP", 
+          "NbMOPermFam","MOPermFamETP", 
+          "NbMoPermNonFam", "MoPermNonFamETP", 
+          "NbMOOccasionnelle","MOOccasionnelleETP")
+
+test_that("Les valeurs résumées sont correctes", {
+  aVerifier <- TCD11 |> summarize(across(all_of(cols), ~ round(sum(.x, na.rm = TRUE)), .names = "Total{.col}"))
+  
+  for (col in cols) {
+    expect_equal(aVerifier[[paste0("Total", col)]], expected_values[[paste0("Total", col)]])
+  }
+})
