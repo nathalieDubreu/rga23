@@ -278,10 +278,47 @@ TCD10 <- inner_join(
     AccesParcoursTous = ifelse(AccesParcoursPorcins == 1, 1, 0),
     AccesParcoursUneParite = ifelse(AccesParcoursPorcins == 3, 1, 0),
     PasAccesParcous = ifelse(AccesParcoursPorcins == 2, 1, 0),
-    PasAccesBatiment = ifelse(AccesBatimentPorcins == 2, 1,0)
+    PasAccesBatiment = ifelse(AccesBatimentPorcins == 2, 1, 0)
   ) |>
   select(-AccesParcoursPorcins, -AccesBatimentPorcins)
 writeCSV(TCD10)
 
 # TCD 11 : Effectifs et ETP
 source("TCD/ExportsTCD_IleCommune_ETP.R")
+
+# TCD 12 : Matériel de traction et de transport
+
+# Bateau à usage agricole.......................1/1
+# Bétaillère....................................2/2
+# Bulldozer (case)..............................3/3
+# Mini-pelle hydraulique (Pel-Job)..............4/4
+# Motoculteur...................................5/5
+# Quad..........................................6/6
+# Tracteur de moins de 50 CV....................7/7
+# Tracteur de plus de 50 CV et moins de 90 CV...8/8
+# Tracteur de plus de 90 CV.....................9/9
+# Tractopelle (drague)..........................10/10
+# Véhicule de livraison.........................11/11
+# Autre.........................................12/12
+# Aucune de ces propositions....................999/999
+
+TCD12 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_exploitations.csv") |> filter(eligibilite == 1) |> select(interview__key, starts_with("MaterielTransport")) |> select(-MaterielTransport__13),
+  by = "interview__key"
+) |> rename(
+  `Bateau à usage agricole` = MaterielTransport__1,
+  `Bétaillère` = MaterielTransport__2,
+  `Bulldozer (case)` = MaterielTransport__3,
+  `Mini-pelle hydraulique (Pel-Job)` = MaterielTransport__4,
+  `Motoculteur` = MaterielTransport__5,
+  `Quad` = MaterielTransport__6,
+  `Tracteur de moins de 50 CV` = MaterielTransport__7,
+  `Tracteur de plus de 50 CV et moins de 90 CV` = MaterielTransport__8,
+  `Tracteur de plus de 90 CV` = MaterielTransport__9,
+  `Tractopelle (drague)` = MaterielTransport__10,
+  `Véhicule de livraison` = MaterielTransport__11,
+  `Autre` = MaterielTransport__12,
+  `Aucune de ces propositions` = MaterielTransport__999
+)
+writeCSV(TCD12)
