@@ -322,3 +322,53 @@ TCD12 <- inner_join(
   `Aucune de ces propositions` = MaterielTransport__999
 )
 writeCSV(TCD12)
+
+# TCD 13 : Matériel de travail et entretien du sol
+
+# Charrue........................1
+# Matériel à dents...............2
+# Matériel à disques.............3
+# Matériel à lames (rotavator)...4
+# Petit matériel (manuel)........5
+# Autre..........................6
+# Aucune de ces propositions.....999
+
+TCD13 <- inner_join(
+  rga23_champ_Ile_Commune |> filter(Cultivateurs == 1),
+  readCSV("rga23_exploitations.csv") |> select(interview__key, starts_with("MaterielTravailSol")),
+  by = "interview__key"
+) |> rename(
+  `Charrue` = MaterielTravailSol__1,
+  `Matériel à dents` = MaterielTravailSol__2,
+  `Matériel à disques` = MaterielTravailSol__3,
+  `Matériel à lames (rotavator)` = MaterielTravailSol__4,
+  `Petit matériel (manuel)` = MaterielTravailSol__5,
+  `Autre` = MaterielTravailSol__6,
+  `Aucune de ces propositions` = MaterielTravailSol__999
+)
+writeCSV(TCD13)
+
+# TCD 14 : Materiel pour les semis, plantations et entretiens des cultures
+
+# Semoir.....................................1
+# Planteuse..................................2
+# Epandeur d'engrais.........................3
+# Pulvérisateur tracté.......................4
+# Pulvérisateur thermique/électrique porté...5
+# Pulvérisateur manuel (pompe)...............6
+# Aucune de ces propositions.................999
+
+TCD14 <- inner_join(
+  rga23_champ_Ile_Commune |> filter(Cultivateurs == 1),
+  readCSV("rga23_exploitations.csv") |> select(interview__key, starts_with("MatSemisPlant_")),
+  by = "interview__key"
+) |> rename(
+  `Semoir` = MatSemisPlant__1,
+  `Planteuse` = MatSemisPlant__2,
+  `Epandeur d'engrais` = MatSemisPlant__3,
+  `Pulvérisateur tracté` = MatSemisPlant__4,
+  `Pulvérisateur thermique/électrique porté` = MatSemisPlant__5,
+  `Pulvérisateur manuel (pompe)` = MatSemisPlant__6,
+  `Aucune de ces propositions` = MatSemisPlant__999
+)
+writeCSV(TCD14)
