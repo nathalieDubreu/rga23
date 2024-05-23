@@ -2,6 +2,10 @@
 
 ## Analyse
 - `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
+- Listings des différentes demandes ponctuelles
+
+## TCD
+- `ExportsTCD_IleCommune.R` : Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques par Archipel, Commune et Ile
 
 ## Analyse supplémentaire : TAPE
 - `tape.R`
