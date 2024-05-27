@@ -372,3 +372,57 @@ TCD14 <- inner_join(
   `Aucune de ces propositions` = MatSemisPlant__999
 )
 writeCSV(TCD14)
+
+# TCD 15 : Materiel pour l'épandage et l'enfouissement des déjections animales
+
+# Buse palette ou rampe d'épandage (cuve à lisier)....1
+# Enfouisseur / injecteur à dents (en surface)........2
+# Enfouisseur / injecteur à disques (en profondeur)...3
+# Epandage manuel.....................................4
+# Epandeur à fumier...................................5
+# Pendillard avec sabots traîné.......................6
+# Pendillard avec tuyaux traînés......................7
+# Autre...............................................8
+
+TCD15 <- inner_join(
+  rga23_champ_Ile_Commune |> filter(Cultivateurs == 1),
+  readCSV("rga23_exploitations.csv") |> select(interview__key, starts_with("MaterielEpandage")) |> filter(!is.na(MaterielEpandage__1)),
+  by = "interview__key"
+) |> rename(
+  `Buse palette ou rampe d'épandage (cuve à lisier)` = MaterielEpandage__1,
+  `Enfouisseur / injecteur à dents (en surface)` = MaterielEpandage__2,
+  `Enfouisseur / injecteur à disques (en profondeur)` = MaterielEpandage__3,
+  `Epandage manuel` = MaterielEpandage__4,
+  `Epandeur à fumier` = MaterielEpandage__5,
+  `Pendillard avec sabots traînés` = MaterielEpandage__6,
+  `Pendillard avec tuyaux traînés` = MaterielEpandage__7,
+  `Autre` = MaterielEpandage__8
+)
+writeCSV(TCD15)
+
+# TCD 16 : Materiel de traitement de la récolte 
+
+# Calibreuse........................................1/1
+# Laveuse de légumes................................2/2
+# Eplucheuse........................................3/3
+# Séchoir solaire...................................4/4
+# Séchoir thermique.................................5/5
+# Installation de stockage au froid.................6/6
+# Installation de stockage à température ambiante...7/7
+# Aucune de ces propositions........................999/999
+
+TCD16 <- inner_join(
+  rga23_champ_Ile_Commune |> filter(Cultivateurs == 1),
+  readCSV("rga23_exploitations.csv") |> select(interview__key, starts_with("MaterielTraitRecolte")) |> filter(!is.na(MaterielTraitRecolte__1)),
+  by = "interview__key"
+) |> rename(
+  `Calibreuse` = MaterielTraitRecolte__1,
+  `Laveuse de légumes` = MaterielTraitRecolte__2,
+  `Eplucheuse` = MaterielTraitRecolte__3,
+  `Séchoir solaire` = MaterielTraitRecolte__4,
+  `Séchoir thermique` = MaterielTraitRecolte__5,
+  `Installation de stockage au froid` = MaterielTraitRecolte__6,
+  `Installation de stockage à température ambiante` = MaterielTraitRecolte__7,
+  `Aucune de ces propositions` = MaterielTraitRecolte__999
+)
+writeCSV(TCD16)
