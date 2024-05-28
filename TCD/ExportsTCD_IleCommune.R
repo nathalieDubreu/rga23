@@ -127,7 +127,7 @@ TCD6 <- inner_join(
     NombreOvins = replace_na(nbTotalOvins, 0),
     NombrePorcins = replace_na(nbTotalPorcs, 0),
     NombreVolailles = rowSums(across(
-      c("NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+      c("NbAutresVolailles", "NbDindesDindons", "NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
       ~ (coalesce(., 0))
     )),
     NombrePoulesPondeuses = rowSums(across(
