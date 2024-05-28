@@ -12,6 +12,7 @@ eleveurs <- rga23_prodAnimales |>
     EleveursRuches = sum(PresenceAnimaux__7, na.rm = TRUE),
     EleveursCaprins = sum(PresenceAnimaux__8, na.rm = TRUE)
   ) |>
+  
   pivot_longer(cols = starts_with("Eleveurs"), names_to = "Animaux", values_to = "Nombre d'éleveurs") |>
   mutate(Animaux = gsub("^Eleveurs", "", Animaux))
 
@@ -21,7 +22,7 @@ nombreAnimaux <- rga23_prodAnimales |>
     NombreOvins = sum(nbTotalOvins, na.rm = TRUE),
     NombrePorcins = sum(nbTotalPorcs, na.rm = TRUE),
     NombreVolailles = sum(across(
-      c("NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+      c("NbAutresVolailles", "NbDindesDindons", "NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
       ~ sum(coalesce(.x, 0))
     )),
     NombrePoulesPondeuses = sum(across(
