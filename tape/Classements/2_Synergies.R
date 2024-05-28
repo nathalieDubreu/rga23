@@ -24,7 +24,7 @@ rga23_prodAnimales_NbEtPoids <- rga23_prodAnimales_alimentation |>
       TRUE ~ 0
     ),
     nbAnimauxBasseCour = rowSums(across(
-      c("NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
+      c("NbAutresVolailles", "NbDindesDindons", "NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
       ~ coalesce(., 0)
     )),
     nbPoulesPondeuses = rowSums(across(
