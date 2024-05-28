@@ -163,7 +163,7 @@ inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__ke
 inner_join(readCSV("rga23_prodAnimales.csv"), rga23_champ, by = c("interview__key")) |>
   filter(PresenceAnimaux__4 == 1) |>
   mutate(NombreVolailles = rowSums(across(
-    c("NbOies", "NbCanards", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+    c("NbAutresVolailles", "NbDindesDindons", "NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
     ~ coalesce(.x, 0)
   ))) |>
   summarize(
