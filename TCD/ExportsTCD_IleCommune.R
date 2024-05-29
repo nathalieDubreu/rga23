@@ -435,7 +435,28 @@ writeCSV(TCD16)
 
 TCD17 <- inner_join(
   rga23_champ_Ile_Commune,
-  readCSV("rga23_exploitations.csv") |> filter(eligibilite == 1) |> select(interview__key, UtilisationPhytosanit, TypePhytosanit__1, TypePhytosanit__2, NbCultEspPhytoChim),
+  readCSV("rga23_exploitations.csv") |>
+    filter(eligibilite == 1) |>
+    mutate(
+      NbCultEspPhytoChim = case_when(
+        NbCultEspPhytoChim == 1 ~ "Toutes vos cultures/espèces",
+        NbCultEspPhytoChim == 2 ~ "Une partie de vos cultures/espèces",
+        NbCultEspPhytoChim == 3 ~ "Une seule culture/espèce"
+      ),
+      UtilisationPhytosanit = case_when(
+        UtilisationPhytosanit == 1 ~ "Oui",
+        UtilisationPhytosanit == 2 ~ "Non"
+      ),
+      FormationPhytosanit = case_when(
+        FormationPhytosanit == 1 ~ "Oui",
+        FormationPhytosanit == 2 ~ "Non"
+      )
+    ) |>
+    rename(
+      `Produits Synthétiques (chimique)` = TypePhytosanit__1,
+      `Produits Biologiques` = TypePhytosanit__2
+    ) |>
+    select(interview__key, UtilisationPhytosanit, `Produits Synthétiques (chimique)`, `Produits Biologiques`, NbCultEspPhytoChim, FormationPhytosanit),
   by = "interview__key"
-) 
+)
 writeCSV(TCD17)
