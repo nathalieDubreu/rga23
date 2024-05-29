@@ -426,3 +426,16 @@ TCD16 <- inner_join(
   `Aucune de ces propositions` = MaterielTraitRecolte__999
 )
 writeCSV(TCD16)
+
+# TCD 17 : Utilisation de produits phytosanitaires 
+
+## Utilisez-vous des médicaments pour vos animaux ou au moins l'un des produits phytosanitaires suivants ? UtilisationPhytosanit
+## De quel(s) type(s) sont les produits phytosanitaires que vous utilisez ? TypePhytosanit__
+## Sur quelles espèces/cultures utilisez-vous ces médicaments ou produits phytosanitaires chimiques ? NbCultEspPhytoChim
+
+TCD17 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_exploitations.csv") |> filter(eligibilite == 1) |> select(interview__key, UtilisationPhytosanit, TypePhytosanit__1, TypePhytosanit__2, NbCultEspPhytoChim),
+  by = "interview__key"
+) 
+writeCSV(TCD17)
