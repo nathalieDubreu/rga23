@@ -400,7 +400,7 @@ TCD15 <- inner_join(
 )
 writeCSV(TCD15)
 
-# TCD 16 : Materiel de traitement de la récolte 
+# TCD 16 : Materiel de traitement de la récolte
 
 # Calibreuse........................................1/1
 # Laveuse de légumes................................2/2
@@ -427,7 +427,7 @@ TCD16 <- inner_join(
 )
 writeCSV(TCD16)
 
-# TCD 17 : Utilisation de produits phytosanitaires 
+# TCD 17 : Utilisation de produits phytosanitaires
 
 ## Utilisez-vous des médicaments pour vos animaux ou au moins l'un des produits phytosanitaires suivants ? UtilisationPhytosanit
 ## De quel(s) type(s) sont les produits phytosanitaires que vous utilisez ? TypePhytosanit__
@@ -438,25 +438,28 @@ TCD17 <- inner_join(
   readCSV("rga23_exploitations.csv") |>
     filter(eligibilite == 1) |>
     mutate(
-      NbCultEspPhytoChim = case_when(
-        NbCultEspPhytoChim == 1 ~ "Toutes vos cultures/espèces",
-        NbCultEspPhytoChim == 2 ~ "Une partie de vos cultures/espèces",
-        NbCultEspPhytoChim == 3 ~ "Une seule culture/espèce"
-      ),
+      `Toutes les Cultures et Especes` = ifelse(NbCultEspPhytoChim == 1, 1, 0),
+      `Une Partie des Cultures et Especes` = ifelse(NbCultEspPhytoChim == 2, 1, 0),
+      `Une Seule Culture Espece` = ifelse(NbCultEspPhytoChim == 3, 1, 0),
       UtilisationPhytosanit = case_when(
-        UtilisationPhytosanit == 1 ~ "Oui",
-        UtilisationPhytosanit == 2 ~ "Non"
+        UtilisationPhytosanit == 1 ~ 1,
+        UtilisationPhytosanit == 2 ~ 0
       ),
       FormationPhytosanit = case_when(
-        FormationPhytosanit == 1 ~ "Oui",
-        FormationPhytosanit == 2 ~ "Non"
+        FormationPhytosanit == 1 ~ 1,
+        FormationPhytosanit == 2 ~ 0
       )
     ) |>
     rename(
       `Produits Synthétiques (chimique)` = TypePhytosanit__1,
       `Produits Biologiques` = TypePhytosanit__2
     ) |>
-    select(interview__key, UtilisationPhytosanit, `Produits Synthétiques (chimique)`, `Produits Biologiques`, NbCultEspPhytoChim, FormationPhytosanit),
+    select(
+      interview__key, UtilisationPhytosanit,
+      `Produits Synthétiques (chimique)`, `Produits Biologiques`,
+      `Toutes les Cultures et Especes`, `Une Partie des Cultures et Especes`, `Une Seule Culture Espece`,
+      FormationPhytosanit
+    ),
   by = "interview__key"
 )
 writeCSV(TCD17)
