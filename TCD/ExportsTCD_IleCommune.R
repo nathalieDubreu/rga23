@@ -463,3 +463,40 @@ TCD17 <- inner_join(
   by = "interview__key"
 )
 writeCSV(TCD17)
+
+## TCD18 : Formation
+
+TCD18 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_mainOeuvre.csv") |> select(-Ile, -Commune),
+  by = "interview__key"
+) |>
+  mutate(
+    `FNA - 1 : Aucune` = ifelse(FormNAChefExpl == 1, 1, 0),
+    `FNA - 2 : Primaire` = ifelse(FormNAChefExpl == 2, 1, 0),
+    `FNA - 3 : Secondaire court` = ifelse(FormNAChefExpl == 3, 1, 0),
+    `FNA - 4 : Secondaire long` = ifelse(FormNAChefExpl == 4, 1, 0),
+    `FNA - 5 : Supérieure` = ifelse(FormNAChefExpl == 5, 1, 0),
+    `FNA - Non réponse` = ifelse(is.na(FormNAChefExpl), 1, 0),
+    `FA - 1 : Aucune / Formation sur le tas` = ifelse(FormAgriChefExpl == 1, 1, 0),
+    `FA - 2 : MFR, CJA sans obtention de diplôme` = ifelse(FormAgriChefExpl == 2, 1, 0),
+    `FA - 3 : Secondaire courte (CAPA, BEPA)` = ifelse(FormAgriChefExpl == 3, 1, 0),
+    `FA - 4 : Secondaire longue (BTA, Bac agricole)` = ifelse(FormAgriChefExpl == 4, 1, 0),
+    `FA - 5 : Supérieure courte (BTSA)` = ifelse(FormAgriChefExpl == 5, 1, 0),
+    `FA - 6 : Supérieure longue (ingénieur)` = ifelse(FormAgriChefExpl == 6, 1, 0),
+    `FA - Non réponse` = ifelse(is.na(FormAgriChefExpl), 1, 0),
+    FormationContinue = case_when(
+      FormationContinue == 1 ~ 1,
+      FormationContinue == 2 ~ 0
+    )
+  ) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    starts_with("FNA - "),
+    starts_with("FA - "),
+    FormationContinue
+  )
+writeCSV(TCD18)

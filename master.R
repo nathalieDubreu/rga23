@@ -12,6 +12,7 @@ source("analyse/2024-04-25_DemandeISPF_PoulesPondeusesPouletsChair.R")
 source("analyse/2024-04-29_BSE_ComparaisonDonneesMaraichage.R")
 source("analyse/2024-05-13_BSE_TransformationProduitsCoco.R")
 source("analyse/2024-05-14_Ministere_ProportionSurfacesDispoCannabis.R")
+source("analyse/2024-05-30_DemandeISPF_CTC_Vanille.R")
 
 # TCD (à lancer dans l'ordre)
 source("TCD/ExportsTCD_IleCommune.R")
