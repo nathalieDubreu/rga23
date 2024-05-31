@@ -77,7 +77,7 @@ writeCSV(vanille)
 
 ## Non pris en compte
 
-vanilleJardinsOceaniens <- inner_join(rga23_champ_Ile_Commune,
+vanilleJardinsOceaniens <- inner_join(rga23_champ,
   readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceJardins, starts_with("CultPrincipJardins")),
   by = "interview__key"
 ) |> filter(CultPrincipJardins__0 == 509 |
@@ -90,3 +90,101 @@ vanilleJardinsOceaniens <- inner_join(rga23_champ_Ile_Commune,
   CultPrincipJardins__3 == 510 |
   CultPrincipJardins__4 == 509 |
   CultPrincipJardins__4 == 510)
+
+## Pluriactivité ?
+
+
+rga23_champ <- left_join(readCSV("rga23_general.csv") |> filter(indicRGA23 == 1),
+  readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite),
+  by = "interview__key"
+) |>
+  left_join(
+    readCSV("rga23_coprahculteurs.csv") |> select(interview__key, eligibiliteCoprah),
+    by = "interview__key"
+  ) |>
+  mutate(
+    Cultivateurs = ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1, 1, 0),
+    Eleveurs = ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1, 1, 0),
+    ProducteursCoprah = ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1, 1, 0)
+  ) |>
+  select(-starts_with("indic"), -starts_with("eligibilite"), -statut_collecte, -starts_with("RaisonsRecensement"), -PointsCAPL, -ActiviteEnquete)
+
+
+plantes_1_8 <- paste0("TypePlantes__50", 1:8)
+typeCultures <- paste0("CulturesPresentes__", 1:8, "0")
+
+pluriactivite <- inner_join(rga23_champ, vanille |>
+  select(
+    -`Temps de travail du chef d'exploitation`,
+    -`Formation générale non agricole du chef d'exploitation`,
+    -`Formation générale agricole du chef d'exploitation`,
+    -FormationContinue,
+    -starts_with("Surface"),
+    -starts_with("Cultivateur")
+  ),
+by = c("interview__key", "Archipel_1")
+) |>
+  left_join(readCSV("rga23_prodVegetales.csv") |>
+    mutate(
+      autresPPAM = rowSums(across(
+        all_of(plantes_1_8),
+        ~ coalesce(., 0)
+      )) + TypePlantes__511,
+      autresTypesCultures = rowSums(across(
+        all_of(typeCultures),
+        ~ coalesce(., 0)
+      )) - CulturesPresentes__50 + ModesProduction__4
+    ) |>
+    select(interview__key, autresTypesCultures, autresPPAM), by = "interview__key") |>
+  mutate(Activite = case_when(
+    autresPPAM == 0 & autresTypesCultures == 0 & Eleveurs == 0 & ProducteursCoprah == 0 ~ "Uniquement de la culture de vanille",
+    (autresPPAM > 0 | autresTypesCultures > 0) & Eleveurs == 0 & ProducteursCoprah == 0 ~ "Vanille + Autre(s) type(s) de cultures",
+    autresPPAM == 0 & autresTypesCultures == 0 & Eleveurs == 1 & ProducteursCoprah == 0 ~ "Vanille + Elevage",
+    autresPPAM == 0 & autresTypesCultures == 0 & Eleveurs == 0 & ProducteursCoprah == 1 ~ "Vanille + Coprah",
+    autresPPAM == 0 & autresTypesCultures == 0 & Eleveurs == 1 & ProducteursCoprah == 1 ~ "Vanille + Elevage + Coprah",
+    (autresPPAM > 0 | autresTypesCultures > 0) & Eleveurs == 1 & ProducteursCoprah == 0 ~ "Vanille + Autre(s) type(s) de cultures + Elevage",
+    (autresPPAM > 0 | autresTypesCultures > 0) & Eleveurs == 0 & ProducteursCoprah == 1 ~ "Vanille + Autre(s) type(s) de cultures + Coprah",
+    (autresPPAM > 0 | autresTypesCultures > 0) & Eleveurs == 1 & ProducteursCoprah == 1 ~ "Vanille + Autre(s) type(s) de cultures + Elevage + Coprah",
+    TRUE ~ "A classer"
+  ))
+
+pluriactivite |>
+  group_by(Activite) |>
+  count()
+
+libelles <- c(
+  "Travail sur l'exploitation",
+  "Exploitant agricole (dans une autre exploitation)",
+  "Activité salariée",
+  "Commerçant, profession libérale",
+  "Pêche",
+  "Perliculture ou activité liée à la perle",
+  "Agro-tourisme",
+  "Artisan",
+  "Producteur de coprah / noix de coco",
+  "Retraité",
+  "Sans activité",
+  "Autre"
+)
+libellesOrdonnes <- factor(libelles, levels = libelles, ordered = TRUE)
+
+rga23_mainOeuvre <- inner_join(vanille |> select(interview__key) |> mutate(ProducteurVanille = "1"), readCSV("rga23_mainOeuvre.csv"))
+
+activitePrincipale <- rga23_mainOeuvre |>
+  mutate(ActivitePrincipaleChef = libellesOrdonnes[ActivitePrincipaleChef]) |>
+  group_by(ActivitePrincipaleChef) |>
+  count()
+
+variablesActivites <- paste0("ActivitesChefExploit__", 1:12)
+
+autresActivitesDeclarees <- rga23_mainOeuvre |>
+  mutate(nombreAutresActivitesDeclarees = rowSums(across(
+    all_of(variablesActivites),
+    ~ coalesce(., 0)
+  )) - ActivitesChefExploit__1) |>
+  filter(nombreAutresActivitesDeclarees > 0) |>
+  count()
+
+totals <- colSums(rga23_mainOeuvre[variablesActivites], na.rm = TRUE)
+activitesDeclarees <- data.frame(Variable = libelles, Total = totals)
+
