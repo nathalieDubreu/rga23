@@ -500,3 +500,96 @@ TCD18 <- inner_join(
     FormationContinue
   )
 writeCSV(TCD18)
+
+## TCD18 : Formation
+
+TCD18 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_mainOeuvre.csv") |> select(-Ile, -Commune),
+  by = "interview__key"
+) |>
+  mutate(
+    `FNA - 1 : Aucune` = ifelse(FormNAChefExpl == 1, 1, 0),
+    `FNA - 2 : Primaire` = ifelse(FormNAChefExpl == 2, 1, 0),
+    `FNA - 3 : Secondaire court` = ifelse(FormNAChefExpl == 3, 1, 0),
+    `FNA - 4 : Secondaire long` = ifelse(FormNAChefExpl == 4, 1, 0),
+    `FNA - 5 : Supérieure` = ifelse(FormNAChefExpl == 5, 1, 0),
+    `FNA - Non réponse` = ifelse(is.na(FormNAChefExpl), 1, 0),
+    `FA - 1 : Aucune / Formation sur le tas` = ifelse(FormAgriChefExpl == 1, 1, 0),
+    `FA - 2 : MFR, CJA sans obtention de diplôme` = ifelse(FormAgriChefExpl == 2, 1, 0),
+    `FA - 3 : Secondaire courte (CAPA, BEPA)` = ifelse(FormAgriChefExpl == 3, 1, 0),
+    `FA - 4 : Secondaire longue (BTA, Bac agricole)` = ifelse(FormAgriChefExpl == 4, 1, 0),
+    `FA - 5 : Supérieure courte (BTSA)` = ifelse(FormAgriChefExpl == 5, 1, 0),
+    `FA - 6 : Supérieure longue (ingénieur)` = ifelse(FormAgriChefExpl == 6, 1, 0),
+    `FA - Non réponse` = ifelse(is.na(FormAgriChefExpl), 1, 0),
+    FormationContinue = case_when(
+      FormationContinue == 1 ~ 1,
+      FormationContinue == 2 ~ 0
+    )
+  ) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    starts_with("FNA - "),
+    starts_with("FA - "),
+    FormationContinue
+  )
+writeCSV(TCD18)
+
+## TCD19 : Temps de travail Chef exploitation
+
+TCD19 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_mainOeuvre.csv") |> select(-Ile, -Commune),
+  by = "interview__key"
+) |>
+  mutate(
+    `1 : Moins de 1/2 temps` = ifelse(TpsTravailChefExpl == 1, 1, 0),
+    `2 : 1/2 temps` = ifelse(TpsTravailChefExpl == 2, 1, 0),
+    `3 : Entre 1/2 temps et temps complet` = ifelse(TpsTravailChefExpl == 3, 1, 0),
+    `4 : Temps complet` = ifelse(TpsTravailChefExpl == 4, 1, 0),
+    `Non réponse` = ifelse(is.na(TpsTravailChefExpl), 1, 0)
+  ) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    `1 : Moins de 1/2 temps`,
+    `2 : 1/2 temps`,
+    `3 : Entre 1/2 temps et temps complet`,
+    `4 : Temps complet`,
+    `Non réponse`
+  )
+writeCSV(TCD19)
+
+# TCD 20 : Surfaces végétales classiques (hors pâturages et hors cocoteraies) par mode de production
+TCD20 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_surfacesCultures.csv") |>
+    filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
+    left_join(readInputCSV("cultures.csv"),
+      by = "culture_id"
+    ) |>
+    mutate(ModeProduction = case_when(
+      grepl("Plein air ou abri bas", libelleCulture, ignore.case = TRUE) ~ "Plein air ou abri bas",
+      grepl("Serre ou abri haut pleine terre", libelleCulture, ignore.case = TRUE) ~ "Serre ou abri haut pleine terre",
+      grepl("Serre ou abri haut hors sol", libelleCulture, ignore.case = TRUE) ~ "Serre ou abri haut hors sol",
+      grepl("Serre ou abri haut", libelleCulture, ignore.case = TRUE) ~ "Serre ou abri haut",
+      grepl("Plein air hors sol", libelleCulture, ignore.case = TRUE) ~ "Plein air hors sol",
+      grepl("Plein champ", libelleCulture, ignore.case = TRUE) ~ "Plein champ",
+      grepl("Sous ombrière", libelleCulture, ignore.case = TRUE) ~ "Sous ombrière",
+      grepl("Sous serre", libelleCulture, ignore.case = TRUE) ~ "Sous serre",
+      grepl("ombrage naturel", libelleCulture, ignore.case = TRUE) ~ "Ombrage naturel",
+      grepl("serre ou ombrière", libelleCulture, ignore.case = TRUE) ~ "Serre ou ombrière",
+      grepl("Plein air", libelleCulture, ignore.case = TRUE) ~ "Plein air",
+      TRUE ~ "Non précisé"
+    )) |>
+    group_by(interview__key, ModeProduction) |>
+    summarize(SurfacesModeProduction = sum(ifelse(is.na(SurfaceCult), 0, SurfaceCult))) |>
+    spread(key = ModeProduction, value = SurfacesModeProduction, fill = 0),
+  by = "interview__key"
+)
+writeCSV(TCD20)
