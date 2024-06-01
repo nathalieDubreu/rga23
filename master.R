@@ -16,7 +16,7 @@ source("analyse/2024-05-30_DemandeISPF_CTC_Vanille.R")
 
 # TCD (à lancer dans l'ordre)
 source("TCD/ExportsTCD_IleCommune.R")
-source("TCD/ExportsTCD_TypeExploitations.R")
+source("TCD/ExportsTCD_CategoriesSurfacesVegetales.R")
 
 # Tape
 source("tape/tape.R")

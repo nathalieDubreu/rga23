@@ -211,8 +211,10 @@ TCD8 <- inner_join(
 ) |>
   filter(PresenceAnimaux__4 == 1 & (TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1)) |>
   mutate(
+    EleveursPoulesEnCage = ifelse(replace_na(NombrePoules3, 0) > 0, 1, 0),
     PoulesEnCage = replace_na(NombrePoules3, 0),
     NbOeufsPoulesEnCage = replace_na(ProductionPoules3, 0),
+    EleveursAutresPoules = ifelse(replace_na(NombrePoules0, 0) > 0 | replace_na(NombrePoules1, 0) > 0, 1, 0),
     AutresPoules = replace_na(NombrePoules0, 0) + replace_na(NombrePoules1, 0),
     NbOeufsAutresPoules = replace_na(ProductionPoules0, 0) + replace_na(ProductionPoules1, 0)
   ) |>
@@ -221,8 +223,10 @@ TCD8 <- inner_join(
     Archipel_1,
     Ile,
     Commune,
+    EleveursPoulesEnCage,
     PoulesEnCage,
     NbOeufsPoulesEnCage,
+    EleveursAutresPoules,
     AutresPoules,
     NbOeufsAutresPoules
   )
