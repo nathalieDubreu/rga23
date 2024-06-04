@@ -597,3 +597,84 @@ TCD20 <- inner_join(
   by = "interview__key"
 )
 writeCSV(TCD20)
+
+# TCD 21 : Utilisation des engrais
+
+## UtilisationEngrais
+## TypeEngrais
+### Engrais (ou amendements) de synthèse............1
+### Engrais (ou amendements) organiques.............2
+### Engrais (ou amendements) minéraux biologiques...3
+
+TCD21 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_exploitations.csv") |>
+    filter(eligibilite == 1 & !is.na(UtilisationEngrais)) |>
+    mutate(
+      UtilisationEngrais = case_when(
+        UtilisationEngrais == 1 ~ 1,
+        UtilisationEngrais == 2 ~ 0
+      )
+    ) |>
+    rename(
+      `Engrais (ou amendements) de synthèse` = TypeEngrais__1,
+      `Engrais (ou amendements) organiques` = TypeEngrais__2,
+      `Engrais (ou amendements) minéraux biologiques` = TypeEngrais__3
+    ) |>
+    select(
+      interview__key, UtilisationEngrais, starts_with("Engrais (ou amendements)")
+    ),
+  by = "interview__key"
+)
+writeCSV(TCD21)
+
+# TCD 22 : Engrais/amendements organiques
+
+# Lisier..................1
+# Fumier..................2
+# Fientes fraiches........3
+# Fientes séchées.........7
+# Engrais de poisson......4
+# Compost et co-compost...5
+# Autres..................6
+
+TCD22 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_engraisOrganiques.csv") |>
+    mutate(
+      NomEngraisOrganique = case_when(
+        engraisOrga_id == 1 ~ "Lisier",
+        engraisOrga_id == 2 ~ "Fumier",
+        engraisOrga_id == 3 ~ "Fientes fraiches",
+        engraisOrga_id == 7 ~ "Fientes séchées",
+        engraisOrga_id == 4 ~ "Engrais de poisson",
+        engraisOrga_id == 5 ~ "Compost et co-compost",
+        engraisOrga_id == 6 ~ "Autres",
+        TRUE ~ NA_character_
+      ),
+      VenteEngraisOrga = case_when(
+        VenteEngraisOrga == 1 ~ 1,
+        VenteEngraisOrga == 2 ~ 0
+      ),
+      DonEngraisOrga = case_when(
+        DonEngraisOrga == 1 ~ 1,
+        DonEngraisOrga == 2 ~ 0
+      ),
+      EpandageEngraisOrga = case_when(
+        EpandageEngraisOrga == 1 ~ 1,
+        EpandageEngraisOrga == 2 ~ 0
+      ),
+      EnfouissEngraisOrga = case_when(
+        EnfouissEngraisOrga == 1 ~ 1,
+        EnfouissEngraisOrga == 2 ~ 0
+      )
+    ) |>
+    rename(
+      `En provenance de l'exploitation` = OrigineEngraisOrga__1,
+      `En provenance d'une autre exploitation ou d'un producteur de l'île` = OrigineEngraisOrga__2,
+      `Importé depuis la Polynésie` = OrigineEngraisOrga__3,
+      `Importé hors Polynésie` = OrigineEngraisOrga__4
+    ),
+  by = "interview__key"
+)
+writeCSV(TCD22)
