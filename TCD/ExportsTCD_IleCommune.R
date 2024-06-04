@@ -678,3 +678,55 @@ TCD22 <- inner_join(
   by = "interview__key"
 )
 writeCSV(TCD22)
+
+# TCD 23 : Transformation de produits agricoles
+
+# Transformation d’oléagineux (huiles de consommation ou pour combustible…).......................1/1
+# Production d’huiles essentielles et hydrolats...................................................2/2
+# Epluchage, découpe, conditionnement, 4ème gamme, ...............................................3/3
+# Transformation de légumes (soupe, conserves…)...................................................4/4
+# Transformation de racines ou tubercules (farine de manioc, kwak...).............................5/5
+# Production issue de canne à sucre (jus de canne, rhum...).......................................6/6
+# Transformation de vanille.......................................................................7/7
+# Transformation de produits du cocotier (coprah, niau, lait de coco, …)..........................8/8
+# Transformation de fruits (confitures, sirops, liqueurs, jus de fruits…).........................9/9
+# Transformation de lait (beurre, yaourts, fromages, crème...)....................................10/10
+# Abattage à la ferme.............................................................................11/11
+# Transformation de viandes (pâtés, salaisons, conserves…)........................................12/12
+# Découpe de viandes, caissettes….................................................................13/13
+# Production de produits à base de miel...........................................................14/14
+# Transformation d’autres produits agricoles (hors aliments pour les animaux de l’exploitation)...15/15
+# Préparation de plats cuisinés...................................................................16/16
+# Aucune transformation réalisée sur l'exploitation...............................................17/17
+
+TCD23 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_mainOeuvre.csv") |>
+    select(interview__key, starts_with("TransformationPA")) |>
+    mutate(`Au moins une transformation` = case_when(
+      TransformationPA__17 == 0 ~ 1,
+      TRUE ~ 0
+    )) |>
+    rename(
+      "Transformation d’oléagineux (huiles de consommation ou pour combustible…)" = TransformationPA__1,
+      "Production d’huiles essentielles et hydrolats" = TransformationPA__2,
+      "Epluchage, découpe, conditionnement, 4ème gamme" = TransformationPA__3,
+      "Transformation de légumes (soupe, conserves…)" = TransformationPA__4,
+      "Transformation de racines ou tubercules (farine de manioc, kwak...)" = TransformationPA__5,
+      "Production issue de canne à sucre (jus de canne, rhum...)" = TransformationPA__6,
+      "Transformation de vanille" = TransformationPA__7,
+      "Transformation de produits du cocotier (coprah, niau, lait de coco, …)" = TransformationPA__8,
+      "Transformation de fruits (confitures, sirops, liqueurs, jus de fruits…)" = TransformationPA__9,
+      "Transformation de lait (beurre, yaourts, fromages, crème...)" = TransformationPA__10,
+      "Abattage à la ferme" = TransformationPA__11,
+      "Transformation de viandes (pâtés, salaisons, conserves…)" = TransformationPA__12,
+      "Découpe de viandes, caissettes…" = TransformationPA__13,
+      "Production de produits à base de miel" = TransformationPA__14,
+      "Transformation d’autres produits agricoles (hors aliments pour les animaux de l’exploitation)" = TransformationPA__15,
+      "Préparation de plats cuisinés" = TransformationPA__16,
+      "Aucune transformation réalisée sur l'exploitation" = TransformationPA__17
+    ) |>
+    select(-starts_with("TransformationPA")),
+  by = "interview__key"
+)
+writeCSV(TCD23)
