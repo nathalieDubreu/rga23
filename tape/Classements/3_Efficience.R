@@ -171,27 +171,36 @@ score_2_Engrais <- left_join(rga23_exploitations,
   ) |>
   mutate(
     nombrePratiques =
-      replace_na(SurfaceJardins, 0) +
-        replace_na(SurfaceAgroF, 0) +
+      ifelse(!is.na(SurfaceJardins) & SurfaceJardins > 0, 1, 0) +
+        ifelse(!is.na(SurfaceAgroF) & SurfaceAgroF > 0, 1, 0) +
         replace_na(PratiquesCulturales__1, 0) +
         replace_na(PratiquesCulturales__2, 0) +
         replace_na(PratiquesCulturales__6, 0) +
         replace_na(PratiquesCulturales__7, 0),
     score = case_when(
-      ## 0 - Pas d'engrais organiques ni minéraux biologiques ET aucune des pratiques considérées
+      ## 0 - Engrais de synthèse mais Pas d'engrais organiques ni minéraux biologiques ET aucune des pratiques considérées
       (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & nombrePratiques == 0 ~ 0,
-      ## 1 - Pas d'engrais organiques ni minéraux biologiques ET au moins une des pratiques considérées
-      (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & nombrePratiques >= 1 ~ 1,
-      ## 3 - Engrais de synthèse + engrais minéraux bio et/ou engrais organiques et au moins deux pratiques considérées ou produits phyto sur 0 ou une seule espèce/culture
-      TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & (nombrePratiques >= 2 | NbCultEspPhytoChim == 3 | is.na(NbCultEspPhytoChim)) ~ 3,
-      ## 2 - Engrais de synthèse  + engrais minéraux bio et/ou engrais organiques + produits phyto sur une partie des cultures et espèces
-      TypeEngrais__1 == 1 & NbCultEspPhytoChim == 2 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) ~ 2,
+      ## 1 - Engrais de synthèse mais Pas d'engrais organiques ni minéraux biologiques ET EXACTEMENT une des pratiques considérées
+      (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & nombrePratiques == 1 ~ 1,
+      ## 2 - Engrais de synthèse mais Pas d'engrais organiques ni minéraux biologiques ET au moins 2 pratiques considérées
+      (is.na(UtilisationEngrais) | UtilisationEngrais == 2 | (TypeEngrais__1 == 1 & TypeEngrais__2 == 0 & TypeEngrais__3 == 0)) & nombrePratiques >= 2 ~ 2,
+      
       ## 1 - Engrais de synthèse + engrais minéraux bio et/ou engrais organiques + produits phyto sur toutes les cultures et espèces
-      TypeEngrais__1 == 1 & NbCultEspPhytoChim == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) ~ 1,
-      ## 3 - Aucun engrais de synthèse mais minéraux et/ou organiques et pas de pratiques
-      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) & nombrePratiques == 0 ~ 3,
-      ## 4 - Aucun engrais de synthèse mais minéraux et/ou organiques et au moins une pratique
-      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) & nombrePratiques >= 1 ~ 4,
+      TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & NbCultEspPhytoChim == 1 ~ 1,
+      ## 2 - Engrais de synthèse  + engrais minéraux bio et/ou engrais organiques + produits phyto sur une seule ou une partie des cultures et espèces
+      TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & (NbCultEspPhytoChim == 2 | NbCultEspPhytoChim == 3) ~ 2,
+      ## 2 - Engrais de synthèse  + engrais minéraux bio et/ou engrais organiques + pas de produits phyto mais 0 pratique
+      TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & nombrePratiques == 0 & is.na(NbCultEspPhytoChim) ~ 2,
+      ## 3 - Engrais de synthèse + engrais minéraux bio et/ou engrais organiques et au moins 1 pratique et pas de produits phyto
+      TypeEngrais__1 == 1 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1) & nombrePratiques >= 1 & is.na(NbCultEspPhytoChim) ~ 3,
+
+      ## 2 - Aucun engrais de synthèse mais minéraux et/ou organiques et AUCUNE pratique    
+      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) & nombrePratiques == 0 ~ 2,     
+      ## 3 - Aucun engrais de synthèse mais minéraux et/ou organiques et exactement une pratique
+      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) & nombrePratiques == 1 ~ 3,
+      ## 4 - Aucun engrais de synthèse mais minéraux et/ou organiques et au moins 2 pratiques
+      (TypeEngrais__1 == 0 & (TypeEngrais__2 == 1 | TypeEngrais__3 == 1)) & nombrePratiques >= 2 ~ 4,
+      
       TRUE ~ 55
     )
   )
