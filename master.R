@@ -14,9 +14,11 @@ source("analyse/2024-05-13_BSE_TransformationProduitsCoco.R")
 source("analyse/2024-05-14_Ministere_ProportionSurfacesDispoCannabis.R")
 source("analyse/2024-05-30_DemandeISPF_CTC_Vanille.R")
 
-# TCD (à lancer dans l'ordre)
+# TCD 
+## A lancer avant les autres classifications
 source("TCD/ExportsTCD_IleCommune.R")
 source("TCD/ExportsTCD_CategoriesSurfacesVegetales.R")
+source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 
 # Tape
 source("tape/tape.R")
