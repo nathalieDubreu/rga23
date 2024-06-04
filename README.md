@@ -4,8 +4,10 @@
 - `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
 - Listings des différentes demandes ponctuelles
 
-## TCD
-- `ExportsTCD_IleCommune.R` : Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques par Archipel, Commune et Ile
+## TCD - Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques
+- `ExportsTCD_IleCommune.R` : Décomposition par Archipel, Commune et Ile
+- `ExportsTCD_CategoriesSurfacesVegetales.R` : Par catégories de surfaces végétales (à lancer après ExportsTCD_IleCommune.R)
+- `ExportsTCD_TpsTravailChefExploitation.R` : Par temps de travail du chef d'exploitation (à lancer après ExportsTCD_IleCommune.R)
 
 ## Analyse supplémentaire : TAPE
 - `tape.R`
