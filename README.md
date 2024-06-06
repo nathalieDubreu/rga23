@@ -6,8 +6,10 @@
 
 ## TCD - Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques
 - `ExportsTCD_IleCommune.R` : Décomposition par Archipel, Commune et Ile
-- `ExportsTCD_CategoriesSurfacesVegetales.R` : Par catégories de surfaces végétales (à lancer après ExportsTCD_IleCommune.R)
-- `ExportsTCD_TpsTravailChefExploitation.R` : Par temps de travail du chef d'exploitation (à lancer après ExportsTCD_IleCommune.R)
+### Les programmes suivants nécessitent le lancement préalable de `ExportsTCD_IleCommune.R`
+- `ExportsTCD_CategoriesSurfacesVegetales.R` : Par catégories de surfaces végétales 
+- `ExportsTCD_TpsTravailChefExploitation.R` : Par temps de travail du chef d'exploitation
+- `ExportsTCD_CategoriesTape.R` : Par catégories inpirées de Tape
 
 ## Analyse supplémentaire : TAPE
 - `tape.R`
@@ -64,6 +66,12 @@ Ensuite, de façon automatique, la réponse "Aucune autonomie" a été imputée 
 - `ajoutsIndicEtPointsCAPL.R` : Ajout du nombre de points CAPL calculés et d'une indicatrice de respect du seuil des 400 points ou de production de 2,7 tonnes ou plus de coprah
 #### B - En vue de l'intégration dans le SIA
 - `integrationSIA.R` : suppression des variables relatives à la situation conjugale de l'exploitant avant mise à disposition pour intégration dans le SIA
+
+## Ajout juin 2024 : 
+- `ajoutVariablesEtpEtRegroupementTables.R` : 
+    - Sauvegarde des variables d'ETP dans une nouvelle table **rga23_etp**
+    - Sauvegarde de la surface de productions végétales Hors pâturages et hors cocoteraie dans la table **rga23_prodVegetales** 
+    - Regroupement des 9 fichiers plats pour faciliter le travail sous Excel **rga23_tousFichiersPlats**
 
 ## Collecte
 ### Mise à jour des fichiers Rmd en cours de collecte

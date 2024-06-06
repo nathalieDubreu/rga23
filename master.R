@@ -25,6 +25,9 @@ source("TCD/ExportsTCD_CategoriesTape.R")
 # Tape
 source("tape/tape.R")
 
+# Ajout juin 2024 : variables ETP dans une nouvelle table + surfaces végétales dans la table ProdVegetales + regroupement des tables pour faciliter le travail sous Excel
+source("miseEnForme/ajoutVariablesEtpEtRegroupementTables.R")
+
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")
 source("champs/champ2012.R")
