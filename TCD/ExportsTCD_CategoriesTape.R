@@ -13,17 +13,18 @@ tableAMerger <- left_join(
     Eleveurs == 0 & totalSurfacePlantes / SurfaceTotalProdAgri >= 2 / 3 ~ "d - Plantes aromatiques, stimulantes et médicinales sur plus de 2/3 de la SAU déclarée SANS élevage",
     Eleveurs == 0 & Cultivateurs == 1 ~ "e - Cultures (y compris production éventuelle de coprah) SANS élevage",
     Eleveurs == 1 & Cultivateurs == 1 ~ "f - Cultures (y compris production éventuelle de coprah) ET élevage",
-    Cultivateurs == 0 ~ "g - Pas de cultures (Uniquement production de coprah et/ou élevage sans pâturages)",
+    Eleveurs == 1 & Cultivateurs == 0 & ProducteursCoprah == 0 ~ "g - Uniquement élevage sans pâturages. Pas de cultures ni production de coprah",
+    Cultivateurs == 0 & ProducteursCoprah == 1 ~ "h - Pas de cultures. Uniquement production de coprah et éventuellement élevage sans pâturages",
     TRUE ~ "AUTRE"
   )) |>
   select(interview__key, TypeExploit)
 
-# tableAMerger |>
-#   group_by(TypeExploit) |>
-#   count()
+tableAMerger |>
+  group_by(TypeExploit) |>
+  count()
 
 ### Suffixe correspondant
 suffixeNomTable <- "_CategoriesTape"
 
-## Ajout de la colonne et export des différents CSV pour la construciton des TCD
+## Ajout de la colonne et export des différents CSV pour la construction des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

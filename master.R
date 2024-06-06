@@ -20,6 +20,7 @@ source("TCD/ExportsTCD_IleCommune.R")
 ##
 source("TCD/ExportsTCD_CategoriesSurfacesVegetales.R")
 source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
+source("TCD/ExportsTCD_CategoriesTape.R")
 
 # Tape
 source("tape/tape.R")

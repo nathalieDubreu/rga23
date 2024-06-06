@@ -28,5 +28,5 @@ tableAMerger <- left_join(
 ### Suffixe correspondant
 suffixeNomTable <- "_CategorieSurfaceCultVege_HC_HP"
 
-## Ajout de la colonne et export des différents CSV pour la construciton des TCD
+## Ajout de la colonne et export des différents CSV pour la construction des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")
