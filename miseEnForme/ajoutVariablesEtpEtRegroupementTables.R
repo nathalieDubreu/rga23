@@ -1,9 +1,9 @@
 library(testthat)
+library(readr)
 
 # ETAPE 1 - Sauvegarde des variables d'effectifs et d'ETP de la population active agricole
 
 ## Ajout des variables relatives aux ETP présentes dans la table main d'oeuvre
-
 rga23_mainOeuvreETP <- readCSV("rga23_mainOeuvre.csv") |>
   mutate(
     ChefETP = case_when(
@@ -37,7 +37,6 @@ rga23_mainOeuvreETP <- readCSV("rga23_mainOeuvre.csv") |>
   )
 
 ## Calcul ETP des coexploitants
-
 rga23_coexploitantsETP <- readCSV("rga23_coexploitants.csv") |>
   mutate(CoexploitantsETP = case_when(
     (TempsTravailCoExploit == 1) ~ 0.25,
@@ -53,7 +52,6 @@ rga23_coexploitantsETP <- readCSV("rga23_coexploitants.csv") |>
   )
 
 ## Calcul ETP de la MO Permanente familiale
-
 rga23_moPermanenteFamETP <- readCSV("rga23_moPermanenteFam.csv") |>
   mutate(MOPermFamETP = case_when(
     (TempsTravailMOFamPerm == 1) ~ 0.25,
@@ -111,7 +109,7 @@ test_that("Les valeurs des ETP sont correctes", {
 
 writeCSVTraites(rga23_etp)
 
-# ETAPE 2 - Ajout de la variable SurfacesProdVegetales (hors cocoteraies et hors pâturages) dans la table prodVegetales 
+# ETAPE 2 - Ajout de la variable SurfacesProdVegetales (hors cocoteraies et hors pâturages) dans la table prodVegetales
 
 ## Récupération des surfaces Hors pâturages et Hors cocoteraies
 rga23_surfacesCultures_HC_HP <- readCSV("rga23_surfacesCultures.csv") |>
@@ -132,12 +130,14 @@ rga23_surfacesCultures_HC_HP <- readCSV("rga23_surfacesCultures.csv") |>
 
 ## Récupération de la surface de Jardins océaniens, Ajout de la surface obtenue précédemment et Save
 rga23_prodVegetales <- left_join(readCSV("rga23_prodVegetales.csv"), rga23_surfacesCultures_HC_HP) |>
-  mutate(SurfaceProdVegetales_HC_HP = replace_na(SurfacesTotalesClassiques,0) + replace_na(SurfaceJardins,0)) |>
+  mutate(SurfaceProdVegetales_HC_HP = replace_na(SurfacesTotalesClassiques, 0) + replace_na(SurfaceJardins, 0)) |>
   select(-SurfacesTotalesClassiques)
 
 test_that("Test de la somme des surfaces de production végétales", {
-  testUnitaireSurface <- left_join(rga23_prodVegetales, rga23_general) |> filter(indicRGA23 == 1)
-  result <- testUnitaireSurface |> summarize(round(sum(SurfaceProdVegetales_HC_HP) / 10000)) |> pull()
+  testUnitaireSurface <- left_join(rga23_prodVegetales, readCSV("rga23_general.csv")) |> filter(indicRGA23 == 1)
+  result <- testUnitaireSurface |>
+    summarize(round(sum(SurfaceProdVegetales_HC_HP) / 10000)) |>
+    pull()
   expect_equal(result, 3135)
 })
 
@@ -153,13 +153,13 @@ for (file in file_list) {
 }
 
 ## Regroupement des 9 fichiers plats (y compris variables supplémentaires)
-rga23_tousFichiersPlats <- left_join(rga23_general, rga23_exploitations) |>
-  left_join(rga23_coprahculteurs) |>
-  left_join(rga23_mainOeuvre) |>
-  left_join(rga23_etp) |>
-  left_join(rga23_tape) |>
-  left_join(rga23_prodVegetales) |>
-  left_join(rga23_prodAnimales) |>
-  left_join(rga23_peche)
+rga23_tousFichiersPlats <- left_join(rga23_general, rga23_exploitations, by = "interview__key") |>
+  left_join(rga23_coprahculteurs, by = "interview__key") |>
+  left_join(rga23_mainOeuvre, by = "interview__key") |>
+  left_join(rga23_etp, by = "interview__key") |>
+  left_join(rga23_tape, by = "interview__key") |>
+  left_join(rga23_prodVegetales, by = "interview__key") |>
+  left_join(rga23_prodAnimales, by = "interview__key") |>
+  left_join(rga23_peche, by = "interview__key")
 
 writeCSVTraites(rga23_tousFichiersPlats)

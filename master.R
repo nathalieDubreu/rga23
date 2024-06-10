@@ -21,12 +21,10 @@ source("TCD/ExportsTCD_IleCommune.R")
 source("TCD/ExportsTCD_CategoriesSurfacesVegetales.R")
 source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 source("TCD/ExportsTCD_CategoriesTape.R")
+source("TCD/ExportsTCD_Vanille.R")
 
 # Tape
 source("tape/tape.R")
-
-# Ajout juin 2024 : variables ETP dans une nouvelle table + surfaces végétales dans la table ProdVegetales + regroupement des tables pour faciliter le travail sous Excel
-source("miseEnForme/ajoutVariablesEtpEtRegroupementTables.R")
 
 # Champs (RGA23, RGA12, seuils CAPL)
 source("champs/champRGA.R")
@@ -66,6 +64,9 @@ source("miseEnForme/modificationsFichiersBaseStat.R")
 source("miseEnForme/ajoutsIndicEtPointsCAPL.R")
 #### Pour intégration dans le SIA :
 # source("miseEnForme/integrationSIA.R")
+
+## Ajout juin 2024 : variables ETP dans une nouvelle table + surfaces végétales dans la table ProdVegetales + regroupement des tables pour faciliter le travail sous Excel
+source("miseEnForme/ajoutVariablesEtpEtRegroupementTables.R")
 
 # Suivi de la collecte
 
