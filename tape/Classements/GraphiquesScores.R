@@ -7,7 +7,7 @@ plot_diversity_scores <- function(scores, scoreSousCategorie) {
   custom_colors <- c("#4e79a7", "#f28e2b", "#e15759", "#76b7b2")
   
   nbSousCategories <- length(scoreSousCategorie)
-  width <- ifelse(nbSousCategories > 1,500,250)
+  width <- 500
   height <- ifelse(nbSousCategories > 2,400,200)
 
   png(file = paste0(chemin, gsub("groupesS", "s", deparse(substitute(scores))), ".png"), width = width, height = height)

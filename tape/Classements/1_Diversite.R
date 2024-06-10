@@ -175,6 +175,8 @@ score_4_Activites <- left_join(rga23_tapeAvecVentes,
     ProductionAgricole == 1 & (nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) == 2 | nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) == 3) ~ 1,
     # Pas de vente de produit mais production de plus de 3 types de cultures végétales ou élevage
     ProductionAgricole == 1 & (nombreTypesCultHorsJacheres + replace_na(nbEspeces, 0) > 3 | ModesProduction__4 == 1) ~ 2,
+    # Non concernés : pas de production agricole
+    ProductionAgricole == 2 ~ 99,
     TRUE ~ 55
   ))
 

@@ -22,6 +22,7 @@ source("TCD/ExportsTCD_CategoriesSurfacesVegetales.R")
 source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 source("TCD/ExportsTCD_CategoriesTape.R")
 source("TCD/ExportsTCD_Vanille.R")
+source("TCD/ExportsTCD_Paturages.R")
 
 # Tape
 source("tape/tape.R")
