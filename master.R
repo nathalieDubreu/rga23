@@ -13,6 +13,7 @@ source("analyse/2024-04-29_BSE_ComparaisonDonneesMaraichage.R")
 source("analyse/2024-05-13_BSE_TransformationProduitsCoco.R")
 source("analyse/2024-05-14_Ministere_ProportionSurfacesDispoCannabis.R")
 source("analyse/2024-05-30_DemandeISPF_CTC_Vanille.R")
+source("analyse/2024-06-11_BSE_PepinierePubliquePlantsFruitiers.R")
 
 # TCD 
 ## A lancer avant les autres typologies
@@ -23,7 +24,7 @@ source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 source("TCD/ExportsTCD_CategoriesTape.R")
 source("TCD/ExportsTCD_Vanille.R")
 source("TCD/ExportsTCD_Paturages.R")
-## Programme vierge à copier coller et renommer pour créér une nouvelle typologie
+## Programme vierge à copier-coller, renommer et compléter pour créér une nouvelle typologie
 source("TCD/ExportsTCD_TypologieACreer.R")
 
 # Tape
