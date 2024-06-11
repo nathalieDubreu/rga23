@@ -693,3 +693,7 @@ TCD23 <- inner_join(
   by = "interview__key"
 )
 writeCSV(TCD23)
+
+# TCD 24 à ? : Destination des produits
+source("TCD/ExportsTCD_IleCommune_Destination.R")
+
