@@ -41,7 +41,7 @@ tableAMerger |>
   count()
 
 ## Suffixe correspondant
-suffixeNomTable <- "_Vanille"
+suffixeNomTable <- "_4_Vanille"
 
 ## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

@@ -1,4 +1,4 @@
-library(testthat)
+library(purrr)
 
 # Autoconsommation.....................................1/1
 # Alimentation des animaux .......................................2/2
@@ -37,6 +37,8 @@ rga23_prod <- left_join(rga23_champ_Ile_Commune,
                         readCSV("rga23_prodVegetales.csv"),
                         by = "interview__key")
 
+nomsTables <- paste0("Modalite", 1:12)
+
 # Maraichage
 Modalite1 <- calculPartsDestination(PartComMaraic__1, `Autoconsommation`)
 Modalite2 <- calculPartsDestination(PartComMaraic__2, `Alimentation des animaux`)
@@ -51,8 +53,24 @@ Modalite10 <- calculPartsDestination(PartComMaraic__10, `Vente à la coopérativ
 Modalite11 <- calculPartsDestination(PartComMaraic__11, `Vente à la restauration collective`)
 Modalite12 <- calculPartsDestination(PartComMaraic__12, `Vente aux restaurants (hors collectifs) / hôtels`)
 
-nomsTables <- paste0("Modalite", 1:12)
 listeTables <- lapply(nomsTables, get)
-
 TCD24 <- reduce(listeTables, left_join, by = c("interview__key", "Archipel_1", "Ile", "Commune"))
 writeCSV(TCD24)
+
+# Vivrier
+Modalite1 <- calculPartsDestination(PartComVivri__1, `Autoconsommation`)
+Modalite2 <- calculPartsDestination(PartComVivri__2, `Alimentation des animaux`)
+Modalite3 <- calculPartsDestination(PartComVivri__3, `Dons (à la famille ou à des amis)`)
+Modalite4 <- calculPartsDestination(PartComVivri__4, `Echange`)
+Modalite5 <- calculPartsDestination(PartComVivri__5, `Vente directe au particulier`)
+Modalite6 <- calculPartsDestination(PartComVivri__6, `Vente par internet (Facebook ou autre site)`)
+Modalite7 <- calculPartsDestination(PartComVivri__7, `Vente à un commerçant ou artisan ou revendeur`)
+Modalite8 <- calculPartsDestination(PartComVivri__8, `Vente à un grossiste`)
+Modalite9 <- calculPartsDestination(PartComVivri__9, `Vente à un transformateur ou préparateur (y compris abattoir)`)
+Modalite10 <- calculPartsDestination(PartComVivri__10, `Vente à la coopérative ou au syndicat`)
+Modalite11 <- calculPartsDestination(PartComVivri__11, `Vente à la restauration collective`)
+Modalite12 <- calculPartsDestination(PartComVivri__12, `Vente aux restaurants (hors collectifs) / hôtels`)
+
+listeTables <- lapply(nomsTables, get)
+TCD25 <- reduce(listeTables, left_join, by = c("interview__key", "Archipel_1", "Ile", "Commune"))
+writeCSV(TCD25)
