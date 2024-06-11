@@ -1,18 +1,14 @@
-# Typologie basée sur le temps de travail des chefs d'exploitation
+# Typologie basée sur [TODO : complèter]
 
 ## Définir la table à merger (variable à ajouter)
 tableAMerger <- left_join(
   rga23_champ_Ile_Commune |> select(interview__key, Cultivateurs, Eleveurs, ProducteursCoprah),
-  readCSV("rga23_mainOeuvre.csv") |>
-    select(interview__key, TpsTravailChefExpl),
+  readCSV("rga23_tousFichiersPlats.csv"),
   by = "interview__key"
 ) |>
   mutate(TypeExploit = case_when(
-    TpsTravailChefExpl == 1 ~ "1 : Moins de 1/2 temps",
-    TpsTravailChefExpl == 2 ~ "2 : 1/2 temps",
-    TpsTravailChefExpl == 3 ~ "3 : Entre 1/2 temps et temps complet",
-    TpsTravailChefExpl == 4 ~ "4 : Temps complet",
-    is.na(TpsTravailChefExpl) ~ "Non réponse"
+    # [TODO alimenter la variable de typologie - en faisant les bons left_join...]
+    TRUE ~ "AUTRE"
   )) |>
   select(interview__key, TypeExploit)
 
@@ -20,8 +16,8 @@ tableAMerger |>
   group_by(TypeExploit) |>
   count()
 
-## Suffixe correspondant
-suffixeNomTable <- "_TpsTravailChefExploitation"
+## Suffixe correspondant [TODO : maj]
+suffixeNomTable <- "_NouvelleTypologie"
 
 ## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

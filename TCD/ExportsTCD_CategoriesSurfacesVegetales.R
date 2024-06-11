@@ -1,6 +1,6 @@
-## TODO :
+# Typologie basée sur la surface de cultures végétales (hors pâturages et hors cocoteraies)
 
-### Définir la table à merger (variable à ajouter)
+## Définir la table à merger (variable à ajouter)
 tableAMerger <- left_join(
   rga23_champ_Ile_Commune |> select(interview__key, Cultivateurs, Eleveurs, ProducteursCoprah),
   full_join(
@@ -25,8 +25,12 @@ tableAMerger <- left_join(
   )) |>
   select(interview__key, TypeExploit)
 
-### Suffixe correspondant
+tableAMerger |>
+  group_by(TypeExploit) |>
+  count()
+
+## Suffixe correspondant
 suffixeNomTable <- "_CategorieSurfaceCultVege_HC_HP"
 
-## Ajout de la colonne et export des différents CSV pour la construction des TCD
+## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

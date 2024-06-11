@@ -161,9 +161,11 @@ score_4_Activites <- left_join(rga23_tapeAvecVentes,
     by = "interview__key"
   ) |>
   mutate(score = case_when(
+    # 0 : Vente d'un seul produit
     venteNbProduits == 1 ~ 0,
+    # 1 : vente de 2 ou 3 produits ou vente d'un seul type de produits mais Jardins océaniens
     venteNbProduits == 2 | venteNbProduits == 3 | (venteTypeProduits == 1 & ModesProduction__4 == 1) ~ 1,
-    # > 2 - Plus de 3 activités productives.
+    # > 2 - Plus de 3 activités productives mais pas de service
     (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 0 ~ 2,
     # > 3 - Plus de 3 activités productives et un service (par ex. transformation de produits à la ferme, écotourisme, transport de produits agricoles, formation, etc.).
     (venteNbProduits > 3 | (venteTypeProduits > 1 & ModesProduction__4 == 1)) & nbServices == 1 ~ 3,

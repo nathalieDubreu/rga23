@@ -1,6 +1,6 @@
-## TODO :
+# Typologie basée sur la présence de pâturages
 
-### Définir la table à merger (variable à ajouter)
+## Définir la table à merger (variable à ajouter)
 tableAMerger <- left_join(
   rga23_champ_Ile_Commune |> select(interview__key, Cultivateurs, Eleveurs, ProducteursCoprah),
   readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceProdVegetales_HC_HP, TypeFourrages__701, TypeFourrages__702, TypeFourrages__703),
@@ -30,8 +30,8 @@ tableAMerger |>
   group_by(TypeExploit) |>
   count()
 
-### Suffixe correspondant
+## Suffixe correspondant
 suffixeNomTable <- "_Paturages"
 
-## Ajout de la colonne et export des différents CSV pour la construction des TCD
+## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

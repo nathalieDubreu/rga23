@@ -2,14 +2,14 @@
 
 ## Analyse
 - `publicationDoubleTimbre.R` : contours de la première publi (avec Rmd associé)
-- Listings des différentes demandes ponctuelles
+- Programmes correspondant aux différentes demandes ponctuelles
 
 ## TCD - Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques
 - `ExportsTCD_IleCommune.R` : Décomposition par Archipel, Commune et Ile
 ### Les programmes suivants nécessitent le lancement préalable de `ExportsTCD_IleCommune.R`
-- `ExportsTCD_CategoriesSurfacesVegetales.R` : Par catégories de surfaces végétales 
-- `ExportsTCD_TpsTravailChefExploitation.R` : Par temps de travail du chef d'exploitation
-- `ExportsTCD_CategoriesTape.R` : Par catégories inpirées de Tape
+- Divers programmes correspondant aux typologies existantes : `ExportsTCD_....R` 
+## Programme vierge à copier-coller,  renommer et compléter pour créér une nouvelle typologie
+- `ExportsTCD_TypologieACreer.R`
 
 ## Analyse supplémentaire : TAPE
 - `tape.R`

@@ -1,4 +1,6 @@
-# Etape préalable vanille
+# Typologie basée sur la culture de la vanille
+
+## Etape préalable vanille
 
 vanillerOmbrageNaturel <- readCSV("rga23_surfacesCultures.csv") |>
   filter(culture_id == 509) |>
@@ -19,10 +21,7 @@ vanille <- full_join(vanillerOmbrageNaturel, vanillerSerreOmbriere, by = c("inte
     replace_na(PointsVanilleSerreOmbriere, 0)) |>
   mutate(across(where(is.numeric), ~ coalesce(., 0)))
 
-
-## TODO :
-
-### Définir la table à merger (variable à ajouter)
+## Définition de la table à merger (variable à ajouter)
 tableAMerger <- left_join(rga23_champ_Ile_Commune, vanille, by = "interview__key") |>
   left_join(
     readCSV("rga23_general.csv") |> select(interview__key, PointsCAPL),
@@ -41,8 +40,8 @@ tableAMerger |>
   group_by(TypeExploit) |>
   count()
 
-### Suffixe correspondant
+## Suffixe correspondant
 suffixeNomTable <- "_Vanille"
 
-## Ajout de la colonne et export des différents CSV pour la construction des TCD
+## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")

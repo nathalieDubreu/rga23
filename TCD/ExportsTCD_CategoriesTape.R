@@ -1,6 +1,6 @@
-## TODO :
+# Typologie basée sur les catégories inspirées de Tape
 
-### Définir la table à merger (variable à ajouter)
+## Définir la table à merger (variable à ajouter)
 tableAMerger <- left_join(
   rga23_champ_Ile_Commune |> select(interview__key, Cultivateurs, Eleveurs, ProducteursCoprah),
   readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceTotalProdAgri, totalSurfaceMarai, totalSurfaceFruit, totalSurfaceVivri, totalSurfacePlantes),
@@ -23,8 +23,8 @@ tableAMerger |>
   group_by(TypeExploit) |>
   count()
 
-### Suffixe correspondant
+## Suffixe correspondant
 suffixeNomTable <- "_CategoriesTape"
 
-## Ajout de la colonne et export des différents CSV pour la construction des TCD
+## Lancement du programme d'ajout de la colonne et d'export des différents CSV pour la constrution des TCD
 source("TCD/AjoutColonneTypeExploitEtExportsCSV.R")
