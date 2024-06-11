@@ -1,4 +1,4 @@
-# Demande BSE : listing des interview__key des exploitants qui déclarent acheter des plants en pépinières publique + cultivent du fruitier
+# Demande BSE : listing des interview__key des exploitants (>= 400 points) qui déclarent acheter des plants en pépinières publique + cultivent du fruitier
 
 cultivateursFruitiersPlantsPepinierePublique <- inner_join(
   readCSV("rga23_general.csv") |> filter(indicPointsCAPL == 1),
