@@ -700,7 +700,7 @@ source("TCD/ExportsTCD_IleCommune_Destination.R")
 # TCD 34 à 40 : Pourcentage de destination des produits de culture (Ex : % de la surface maraîchère est auto-consommée)
 source("TCD/ExportsTCD_IleCommune_PourcentageDestination.R")
 
-# TCD 41 : Cocoteraies
+# TCD 41 : Cocoteraies (statut et baguage)
 TCD41 <- inner_join(
   rga23_champ_Ile_Commune,
   readCSV("rga23_cocoteraies.csv") |>
@@ -738,3 +738,74 @@ TCD41 <- inner_join(
     `Nombre de mois`
   )
 writeCSV(TCD41)
+
+# TCD 42 : Producteurs de coprah (regénération et entretien des cocoteraies)
+TCD42 <- inner_join(
+  rga23_champ_Ile_Commune |> filter(ProducteursCoprah == 1),
+  readCSV("rga23_coprahculteurs.csv") |>
+    mutate(
+      `replanté des cocotiers` = case_when(
+        ReplanterCocoteraie1 == 1 ~ 1,
+        ReplanterCocoteraie2 == 1 ~ 1,
+        ReplanterCocoteraie3 == 1 ~ 1,
+        TRUE ~ 0
+      ),
+      `supprimé les anciens cocotiers` = case_when(
+        SuppAnciensCocotiers1 == 1 ~ 1,
+        SuppAnciensCocotiers2 == 1 ~ 1,
+        SuppAnciensCocotiers3 == 1 ~ 1,
+        TRUE ~ 0
+      ),
+      `entretenu les cocoteraies` = case_when(
+        EntretienCoco1 > 0 ~ 1,
+        EntretienCoco2 > 0 ~ 1,
+        EntretienCoco3 > 0 ~ 1,
+        TRUE ~ 0
+      ),
+      `défriché/débroussaillé les cocoteraies` = case_when(
+        ModeEntretCoco1__1 == 1 ~ 1,
+        ModeEntretCoco2__1 == 1 ~ 1,
+        ModeEntretCoco3__1 == 1 ~ 1,
+        TRUE ~ 0
+      ),
+      `fertilisé les cocoteraies (engrais)` = case_when(
+        ModeEntretCoco1__2 == 1 ~ 1,
+        ModeEntretCoco2__2 == 1 ~ 1,
+        ModeEntretCoco3__2 == 1 ~ 1,
+        TRUE ~ 0
+      ),
+      `posé des bagues de cocotiers` = case_when(
+        ModeEntretCoco1__3 == 1 ~ 1,
+        ModeEntretCoco2__3 == 1 ~ 1,
+        ModeEntretCoco3__3 == 1 ~ 1,
+        TRUE ~ 0
+      ),
+      `utilisé des raticides` = case_when(
+        RaticidesCoco1 == 1 ~ 1,
+        RaticidesCoco2 == 1 ~ 1,
+        RaticidesCoco3 == 1 ~ 1,
+        TRUE ~ 0
+      )
+    ) |>
+    rename(
+      `livré le coprah à un mandataire` = DestinataireLivr__2,
+      `livré le coprah à un colleteur/grossiste` = DestinataireLivr__3,
+      `livré le coprah à un quelqu'un d'autre` = DestinataireLivr__4
+    ),
+  by = "interview__key"
+) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    `replanté des cocotiers`,
+    `supprimé les anciens cocotiers`,
+    `entretenu les cocoteraies`,
+    `défriché/débroussaillé les cocoteraies`,
+    `fertilisé les cocoteraies (engrais)`,
+    `posé des bagues de cocotiers`,
+    `utilisé des raticides`,
+    starts_with("livré le coprah")
+  )
+writeCSV(TCD42)
