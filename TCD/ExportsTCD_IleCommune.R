@@ -694,6 +694,8 @@ TCD23 <- inner_join(
 )
 writeCSV(TCD23)
 
-# TCD 24 à ? : Destination des produits
+# TCD 24 à 33 : Répartition de la destination des produits (Ex : nombre d'exploitants autoconsommant entre 0 et 25% de leur production maraichère)
 source("TCD/ExportsTCD_IleCommune_Destination.R")
 
+# TCD 34 à 40 : Pourcentage de destination des produits de culture (Ex : % de la surface maraîchère est auto-consommée)
+source("TCD/ExportsTCD_IleCommune_PourcentageDestination.R")
