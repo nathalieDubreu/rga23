@@ -6,9 +6,9 @@
 
 ## TCD - Exports de CSV pour faciliter la constitution des différents tableaux croisés dynamiques
 - `ExportsTCD_IleCommune.R` : Décomposition par Archipel, Commune et Ile
-### Les programmes suivants nécessitent le lancement préalable de `ExportsTCD_IleCommune.R`
+### _Les programmes suivants nécessitent le lancement préalable de `ExportsTCD_IleCommune.R`_
 - Divers programmes correspondant aux typologies existantes : `ExportsTCD_....R` 
-## Programme vierge à copier-coller,  renommer et compléter pour créér une nouvelle typologie
+### _Programme vierge à copier-coller,  renommer et compléter pour créér une nouvelle typologie_
 - `ExportsTCD_TypologieACreer.R`
 
 ## Analyse supplémentaire : TAPE
