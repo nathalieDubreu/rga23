@@ -699,3 +699,42 @@ source("TCD/ExportsTCD_IleCommune_Destination.R")
 
 # TCD 34 à 40 : Pourcentage de destination des produits de culture (Ex : % de la surface maraîchère est auto-consommée)
 source("TCD/ExportsTCD_IleCommune_PourcentageDestination.R")
+
+# TCD 41 : Cocoteraies
+TCD41 <- inner_join(
+  rga23_champ_Ile_Commune,
+  readCSV("rga23_cocoteraies.csv") |>
+    mutate(
+      `Cocoteraies baguées` = ifelse(cocoteraieBaguee == 1, 1, 0),
+      `Cocoteraies non baguées` = ifelse(cocoteraieBaguee == 2, 1, 0),
+      `Cocoteraies en partie baguées` = ifelse(cocoteraieBaguee == 3, 1, 0),
+      `Cocoteraies exploitées en tant que Propriétaire plein` = ifelse(statutCoco == 1, 1, 0),
+      `Cocoteraies exploitées en tant que Propriétaire en indivision` = ifelse(statutCoco == 2, 1, 0),
+      `Cocoteraies exploitées en tant qu'Exploitant` = ifelse(statutCoco == 3, 1, 0),
+      `Cocoteraies pour lesquelles tout le revenu a été conservé` = case_when(
+        ToutRevenu == 1 ~ 1,
+        ToutRevenu == 2 ~ 0
+      ),
+      `Nombre de mois` = case_when(
+        is.na(DureeExploit) ~ 12,
+        TRUE ~ DureeExploit
+      ),
+      `Statut du producteur` = case_when(
+        statutCoco == 1 ~ "Propriétaire plein",
+        statutCoco == 2 ~ "Propriétaire en indivision",
+        statutCoco == 3 ~ "Exploitant",
+        TRUE ~ "?!?"
+      )
+    ),
+  by = "interview__key"
+) |>
+  select(
+    interview__key,
+    Archipel_1,
+    Ile,
+    Commune,
+    starts_with("Cocoteraies"),
+    `Statut du producteur`,
+    `Nombre de mois`
+  )
+writeCSV(TCD41)
