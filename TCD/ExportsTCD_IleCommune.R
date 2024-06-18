@@ -1,6 +1,6 @@
 ## Champ : 4080 exploitations au sens du RGA 2023
 
-## Récupération des variables Ile et Commune
+## Restriction au champ et récupération des variables Ile et Commune
 rga23_champ_Ile_Commune <- left_join(readCSV("rga23_general.csv") |> filter(indicRGA23 == 1),
   readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite, IleExploitation, CommuneExploitation),
   by = "interview__key"
@@ -56,6 +56,7 @@ recalculSurfacesType <- inner_join(
   readCSV("rga23_surfacesCultures.csv"),
   by = "interview__key"
 ) |>
+  # Exclusion des pâturages et des cocoteraies
   filter(culture_id != 701 & culture_id != 702 & culture_id != 705 & culture_id != 307 & culture_id != 308 & culture_id != 309) |>
   group_by(interview__key, TypeCulture) |>
   summarize(SurfacesTotalesClassiques = sum(ifelse(is.na(SurfaceCult), 0, SurfaceCult))) |>
@@ -88,6 +89,7 @@ TCD5 <- inner_join(
   readCSV("rga23_surfacesCultures.csv"),
   by = "interview__key"
 ) |>
+  # Exclusion uniquement des cocoteraies
   filter(culture_id != 307 & culture_id != 308 & culture_id != 309) |>
   mutate(TypeCulture = case_when(
     (TypeCulture == 10) ~ "10 - Cultures maraîchères",

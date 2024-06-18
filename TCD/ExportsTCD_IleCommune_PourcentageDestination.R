@@ -15,6 +15,8 @@ library(rlang)
 # Vente aux restaurants (hors collectifs) / hôtels................12/12
 # Sans objet (pas de production de ce type).......................13/13
 
+## Fonction de calcul de la surface d'un type de culture lié à une destination en particulier 
+## (ex : pour un exploitant qui possède 1Ha et qui déclare autoconsommer 1/5 de sa production, la surface calculée liée à l'autoconsommation sera de 2000m²)
 calculSurfacesDestination <- function(partComVar, num, surfaceDestination, surfaceTypeCulture) {
   partComVarCol <- sym(paste0(partComVar, num))
   verifProdType <- sym(paste0(partComVar, "13"))
@@ -31,6 +33,7 @@ calculSurfacesDestination <- function(partComVar, num, surfaceDestination, surfa
   return(result)
 }
 
+## Fonction de lancement du calcul des surfaces liées aux 12 destinations possibles et mise en forme en un fichier à exporter
 genererPourcentagesParTypeCulture <- function(partTypeCulture, surfaceTypeCulture) {
   Modalite1 <- calculSurfacesDestination(partTypeCulture, 1, `Autoconsommation`, surfaceTypeCulture)
   Modalite2 <- calculSurfacesDestination(partTypeCulture, 2, `Alimentation des animaux`, surfaceTypeCulture)

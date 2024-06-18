@@ -15,6 +15,7 @@ library(rlang)
 # Vente aux restaurants (hors collectifs) / hôtels................12/12
 # Sans objet (pas de production de ce type).......................13/13
 
+## Fonction qui permet d'attribuer une part à la destination du type de produits (ex : Autoconsommation de 0 à 25%)
 calculPartsDestination <- function(partComVar, num, destinationVar) {
   partComVarCol <- sym(paste0(partComVar, num))
   verifProdType <- sym(paste0(partComVar, "13"))
@@ -37,6 +38,7 @@ calculPartsDestination <- function(partComVar, num, destinationVar) {
   return(result)
 }
 
+## Fonction de lancement du calcul des parts pour les 12 destinations possibles et mise en forme en un fichier à exporter
 genererModalitesParTypeCulture <- function(partTypeCulture) {
   Modalite1 <- calculPartsDestination(partTypeCulture, 1, `Autoconsommation`)
   Modalite2 <- calculPartsDestination(partTypeCulture, 2, `Alimentation des animaux`)
