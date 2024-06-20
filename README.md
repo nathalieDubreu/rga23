@@ -1,3 +1,11 @@
+# Initialisation du projet
+
+- Cloner ou télécharger le projet rga23
+- Créer un dossier pour y stocker les différents fichiers CSV
+- Créer un dossier nommé SortiesR dans ce dossier
+- Créer un fichier nommé .Renviron à la racine du projet et renseigner la variable suivante vers le fichier de données :
+    cheminAcces = C:/...
+
 # Analyse des données du rga23
 
 ## Analyse

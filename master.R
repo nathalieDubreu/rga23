@@ -1,9 +1,12 @@
+#####################################################
+###### A LANCER AVANT TOUT AUTRE PROGRAMME      #####
+#####################################################
 library("dplyr")
 library("rmarkdown")
 library("knitr")
 library("tidyr")
-
 source("fonctions.R")
+#####################################################
 
 # Analyse
 source("analyse/publicationDoubleTimbre.R")

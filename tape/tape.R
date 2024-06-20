@@ -24,7 +24,10 @@ source("tape/Classements/GraphiquesScores.R")
 # PROFILS
 
 source("tape/Profils/TablesScores.R")
+## Graphiques radar par profil
 source("tape/Profils/GraphiquesRadars_Archipel.R")
 source("tape/Profils/GraphiquesRadars_CulturesSpecialisees_Pluriactifs.R")
+## Fichier vierge à copier et mettre à jour pour obtenir des graphiques selon d'autres typologies
+source("tape/Profils/GraphiquesRadars_aMaj.R")
 
 

@@ -1,7 +1,5 @@
 library("tinytex")
 
-## Etape 0 : copier ce programme et le renommer
-
 # Etape 1 : décrire les profils et créér la variable utilisée pour grouper les exploitations (variable de profil)
 descriptionProfils <- "**6 profils distincts :**\\
 - Cultures - élevage : exploitations qui font de la culture ET de l'élevage\\
@@ -61,7 +59,6 @@ source("tape/Profils/FonctionsGraphiques.R")
 source("tape/Profils/PreparationTablesGraphiquesRadar.R")
 
 # Etape 2 :
-## Changer le titre du document pour le rendre cohérent avec la variable de profil + le nom du fichier pdf à exporter
 titreDansLeDocument <- "Graphiques Radars par type d'exploitations (cultures spécialisées vs. pluriactifs - y compris élevage)"
 nomFichierPDF <- "GraphiquesRadars_ByCultSpecOuPluri.pdf"
 
