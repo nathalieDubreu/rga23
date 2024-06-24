@@ -90,4 +90,87 @@ comptagesFiltres <- comptagesCombinaisonsActivites |>
   filter(`Nombre d'exploitants` >= 25)
 
 combinaisonsActivitesFiltrees <- combinaisonsActivites |>
-  semi_join(comptagesFiltres, by = "Activites")
+  semi_join(comptagesFiltres, by = "Activites") |>
+  select(-Archipel_1)
+
+qqStatsParCombinaisonActivite <- rga23_champ |>
+  select(interview__key, Archipel_1) |>
+  left_join(combinaisonsActivitesFiltrees,
+    by = "interview__key"
+  ) |>
+  mutate(Activites = case_when(
+    !is.na(Activites) ~ Activites,
+    TRUE ~ "Autres combinaisons"
+  )) |>
+  left_join(
+    readCSV("rga23_mainOeuvre.csv") |> mutate(
+      age = 2023 - as.numeric(substring(DateNaissChefExpl, 7, 10)),
+      homme = case_when(SexeChefExpl == 1 ~ 0, SexeChefExpl == 2 ~ 1),
+      femme = case_when(SexeChefExpl == 1 ~ 1, SexeChefExpl == 2 ~ 0)
+    ) |>
+      select(interview__key, homme, femme, age),
+    by = "interview__key"
+  ) |>
+  left_join(
+    readCSV("rga23_etp.csv"),
+    by = "interview__key"
+  ) |>
+  left_join(
+    readCSV("rga23_prodVegetales.csv") |> select(interview__key, SurfaceTotalProdAgri, SurfaceProdVegetales_HC_HP),
+    by = "interview__key"
+  ) |>
+  left_join(
+    readCSV("rga23_prodAnimales.csv") |>
+      mutate(
+        EleveurBovins = PresenceAnimaux__1,
+        EleveurOvins = PresenceAnimaux__2,
+        EleveurPorcins = PresenceAnimaux__3,
+        EleveurVolailles = PresenceAnimaux__4,
+        EleveurPoulesPondeuses = ifelse(PresenceAnimaux__4 == 1 & (TypeVolailles__1 == 1 | TypeVolailles__3 == 1 | TypeVolailles__4 == 1), 1, 0),
+        EleveurEquides = PresenceAnimaux__5,
+        EleveurLapins = PresenceAnimaux__6,
+        Apiculteurs = PresenceAnimaux__7,
+        EleveurCaprins = PresenceAnimaux__8,
+        NombreBovins = replace_na(nbTotalBovins, 0),
+        NombreOvins = replace_na(nbTotalOvins, 0),
+        NombrePorcins = replace_na(nbTotalPorcs, 0),
+        NombreVolailles = rowSums(across(
+          c("NbAutresVolailles", "NbDindesDindons", "NbOies", "NbCanards", "NbCailles", "NbPintades", "NbPouletsChairCoqs", "NbPoulettes", "NbPoussins", "NombrePoules0", "NombrePoules1", "NombrePoules3"),
+          ~ (coalesce(., 0))
+        )),
+        NombrePoulesPondeuses = rowSums(across(
+          c("NombrePoules0", "NombrePoules1", "NombrePoules3"),
+          ~ (coalesce(., 0))
+        )),
+        NombreEquides = replace_na(nbTotalEquides, 0),
+        NombreLapins = rowSums(across(
+          c("NbLapereaux", "NbLapinesFutures", "NbLapinesMeres", "NbLapinsReprod", "NbLapinsSevresEngrais"),
+          ~ (coalesce(., 0))
+        )),
+        NombreRuchesPourProduire = replace_na(NbRuchesPourProduire, 0),
+        NombreCaprins = replace_na(nbTotalCaprins, 0)
+      ) |>
+      select(
+        interview__key,
+        EleveurBovins,
+        EleveurOvins,
+        EleveurPorcins,
+        EleveurVolailles,
+        EleveurPoulesPondeuses,
+        EleveurEquides,
+        EleveurLapins,
+        Apiculteurs,
+        EleveurCaprins,
+        NombreBovins,
+        NombreOvins,
+        NombrePorcins,
+        NombreVolailles,
+        NombrePoulesPondeuses,
+        NombreEquides,
+        NombreLapins,
+        NombreRuchesPourProduire,
+        NombreCaprins
+      ),
+    by = "interview__key"
+  )
+writeCSV(qqStatsParCombinaisonActivite)
