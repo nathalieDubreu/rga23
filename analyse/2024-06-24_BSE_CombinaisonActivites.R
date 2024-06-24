@@ -1,5 +1,24 @@
+## Champ : 4080 exploitations au sens du RGA 2023
+
+## Restriction au champ 
+rga23_champ <- left_join(readCSV("rga23_general.csv") |> filter(indicRGA23 == 1),
+                                     readCSV("rga23_exploitations.csv") |> select(interview__key, eligibilite),
+                                     by = "interview__key"
+) |>
+  left_join(
+    readCSV("rga23_coprahculteurs.csv") |> select(interview__key, eligibiliteCoprah),
+    by = "interview__key"
+  ) |>
+  mutate(
+    Cultivateurs = ifelse(indicRGA23 == 1 & RaisonsRecensement__1 == 1 & eligibilite == 1, 1, 0),
+    Eleveurs = ifelse(indicRGA23 == 1 & RaisonsRecensement__2 == 1 & eligibilite == 1, 1, 0),
+    ProducteursCoprah = ifelse(indicRGA23 == 1 & RaisonsRecensement__3 == 1 & eligibiliteCoprah == 1, 1, 0),
+  ) |>
+  select(-starts_with("indic"), -starts_with("eligibilite"), -statut_collecte, -starts_with("RaisonsRecensement"), -PointsCAPL, -ActiviteEnquete)
+
+## Mise en avant des combinaisons d'activités
 combinaisonsActivites <- left_join(
-  rga23_champ_Ile_Commune,
+  rga23_champ,
   readCSV("rga23_tousFichiersPlats.csv") |> select(
     interview__key,
     starts_with("PresenceAnimaux__"),

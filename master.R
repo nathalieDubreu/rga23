@@ -17,6 +17,7 @@ source("analyse/2024-05-13_BSE_TransformationProduitsCoco.R")
 source("analyse/2024-05-14_Ministere_ProportionSurfacesDispoCannabis.R")
 source("analyse/2024-05-30_DemandeISPF_CTC_Vanille.R")
 source("analyse/2024-06-11_BSE_PepinierePubliquePlantsFruitiers.R")
+source("analyse/2024-06-24_BSE_CombinaisonActivites.R")
 source("analyse/2024-06-24_DRM_DonneesPeche.R")
 
 # TCD 
