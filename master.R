@@ -1,5 +1,5 @@
 #####################################################
-###### A LANCER AVANT TOUT AUTRE PROGRAMME      #####
+#####  A LANCER AVANT TOUT AUTRE PROGRAMME      #####
 #####################################################
 library("dplyr")
 library("rmarkdown")
@@ -27,6 +27,7 @@ source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 source("TCD/ExportsTCD_CategoriesTape.R")
 source("TCD/ExportsTCD_Vanille.R")
 source("TCD/ExportsTCD_Paturages.R")
+source("TCD/ExportsTCD_ExploitantsSpecialises.R")
 ## Programme vierge à copier-coller, renommer et compléter pour créér une nouvelle typologie
 source("TCD/ExportsTCD_TypologieACreer.R")
 
