@@ -29,7 +29,7 @@ source("TCD/ExportsTCD_TpsTravailChefExploitation.R")
 source("TCD/ExportsTCD_CategoriesTape.R")
 source("TCD/ExportsTCD_Vanille.R")
 source("TCD/ExportsTCD_Paturages.R")
-source("TCD/ExportsTCD_ExploitantsSpecialises.R")
+source("TCD/ExportsTCD_ExploitationsSpecialisees.R")
 ## Programme vierge à copier-coller, renommer et compléter pour créér une nouvelle typologie
 source("TCD/ExportsTCD_TypologieACreer.R")
 
