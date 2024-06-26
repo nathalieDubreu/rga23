@@ -1,3 +1,9 @@
+# install.packages("FactoMineR")
+# install.packages("factoextra")
+library(FactoMineR)
+library(factoextra)
+library(ggplot2)
+
 ## Champ : 4080 exploitations au sens du RGA 2023
 
 ## Restriction au champ
@@ -16,8 +22,7 @@ rga23_champ <- left_join(readCSV("rga23_general.csv") |> filter(indicRGA23 == 1)
   ) |>
   select(-starts_with("indic"), -starts_with("eligibilite"), -statut_collecte, -starts_with("RaisonsRecensement"), -PointsCAPL, -ActiviteEnquete)
 
-## Mise en avant des combinaisons d'activités
-combinaisonsActivites <- left_join(
+variablesNecessaires <- left_join(
   rga23_champ,
   readCSV("rga23_tousFichiersPlats.csv") |>
     select(
@@ -28,7 +33,10 @@ combinaisonsActivites <- left_join(
       ActivitesChefExploit__5
     ),
   by = "interview__key"
-) |>
+)
+
+## Mise en avant des combinaisons d'activités
+combinaisonsActivites <- variablesNecessaires |>
   mutate(
     # Cultures maraîchères....................................10/10
     activite_A = ifelse(replace_na(CulturesPresentes__10, 0) == 1, " Maraichage /", "-/"),
@@ -152,15 +160,8 @@ qqStatsParCombinaisonActivite <- rga23_champ |>
       ) |>
       select(
         interview__key,
-        EleveurBovins,
-        EleveurOvins,
-        EleveurPorcins,
-        EleveurVolailles,
-        EleveurPoulesPondeuses,
-        EleveurEquides,
-        EleveurLapins,
+        starts_with("Eleveur"),
         Apiculteurs,
-        EleveurCaprins,
         NombreBovins,
         NombreOvins,
         NombrePorcins,
@@ -174,3 +175,162 @@ qqStatsParCombinaisonActivite <- rga23_champ |>
     by = "interview__key"
   )
 writeCSV(qqStatsParCombinaisonActivite)
+
+###################
+#        ACP      #
+###################
+
+tableACP <- variablesNecessaires |>
+  mutate(
+    Maraichage = replace_na(CulturesPresentes__10, 0),
+    Vivrier = replace_na(CulturesPresentes__20, 0),
+    Fruitier = replace_na(CulturesPresentes__30, 0),
+    Floral = replace_na(CulturesPresentes__40, 0),
+    Ppam = replace_na(CulturesPresentes__50, 0),
+    Pepinieres = replace_na(CulturesPresentes__60, 0),
+    Fourrageres = replace_na(CulturesPresentes__70, 0),
+    Jacheres = replace_na(CulturesPresentes__80, 0),
+    JardinsOceaniens = ifelse(replace_na(SurfaceJardins, 0) > 0, 1, 0),
+    Bovins = replace_na(PresenceAnimaux__1, 0),
+    Ovins = replace_na(PresenceAnimaux__2, 0),
+    Porcins = replace_na(PresenceAnimaux__3, 0),
+    Volailles = replace_na(PresenceAnimaux__4, 0),
+    Equides = replace_na(PresenceAnimaux__5, 0),
+    Lapins = replace_na(PresenceAnimaux__6, 0),
+    Abeilles = replace_na(PresenceAnimaux__7, 0),
+    Caprins = replace_na(PresenceAnimaux__8, 0),
+    Peche = replace_na(ActivitesChefExploit__5, 0),
+    Coprah = replace_na(ProducteursCoprah, 0)
+  ) |>
+  select(
+    Maraichage, Vivrier, Fruitier, Floral, Ppam, Pepinieres, Fourrageres, Jacheres,
+    JardinsOceaniens,
+    Bovins, Ovins, Porcins, Volailles, Equides, Lapins, Abeilles, Caprins,
+    Peche,
+    Coprah
+  )
+
+result <- PCA(tableACP, graph = FALSE)
+
+## Matrice de corrélations
+matriceCorrelations <- as.data.frame(cor(tableACP, use = "pairwise.complete.obs"))
+writeCSV(matriceCorrelations)
+
+## Graphique des variables
+fviz_pca_var(result,
+  col.var = "contrib",
+  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+  repel = TRUE
+)
+
+## Graphique des individus
+fviz_pca_ind(result,
+  col.ind = "cos2",
+  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+  repel = TRUE
+)
+### Pas très lisible...
+
+## Regroupements d'exploitations ?!?
+
+## Méthode du coude pour déterminer combien de regroupements choisir
+set.seed(123)
+coordonneesExploitations <- result$ind$coord[, 1:2]
+wcss <- numeric(10)
+for (i in 1:10) {
+  kmeans_result <- kmeans(coordonneesExploitations, centers = i, nstart = 25)
+  wcss[i] <- kmeans_result$tot.withinss
+}
+plot(1:10, wcss,
+  type = "b", pch = 19, frame = FALSE,
+  xlab = "Nombre de clusters", ylab = "WCSS"
+)
+## -> 3 regroupements ^^
+
+## Nombre de regroupements (clusters)
+nbClusters <- 3
+
+kmeans_result <- kmeans(coordonneesExploitations, centers = nbClusters, nstart = 25)
+
+# Résultats des regroupements
+coordonneesExploitations$cluster <- factor(kmeans_result$cluster)
+
+# Visualisation
+fviz_pca_ind(result,
+  geom = "point",
+  col.ind = coordonneesExploitations$cluster,
+  palette = "jco",
+  legend.title = "Clusters"
+)
+
+# Ajout des clusters aux données
+tableACP$cluster <- coordonneesExploitations$cluster
+
+# Calcul des moyennes des variables par cluster
+moyennesParCluster <- tableACP |>
+  group_by(cluster) |>
+  summarise(across(everything(), mean, na.rm = TRUE))
+writeCSV(moyennesParCluster)
+
+# Préparation données pour ggplot
+moyennesParClusterBis <- moyennesParCluster |>
+  pivot_longer(cols = -cluster, names_to = "variable", values_to = "mean")
+
+# Visualisation
+ggplot(moyennesParClusterBis, aes(x = variable, y = mean, fill = cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Moyennes des Variables par cluster", x = "Variable", y = "Moyenne") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Contenu des clusters
+tableACPBis <- tableACP |>
+  pivot_longer(cols = c(
+    Maraichage, Vivrier, Fruitier, Floral, Ppam, Pepinieres, Fourrageres, Jacheres,
+    JardinsOceaniens,
+    Bovins, Ovins, Porcins, Volailles, Equides, Lapins, Abeilles, Caprins,
+    Peche,
+    Coprah
+  ), names_to = "variable", values_to = "value")
+
+# Visualisation
+ggplot(tableACPBis, aes(x = cluster, fill = as.factor(value))) +
+  geom_bar(position = "stack", color = "black") +
+  facet_wrap(~ variable, scales = "free_y", ncol = 2) +  
+  labs(title = "Variables par cluster",
+       x = "Cluster", y = "Nombre d'observations") +
+  scale_fill_manual(values = c("#FFA500", "#6495ED"), labels = c("0", "1")) +  
+  theme_minimal()
+
+# Calcul des pourcentages de 1 et 0 par variable binaire et par cluster
+tableACPPourcentage <- tableACP |>
+  group_by(cluster) |>
+  summarise(
+    across(
+      c(
+        Maraichage, Vivrier, Fruitier, Floral, Ppam, Pepinieres, Fourrageres, Jacheres,
+        JardinsOceaniens, Bovins, Ovins, Porcins, Volailles, Equides, Lapins, Abeilles,
+        Caprins, Peche, Coprah
+      ),
+      ~ mean(. == 1, na.rm = TRUE)
+    )
+  )
+
+tableACPPourcentageBis <- tableACPPourcentage |>
+  pivot_longer(cols = c(
+    Maraichage, Vivrier, Fruitier, Floral, Ppam, Pepinieres, Fourrageres, Jacheres,
+    JardinsOceaniens, Bovins, Ovins, Porcins, Volailles, Equides, Lapins, Abeilles,
+    Caprins, Peche, Coprah
+  ), names_to = "variable", values_to = "percentage")
+
+ggplot(tableACPPourcentageBis, aes(x = cluster, y = percentage, fill = variable)) +
+  geom_bar(stat = "identity", position = "stack", color = "black") +
+  facet_wrap(~ variable, scales = "free_y", ncol = 2) +  
+  labs(
+    title = "Variables en pourcentage par cluster",
+    x = "Cluster", y = "Pourcentage"
+  ) +
+  theme_minimal() +
+  geom_text(aes(label = paste0(round(percentage * 100), "%")),
+            position = position_stack(vjust = 0.5), size = 3, color = "white")  
+
